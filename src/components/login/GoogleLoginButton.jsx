@@ -2,7 +2,7 @@ import Button from '@mui/joy/Button';
 import Typography from '@mui/joy/Typography';
 
 import GoogleIcon from '@/assets/GoogleIcon.jsx';
-import { borderRadiusStyle } from "@/styles/login/styles.js";
+import {borderRadiusStyle} from "@/styles/common/borderRadiusStyle.js";
 
 export default function GoogleLoginButton() {
     return (

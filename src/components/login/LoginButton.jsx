@@ -1,5 +1,5 @@
 import Button from '@mui/joy/Button';
-import { borderRadiusStyle } from "@/styles/login/styles.js";
+import {borderRadiusStyle} from "@/styles/common/borderRadiusStyle.js";
 
 export default function LoginButton() {
     return (

@@ -1,6 +1,6 @@
 import Link from "@mui/joy/Link";
 import Typography from "@mui/joy/Typography";
-import { linkStyles } from "@/styles/login/styles.js";
+import {linkStyles} from "@/styles/login/styles.js";
 
 export default function SignUpLink() {
     return (
