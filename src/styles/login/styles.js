@@ -11,7 +11,3 @@ export const containerStyles = {
     mx: 'auto',
     my: 0,
 };
-
-export const borderRadiusStyle = {
-    borderRadius: 30,
-};
