@@ -5,16 +5,16 @@ import {StyledEngineProvider, CssVarsProvider} from '@mui/joy/styles'
 
 import App from './App.jsx'
 import './index.css'
-import './app.css'
+import './App.css'
 
 createRoot(document.getElementById('root')).render(
     <StrictMode>
-        <StyledEngineProvider injectFirst>
-            <CssVarsProvider>
-                <BrowserRouter>
+        <BrowserRouter>
+            <StyledEngineProvider injectFirst>
+                <CssVarsProvider defaultMode={"dark"}>
                     <App/>
-                </BrowserRouter>
-            </CssVarsProvider>
-        </StyledEngineProvider>
+                </CssVarsProvider>
+            </StyledEngineProvider>
+        </BrowserRouter>
     </StrictMode>
 );
