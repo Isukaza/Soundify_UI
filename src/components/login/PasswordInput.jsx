@@ -1,11 +1,20 @@
+import {useState} from "react";
+
+import {Visibility, VisibilityOff} from "@mui/icons-material";
 import FormControl from "@mui/joy/FormControl";
 import FormLabel from "@mui/joy/FormLabel";
-import Input from "@mui/joy/Input";
 import IconButton from "@mui/joy/IconButton";
+import Input from "@mui/joy/Input";
 import Typography from "@mui/joy/Typography";
-import {VisibilityOff} from "@mui/icons-material";
 
-export default function PasswordInput() {
+// eslint-disable-next-line react/prop-types
+export default function PasswordInput({setPass}) {
+    const [showPassword, setShowPassword] = useState(false);
+
+    const toggleShowPassword = () => {
+        setShowPassword(prev => !prev);
+    };
+
     return (
         <FormControl sx={{pb: 2}}>
             <FormLabel>
@@ -16,11 +25,16 @@ export default function PasswordInput() {
             <Input
                 size='lg'
                 name="password"
-                type="password"
+                type={showPassword ? "text" : "password"}
                 placeholder="Password"
+                onChange={(e) => setPass(e.target.value)}
                 endDecorator={
-                    <IconButton variant="plain">
-                        <VisibilityOff/>
+                    <IconButton onClick={toggleShowPassword} variant="plain">
+                        {
+                            showPassword
+                                ? <Visibility/>
+                                : <VisibilityOff/>
+                        }
                     </IconButton>
                 }
             />
