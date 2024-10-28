@@ -1,14 +1,14 @@
+import {Link} from 'react-router-dom';
+
 import Button from "@mui/joy/Button";
 import {Box} from "@mui/joy";
 import Typography from "@mui/joy/Typography";
-import {Link} from 'react-router-dom';
 
 import Logo from "@/components/common/Logo.jsx";
 import {centerStyles} from "@/styles/common/centerStyles.js";
 import {borderRadiusStyle} from "@/styles/common/borderRadiusStyle.js";
 
-
-export default function NotFound() {
+export default function NotFoundPage() {
     return (
         <main className="main-container">
             <Box sx={{...centerStyles, gap: 3}}>

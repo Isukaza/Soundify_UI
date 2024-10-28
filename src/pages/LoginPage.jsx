@@ -1,7 +1,13 @@
+import {useState} from "react";
+import {useLocation, useNavigate} from "react-router-dom";
+
 import Divider from '@mui/joy/Divider';
 import Sheet from '@mui/joy/Sheet';
 import Stack from '@mui/joy/Stack';
 import {Box} from "@mui/joy";
+
+import {containerStyles} from "@/styles/login/styles.js";
+import {centerStyles} from "@/styles/common/centerStyles.js";
 
 import EmailInput from "@/components/login/EmailInput.jsx";
 import ForgotPasswordLink from "@/components/login/ForgotPasswordLink.jsx";
@@ -11,10 +17,16 @@ import LoginTitle from "@/components/login/LoginTitle.jsx";
 import Logo from "@/components/common/Logo.jsx";
 import PasswordInput from "@/components/login/PasswordInput.jsx";
 import SignUpLink from "@/components/login/SignUpLink.jsx";
-import {containerStyles} from "@/styles/login/styles.js";
-import {centerStyles} from "@/styles/common/centerStyles.js";
 
-export default function Login() {
+export default function LoginPage() {
+    const [email, setEmail] = useState("");
+    const [pass, setPass] = useState("");
+    const navigate = useNavigate();
+    const location = useLocation();
+
+    const fromPage = location.state?.from?.pathname || '/';
+    const nextPage = () => navigate(fromPage, {replace: true});
+
     return (
         <main className="main-container">
             <Sheet
@@ -51,9 +63,9 @@ export default function Login() {
 
                 {/*Email&Pass login*/}
                 <Box sx={containerStyles}>
-                    <EmailInput/>
-                    <PasswordInput/>
-                    <LoginButton/>
+                    <EmailInput setEmail={setEmail}/>
+                    <PasswordInput setPass={setPass}/>
+                    <LoginButton email={email} pass={pass} callback={nextPage}/>
                     <ForgotPasswordLink/>
                     <SignUpLink/>
                 </Box>
