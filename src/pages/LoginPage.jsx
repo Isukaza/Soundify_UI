@@ -70,16 +70,19 @@ export default function LoginPage() {
         <main className="main-container">
             <Sheet
                 sx={{
-                    maxWidth: '734px',
+                    height: {xs: '100%', sm: 'auto'},
+                    maxWidth: {xs: '100%', sm: '734px'},
                     width: '100%',
-                    mx: 'auto',
-                    my: 'auto',
+                    mx: {xs: '0%', sm: 'auto'},
+                    my: {xs: '0%', sm: 'auto'},
                     py: 3,
                     px: 3,
                     display: 'flex',
                     flexDirection: 'column',
+                    justifyContent: {xs: 'center', sm: 'flex-start'},
+                    alignItems: {xs: 'center', sm: 'stretch'},
                     gap: 2,
-                    borderRadius: 'lg',
+                    borderRadius: {xs: '0', sm: 'lg'},
                     boxShadow: 'md',
                 }}
                 variant="outlined"
@@ -98,7 +101,14 @@ export default function LoginPage() {
                     <GoogleLoginButton/>
                 </Stack>
 
-                <Divider sx={{my: '32px', mx: '100px'}} orientation="horizontal"/>
+                <Divider
+                    sx={{
+                        width: {xs: '324px', sm: 'auto'},
+                        my: '32px',
+                        mx: {xs: 'auto', sm: '100px'},
+                    }}
+                    orientation="horizontal"
+                />
 
                 {/*Email&Pass login*/}
                 <Box sx={containerStyles}>
