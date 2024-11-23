@@ -15,9 +15,15 @@ export default function InDevelopPage() {
             <Box sx={{...centerStyles, gap: 3}}>
                 <Logo/>
 
-                <Typography level="h1" sx={{fontWeight: 'bold'}}>Thank you for your interest!</Typography>
-                <Typography level="h1" sx={{fontWeight: 'bold'}}>This page is currently under development.</Typography>
-                <Typography level="h1" sx={{fontWeight: 'bold'}}>{"We're working hard to provide you with valuable and relevant information."}</Typography>
+                <Typography level="h1" sx={{textAlign: 'center',fontWeight: 'bold'}}>
+                    Thank you for your interest!
+                </Typography>
+                <Typography level="h1" sx={{textAlign: 'center',fontWeight: 'bold'}}>
+                    This page is currently under development.
+                </Typography>
+                <Typography level="h1" sx={{textAlign: 'center',fontWeight: 'bold'}}>
+                    {"We're working hard to provide you with valuable and relevant information."}
+                </Typography>
 
                 <Button
                     component={Link}
