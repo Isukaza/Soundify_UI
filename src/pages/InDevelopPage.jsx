@@ -32,7 +32,7 @@ export default function InDevelopPage() {
                     color="primary"
                     size='lg'
                     sx={{
-                        width: '25%',
+                        width: {xs: 'auto', sm: '25%'},
                         ...borderRadiusStyle,
                         [`&:hover`]: {transform: 'scale(1.1)'}
                     }}
