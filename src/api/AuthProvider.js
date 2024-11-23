@@ -7,4 +7,14 @@ export default class AuthProvider {
             password: password
         });
     }
+    static async GetLoginGoogleSsoURL() {
+        return await authAPI.get('/get-google-login-url');
+    }
+    static async HandleGoogleCallback(code) {
+        return await authAPI.get('/google-callback', {
+            params: {
+                code: code
+            }
+        })
+    }
 }
