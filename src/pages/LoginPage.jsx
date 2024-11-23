@@ -1,4 +1,4 @@
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {useLocation, useNavigate} from "react-router-dom";
 
 import Divider from '@mui/joy/Divider';
@@ -10,22 +10,61 @@ import {containerStyles} from "@/styles/login/styles.js";
 import {centerStyles} from "@/styles/common/centerStyles.js";
 
 import EmailInput from "@/components/login/EmailInput.jsx";
+import PasswordInput from "@/components/login/PasswordInput.jsx";
 import ForgotPasswordLink from "@/components/login/ForgotPasswordLink.jsx";
+import SignUpLink from "@/components/login/SignUpLink.jsx";
 import GoogleLoginButton from "@/components/login/GoogleLoginButton.jsx";
 import LoginButton from "@/components/login/LoginButton.jsx";
 import LoginTitle from "@/components/login/LoginTitle.jsx";
 import Logo from "@/components/common/Logo.jsx";
-import PasswordInput from "@/components/login/PasswordInput.jsx";
-import SignUpLink from "@/components/login/SignUpLink.jsx";
+
+import AuthProvider from "@/api/AuthProvider.js";
+import {useAuthStore} from "@/stores/useAuthStore.js";
+import {useFetching} from "@/hooks/useFetching.js";
+
 
 export default function LoginPage() {
     const [email, setEmail] = useState("");
     const [pass, setPass] = useState("");
+
     const navigate = useNavigate();
     const location = useLocation();
 
+    const {refreshAuthTokens} = useAuthStore();
+
     const fromPage = location.state?.from?.pathname || '/';
     const nextPage = () => navigate(fromPage, {replace: true});
+
+    const [fetching, isLoading] = useFetching(async (code) => {
+        const resp = await AuthProvider.HandleGoogleCallback(code);
+
+        if (!resp.status || !resp.data) {
+            throw new Error("Failed to authenticate");
+        }
+
+        refreshAuthTokens(resp.data.bearer, resp.data.refreshToken);
+        nextPage();
+    });
+
+    useEffect(() => {
+        const queryParams = new URLSearchParams(window.location.search);
+        const code = queryParams.get('code');
+
+        if (code) {
+            console.log("Code parameter found:", code);
+            (async () => {
+                try {
+                    await fetching(code);
+                } catch (e) {
+                    console.error("Error fetching credentials:", e.message);
+                }
+            })();
+        }
+    }, []);
+
+    if (isLoading) {
+        return (<main className="main-container"></main>)
+    }
 
     return (
         <main className="main-container">
