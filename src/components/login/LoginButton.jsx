@@ -4,7 +4,7 @@ import Button from "@mui/joy/Button";
 
 import {useFetching} from "@/hooks/useFetching.js";
 
-import AuthProvider from "@/api/AuthProvider.js";
+import AuthApi from "@/api/AuthApi.js";
 
 // eslint-disable-next-line react/prop-types
 export default function LoginButton({email, pass, callback}) {
@@ -12,7 +12,7 @@ export default function LoginButton({email, pass, callback}) {
     const [fetchAuth, isLoading] = useFetching(auth);
 
     async function auth(email, pass) {
-        let resp = await AuthProvider.login(email, pass);
+        let resp = await AuthApi.login(email, pass);
         if (resp.status) {
             refreshAuthTokens(resp.data.bearer, resp.data.refreshToken);
 

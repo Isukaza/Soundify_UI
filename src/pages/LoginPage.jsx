@@ -18,7 +18,7 @@ import LoginButton from "@/components/login/LoginButton.jsx";
 import LoginTitle from "@/components/login/LoginTitle.jsx";
 import Logo from "@/components/common/Logo.jsx";
 
-import AuthProvider from "@/api/AuthProvider.js";
+import AuthApi from "@/api/AuthApi.js";
 import {useAuthStore} from "@/stores/useAuthStore.js";
 import {useFetching} from "@/hooks/useFetching.js";
 
@@ -36,7 +36,7 @@ export default function LoginPage() {
     const nextPage = () => navigate(fromPage, {replace: true});
 
     const [fetching, isLoading] = useFetching(async (code) => {
-        const resp = await AuthProvider.HandleGoogleCallback(code);
+        const resp = await AuthApi.HandleGoogleCallback(code);
 
         if (!resp.status || !resp.data) {
             throw new Error("Failed to authenticate");
