@@ -1,0 +1,27 @@
+import {Stack} from "@mui/joy";
+import TrackProgressTime from "@/components/player/trackProgress/TrackProgressTime.jsx";
+import TrackProgressSlider from "@/components/player/trackProgress/TrackProgressSlider.jsx";
+import TrackDuration from "@/components/player/trackProgress/TrackDuration.jsx";
+
+const TrackProgress = () => {
+    console.log("TrackProgress");
+
+    return (
+        <Stack
+            direction="row"
+            sx={{
+                width: "100%",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center"
+            }}
+        >
+            <TrackProgressTime/>
+            <TrackProgressSlider/>
+            <TrackDuration/>
+        </Stack>
+    );
+};
+
+
+export default TrackProgress;
