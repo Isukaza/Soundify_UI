@@ -1,5 +1,5 @@
-import {useMusicStore} from '@/stores/useMusicStore/useMusicStore';
 import HlsLoader from "@/utils/HlsLoader";
+import {useMusicStore} from '@/stores/useMusicStore/useMusicStore';
 
 const hlsLoader = new HlsLoader();
 

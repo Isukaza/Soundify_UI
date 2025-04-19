@@ -1,6 +1,7 @@
-import { create } from 'zustand';
-import { createPlayerSlice, PlayerState } from '@/stores/useMusicStore/createPlayerSlice';
-import { createLibrarySlice, LibraryState } from '@/stores/useMusicStore/createLibrarySlice';
+import {create} from 'zustand';
+
+import {createPlayerSlice, PlayerState} from '@/stores/useMusicStore/createPlayerSlice';
+import {createLibrarySlice, LibraryState} from '@/stores/useMusicStore/createLibrarySlice';
 
 interface MusicStore extends PlayerState, LibraryState {}
 

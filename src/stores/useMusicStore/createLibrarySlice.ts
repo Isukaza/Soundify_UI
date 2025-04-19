@@ -1,7 +1,7 @@
-import {Track} from '@/models/Track';
 import {Album} from '@/models/Album';
 import {Artist} from '@/models/Artist';
 import {Playlist} from '@/models/Playlist';
+import {Track} from '@/models/Track';
 
 export interface LibraryState {
     tracks: Track[];
@@ -25,11 +25,11 @@ export const createLibrarySlice = (set: any, get: any): LibraryState => ({
     playlists: [] as Playlist[],
     currentTrack: null,
 
-    setTracks: (tracks) => set({ tracks }),
-    setAlbums: (albums) => set({ albums }),
-    setArtists: (artists) => set({ artists }),
-    setPlaylists: (playlists) => set({ playlists }),
-    setCurrentTrack: (track) => set({ currentTrack: track }),
+    setTracks: (tracks) => set({tracks}),
+    setAlbums: (albums) => set({albums}),
+    setArtists: (artists) => set({artists}),
+    setPlaylists: (playlists) => set({playlists}),
+    setCurrentTrack: (track) => set({currentTrack: track}),
 
     addTrackToPlaylist: (playlistId, track) =>
         set((state: LibraryState) => {
@@ -42,7 +42,7 @@ export const createLibrarySlice = (set: any, get: any): LibraryState => ({
                 }
                 return playlist;
             });
-            return { playlists: updatedPlaylists };
+            return {playlists: updatedPlaylists};
         }),
 
     removeTrackFromPlaylist: (playlistId, trackId) =>
@@ -56,6 +56,6 @@ export const createLibrarySlice = (set: any, get: any): LibraryState => ({
                 }
                 return playlist;
             });
-            return { playlists: updatedPlaylists };
+            return {playlists: updatedPlaylists};
         }),
 });

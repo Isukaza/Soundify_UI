@@ -1,8 +1,10 @@
-import {Slider} from '@mui/joy';
+import {useCallback, useEffect, useRef, useState} from "react";
+
+import {AudioPlayerManager} from '@/managers/AudioPlayerManager';
 import {formatTime} from '@/utils/formatters';
 import {useMusicStore} from '@/stores/useMusicStore/useMusicStore';
-import {useCallback, useEffect, useRef, useState} from "react";
-import { AudioPlayerManager } from '@/managers/AudioPlayerManager';
+
+import {Slider} from '@mui/joy';
 
 const TrackProgressSlider = () => {
     console.log("TrackProgressSlider");

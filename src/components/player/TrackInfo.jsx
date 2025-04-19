@@ -1,5 +1,5 @@
-import {IconButton, Stack, Typography} from '@mui/joy';
 import {InsertPhoto, PlaylistAdd} from '@mui/icons-material';
+import {IconButton, Stack, Typography} from '@mui/joy';
 
 export default function TrackInfo() {
     console.log("TrackInfo");
@@ -13,7 +13,7 @@ export default function TrackInfo() {
                 alignItems: "center"
             }}
         >
-            
+
             <InsertPhoto fontSize="xl4"/>
             <Stack
                 sx={{

@@ -1,9 +1,8 @@
-import PlayArrowIcon from '@mui/icons-material/PlayArrow';
-import PauseIcon from '@mui/icons-material/Pause';
+import {PlayArrow as PlayArrowIcon, Pause as PauseIcon} from '@mui/icons-material';
 import Button from "@mui/joy/Button";
 
-import { useMusicStore } from '@/stores/useMusicStore/useMusicStore';
-import { AudioPlayerManager } from '@/managers/AudioPlayerManager';
+import {AudioPlayerManager} from '@/managers/AudioPlayerManager';
+import {useMusicStore} from '@/stores/useMusicStore/useMusicStore';
 
 export default function PlayButton() {
     const isPlaying = useMusicStore(state => state.isPlaying);
@@ -23,8 +22,8 @@ export default function PlayButton() {
             onClick={handlePlay}
         >
             {isPlaying
-                ? <PauseIcon sx={{ color: 'black' }} fontSize="xl2" />
-                : <PlayArrowIcon sx={{ color: 'black' }} fontSize="xl2" />
+                ? <PauseIcon sx={{color: 'black'}} fontSize="xl2"/>
+                : <PlayArrowIcon sx={{color: 'black'}} fontSize="xl2"/>
             }
         </Button>
     );

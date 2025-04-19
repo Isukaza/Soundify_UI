@@ -1,7 +1,7 @@
 import {Typography} from "@mui/joy";
+
 import {formatTime} from "@/utils/formatters.js";
 import {useMusicStore} from '@/stores/useMusicStore/useMusicStore.ts';
-
 
 const TrackDuration = () => {
     console.log("TrackDuration");

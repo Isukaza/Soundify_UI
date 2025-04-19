@@ -5,11 +5,10 @@ import HomePage from "@/pages/HomePage.jsx";
 import LoginPage from "@/pages/LoginPage.jsx";
 import NotFoundPage from "@/pages/NotFoundPage.jsx";
 import DetailsTrackPage from "@/pages/DetailsTrackPage.jsx";
+import InDevelopPage from "@/pages/InDevelopPage.jsx";
 
 import {ProtectedRoutes} from "@/hoc/ProtectedRoutes.jsx";
 import RequireUnAuthenticated from "@/hoc/RequireUnAuthenticated.jsx";
-import InDevelopPage from "@/pages/InDevelopPage.jsx";
-
 
 export default function App() {
     return (

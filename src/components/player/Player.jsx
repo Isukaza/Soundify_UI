@@ -1,8 +1,9 @@
 import {Stack} from "@mui/joy";
 
-import TrackInfo from "@/components/player/TrackInfo.jsx";
 import Playback from "@/components/player/Playback.jsx";
+import TrackInfo from "@/components/player/TrackInfo.jsx";
 import Volume from "@/components/player/playbackControls/Volume.jsx";
+
 
 export default function Player() {
     console.log("Player");
@@ -13,7 +14,6 @@ export default function Player() {
             sx={{
                 height: "auto",
                 width: "100%",
-                position: "fixed",
                 justifyContent: "space-between",
                 paddingX: 3
             }}>

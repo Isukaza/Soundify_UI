@@ -24,28 +24,28 @@ export const createPlayerSlice = (set: any, get: any): PlayerState => ({
     duration: 0,
 
     setIsPlaying: (value) => {
-        if (get().isPlaying !== value) set({ isPlaying: value });
+        if (get().isPlaying !== value) set({isPlaying: value});
     },
     setIsEnded: (value) => {
-        if (get().isEnded !== value) set({ isEnded: value });
+        if (get().isEnded !== value) set({isEnded: value});
     },
     setCurrentTime: (value) => {
         if (Math.abs(get().currentTime - value) > 0.25) {
-            set({ currentTime: value });
+            set({currentTime: value});
         }
     },
     setVolume: (value) => {
-        if (get().playerVolume !== value) set({ playerVolume: value });
+        if (get().playerVolume !== value) set({playerVolume: value});
     },
     setPrevVolume: (value) => {
-        if (get().prevVolume !== value) set({ prevVolume: value });
+        if (get().prevVolume !== value) set({prevVolume: value});
     },
     setDuration: (val) => {
         set({duration: val});  // Set the duration
     },
     restorePrevVolume: () => {
         const prev = get().prevVolume || 0.33;
-        set({ playerVolume: prev });
+        set({playerVolume: prev});
     },
     reset: () => {
         set({
