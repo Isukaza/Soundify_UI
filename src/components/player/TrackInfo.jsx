@@ -1,7 +1,8 @@
 import {InsertPhoto, PlaylistAdd} from '@mui/icons-material';
 import {IconButton, Stack, Typography} from '@mui/joy';
 
-export default function TrackInfo() {
+// eslint-disable-next-line react/prop-types
+export default function TrackInfo({sx}) {
     console.log("TrackInfo");
 
     return (
@@ -10,10 +11,10 @@ export default function TrackInfo() {
             spacing={1}
             sx={{
                 justifyContent: "space-between",
-                alignItems: "center"
+                alignItems: "center",
+                ...sx,
             }}
         >
-
             <InsertPhoto fontSize="xl4"/>
             <Stack
                 sx={{

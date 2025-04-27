@@ -7,8 +7,10 @@ import NotFoundPage from "@/pages/NotFoundPage.jsx";
 import DetailsTrackPage from "@/pages/DetailsTrackPage.jsx";
 import InDevelopPage from "@/pages/InDevelopPage.jsx";
 
-import {ProtectedRoutes} from "@/hoc/ProtectedRoutes.jsx";
+import ProtectedRoutes from "@/hoc/ProtectedRoutes.jsx";
 import RequireUnAuthenticated from "@/hoc/RequireUnAuthenticated.jsx";
+
+import Layout from "@/components/Layout/Layout.jsx";
 
 export default function App() {
     return (
@@ -16,7 +18,11 @@ export default function App() {
             <CssBaseline/>
             <Routes>
                 <Route element={<ProtectedRoutes/>}>
-                    <Route path="/" element={<HomePage/>}/>
+                    <Route path="/" element={
+                        <Layout>
+                            <HomePage/>
+                        </Layout>
+                    }/>
                     <Route path="/DetailsTrack" element={<DetailsTrackPage/>}/>
                 </Route>
 
