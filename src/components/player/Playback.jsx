@@ -3,8 +3,8 @@ import {Stack} from "@mui/joy";
 import PlaybackControls from "@/components/player/playbackControls/PlaybackControls.jsx";
 import TrackProgress from "@/components/player/trackProgress/TrackProgress.jsx";
 
-
-export default function Playback() {
+// eslint-disable-next-line react/prop-types
+export default function Playback({sx}) {
     console.log("Playback");
 
     return (
@@ -15,7 +15,8 @@ export default function Playback() {
                 justifyContent: "center",
                 alignItems: "center",
                 width: "100%",
-                maxWidth: "600px",
+                maxWidth: "500px",
+                ...sx,
             }}
         >
             <PlaybackControls/>

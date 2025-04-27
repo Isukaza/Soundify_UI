@@ -12,4 +12,4 @@ const ProtectedRoutes = () => {
         : <Navigate to="/login" replace={true} state={{from: location}}/>;
 };
 
-export {ProtectedRoutes};
+export default ProtectedRoutes;
