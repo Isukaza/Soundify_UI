@@ -1,26 +1,26 @@
-import {useEffect, useState} from "react";
-import {useLocation, useNavigate} from "react-router-dom";
+import {useEffect, useState} from 'react';
+import {useLocation, useNavigate} from 'react-router-dom';
 
 import Divider from '@mui/joy/Divider';
 import Sheet from '@mui/joy/Sheet';
 import Stack from '@mui/joy/Stack';
-import {Box} from "@mui/joy";
+import {Box} from '@mui/joy';
 
-import {containerStyles} from "@/styles/login/styles.js";
-import {centerStyles} from "@/styles/common/centerStyles.js";
+import {containerStyles} from '@/styles/login/styles.js';
+import {centerStyles} from '@/styles/common/centerStyles.js';
 
-import EmailInput from "@/components/login/EmailInput.jsx";
-import PasswordInput from "@/components/login/PasswordInput.jsx";
-import ForgotPasswordLink from "@/components/login/ForgotPasswordLink.jsx";
-import SignUpLink from "@/components/login/SignUpLink.jsx";
-import GoogleLoginButton from "@/components/login/GoogleLoginButton.jsx";
-import LoginButton from "@/components/login/LoginButton.jsx";
-import LoginTitle from "@/components/login/LoginTitle.jsx";
-import Logo from "@/components/common/Logo.jsx";
+import EmailInput from '@/components/login/EmailInput.jsx';
+import PasswordInput from '@/components/login/PasswordInput.jsx';
+import ForgotPasswordLink from '@/components/login/ForgotPasswordLink.jsx';
+import SignUpLink from '@/components/login/SignUpLink.jsx';
+import GoogleLoginButton from '@/components/login/GoogleLoginButton.jsx';
+import LoginButton from '@/components/login/LoginButton.jsx';
+import LoginTitle from '@/components/login/LoginTitle.jsx';
+import Logo from '@/components/common/Logo.jsx';
 
-import AuthApi from "@/api/AuthApi.js";
-import {useAuthStore} from "@/stores/useAuthStore.js";
-import {useFetching} from "@/hooks/useFetching.js";
+import AuthApi from '@/api/AuthApi.js';
+import {useFetching} from '@/hooks/useFetching.js';
+import {AuthManager} from '@/managers/AuthManager';
 
 
 export default function LoginPage() {
@@ -29,8 +29,6 @@ export default function LoginPage() {
 
     const navigate = useNavigate();
     const location = useLocation();
-
-    const {refreshAuthTokens} = useAuthStore();
 
     const fromPage = location.state?.from?.pathname || '/';
     const nextPage = () => navigate(fromPage, {replace: true});
@@ -42,7 +40,7 @@ export default function LoginPage() {
             throw new Error("Failed to authenticate");
         }
 
-        refreshAuthTokens(resp.data.bearer, resp.data.refreshToken);
+        AuthManager.refreshTokens(resp.data.bearer, resp.data.refreshToken);
         nextPage();
     });
 

@@ -1,16 +1,13 @@
 import {Link} from 'react-router-dom';
+import Button from '@mui/joy/Button';
+import {Box} from '@mui/joy';
+import Typography from '@mui/joy/Typography';
 
-import Button from "@mui/joy/Button";
-import {Box} from "@mui/joy";
-import Typography from "@mui/joy/Typography";
-
-import {centerStyles} from "@/styles/common/centerStyles.js";
-import {borderRadiusStyle} from "@/styles/common/borderRadiusStyle.js";
-
-import {useAuthStore} from "@/stores/useAuthStore.js";
+import {centerStyles} from '@/styles/common/centerStyles.js';
+import {borderRadiusStyle} from '@/styles/common/borderRadiusStyle.js';
+import {AuthManager} from '@/managers/AuthManager';
 
 export default function DetailsTrackPage() {
-    const {clearAuthData} = useAuthStore();
 
     return (
         <main className="main-container">
@@ -19,7 +16,7 @@ export default function DetailsTrackPage() {
                 <Button
                     component={Link}
                     to="/"
-                    onClick={() => clearAuthData()}
+                    onClick={() => AuthManager.clearAuthData()}
                     variant="solid"
                     color="primary"
                     size='lg'

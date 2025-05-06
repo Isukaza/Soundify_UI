@@ -1,17 +1,17 @@
-import {useCallback, useEffect, useRef, useState} from "react";
+import {useCallback, useEffect, useRef, useState} from 'react';
 
 import {AudioPlayerManager} from '@/managers/AudioPlayerManager';
 import {formatTime} from '@/utils/formatters';
-import {useMusicStore} from '@/stores/useMusicStore/useMusicStore';
+import {useStore} from '@/stores/index';
 
 import {Slider} from '@mui/joy';
 
 const TrackProgressSlider = () => {
     console.log("TrackProgressSlider");
 
-    const currentTime = useMusicStore((state) => state.currentTime);
-    const duration = useMusicStore((state) => state.duration);
-    const isEnded = useMusicStore((state) => state.isEnded);
+    const currentTime = useStore((state) => state.player.currentTime);
+    const duration = useStore((state) => state.player.duration);
+    const isEnded = useStore((state) => state.player.isEnded);
 
     const sliderRef = useRef(null);
     const onFocusRef = useRef(false);
@@ -19,12 +19,6 @@ const TrackProgressSlider = () => {
     const [currentSliderTime, setCurrentSliderTime] = useState(0);
 
     useEffect(() => {
-        console.log("TrackProgressSlider onFocusRef", onFocusRef.current);
-    }, [onFocusRef.current]);
-
-    useEffect(() => {
-        console.log("TrackProgressSlider isEnded", isEnded);
-
         if (isEnded === true)
             setCurrentSliderTime(duration);
     }, [isEnded]);

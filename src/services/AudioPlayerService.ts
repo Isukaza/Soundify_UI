@@ -1,5 +1,5 @@
 import HlsLoader from "@/utils/HlsLoader";
-import {useMusicStore} from '@/stores/useMusicStore/useMusicStore';
+import {useStore} from '@/stores';
 
 const hlsLoader = new HlsLoader();
 
@@ -21,21 +21,21 @@ class AudioPlayerService {
 
     private attachListeners() {
         this.audioRef.addEventListener('timeupdate', () => {
-            if (this.audioRef.currentTime - useMusicStore.getState().currentTime > 0.5)
-                useMusicStore.getState().setCurrentTime(this.audioRef.currentTime);
+            if (this.audioRef.currentTime - useStore.getState().player.currentTime > 0.5)
+                useStore.getState().player.setCurrentTime(this.audioRef.currentTime);
         });
 
         this.audioRef.addEventListener('ended', () => {
-            useMusicStore.getState().setIsPlaying(false);
-            useMusicStore.getState().setIsEnded(true);
+            useStore.getState().player.setIsPlaying(false);
+            useStore.getState().player.setIsEnded(true);
         });
 
         this.audioRef.addEventListener('volumechange', () => {
-            useMusicStore.getState().setVolume(this.audioRef.volume);
+            useStore.getState().player.setVolume(this.audioRef.volume);
         });
 
         this.audioRef.addEventListener('loadedmetadata', () => {
-            useMusicStore.getState().setDuration(this.audioRef.duration);
+            useStore.getState().player.setDuration(this.audioRef.duration);
         });
     }
 
@@ -43,8 +43,8 @@ class AudioPlayerService {
         await hlsLoader.loadToAudioElement(this.audioRef, musicName);
     }
 
-    public play() {
-        this.audioRef.play();
+    public async play() {
+        await this.audioRef.play();
     }
 
     public pause() {

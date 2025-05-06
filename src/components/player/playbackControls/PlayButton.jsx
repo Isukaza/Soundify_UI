@@ -1,11 +1,11 @@
+import Button from '@mui/joy/Button';
 import {PlayArrow as PlayArrowIcon, Pause as PauseIcon} from '@mui/icons-material';
-import Button from "@mui/joy/Button";
 
 import {AudioPlayerManager} from '@/managers/AudioPlayerManager';
-import {useMusicStore} from '@/stores/useMusicStore/useMusicStore';
+import {useStore} from '@/stores/index';
 
 export default function PlayButton() {
-    const isPlaying = useMusicStore(state => state.isPlaying);
+    const isPlaying = useStore(state => state.player.isPlaying);
 
     const handlePlay = () => {
         AudioPlayerManager.togglePlay();

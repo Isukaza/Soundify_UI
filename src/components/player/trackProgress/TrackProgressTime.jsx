@@ -1,12 +1,12 @@
 import {Typography} from "@mui/joy";
 
 import {formatTime} from "@/utils/formatters.js";
-import {useMusicStore} from '@/stores/useMusicStore/useMusicStore.ts';
+import {useStore} from '@/stores/index';
 
 const TrackProgressTime = () => {
     console.log("TrackProgressTime");
 
-    const currentTime = useMusicStore((state) => state.currentTime);
+    const currentTime = useStore((state) => state.player.currentTime);
 
     return <Typography style={{width: '50px'}}>{formatTime(currentTime)}</Typography>;
 };

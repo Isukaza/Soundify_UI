@@ -1,14 +1,14 @@
-import { useEffect } from 'react';
-import { Box } from '@mui/joy';
+import {useEffect} from 'react';
+import {Box} from '@mui/joy';
 
 import Player from '@/components/player/Player';
-import AudioPlayerService from '@/services/AudioPlayerService';
+import {AudioPlayerManager} from '@/managers/AudioPlayerManager';
 
 const Footer = () => {
     const musicName = "tmpdob60llg";
 
     useEffect(() => {
-        AudioPlayerService.loadSource(musicName);
+        AudioPlayerManager.loadSource(musicName);
     }, []);
 
     return (

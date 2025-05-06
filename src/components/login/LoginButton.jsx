@@ -1,21 +1,19 @@
-import {borderRadiusStyle} from "@/styles/common/borderRadiusStyle.js";
-import {useAuthStore} from "@/stores/useAuthStore.js";
-import Button from "@mui/joy/Button";
+import Button from '@mui/joy/Button';
 
-import {useFetching} from "@/hooks/useFetching.js";
+import {useFetching} from '@/hooks/useFetching.js';
+import AuthApi from '@/api/AuthApi.js';
+import {AuthManager} from '@/managers/AuthManager';
 
-import AuthApi from "@/api/AuthApi.js";
+import {borderRadiusStyle} from '@/styles/common/borderRadiusStyle.js';
 
 // eslint-disable-next-line react/prop-types
 export default function LoginButton({email, pass, callback}) {
-    const {refreshAuthTokens} = useAuthStore();
     const [fetchAuth, isLoading] = useFetching(auth);
 
     async function auth(email, pass) {
         let resp = await AuthApi.login(email, pass);
         if (resp.status) {
-            refreshAuthTokens(resp.data.bearer, resp.data.refreshToken);
-
+            AuthManager.refreshTokens(resp.data.bearer, resp.data.refreshToken);
             callback();
         }
     }
