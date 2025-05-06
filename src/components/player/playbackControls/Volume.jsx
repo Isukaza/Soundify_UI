@@ -1,32 +1,33 @@
 import {Slider, IconButton, Stack} from '@mui/joy';
 import {VolumeDown, VolumeMute, VolumeOff, VolumeUp} from '@mui/icons-material';
-import {useMusicStore} from '@/stores/useMusicStore/useMusicStore.ts';
+
+import {useStore} from '@/stores/index';
 import {AudioPlayerManager} from '@/managers/AudioPlayerManager';
 
-const Volume = () => {
+// eslint-disable-next-line react/prop-types
+export default function Volume({sx}) {
     console.log("Volume");
 
-    const playerVolume = useMusicStore((state) => state.playerVolume);
+    const playerVolume = useStore((state) => state.player.volume);
 
     const getVolumeIcon = (volume) => {
         if (volume === 0) {
-            return <VolumeOff />;
+            return <VolumeOff/>;
         } else if (volume <= 0.33) {
-            return <VolumeMute />;
+            return <VolumeMute/>;
         } else if (volume <= 0.66) {
-            return <VolumeDown />;
+            return <VolumeDown/>;
         } else {
-            return <VolumeUp />;
+            return <VolumeUp/>;
         }
     };
 
     return (
         <Stack
-            sx={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}
+            sx={{display: 'flex', justifyContent: 'center', alignItems: 'center', ...sx}}
             direction="row"
             spacing={1}
         >
-            {/* Иконка для отключения звука */}
             <IconButton
                 sx={{height: '36px', width: '36px'}}
                 onClick={() => AudioPlayerManager.toggleMute()}
@@ -49,5 +50,3 @@ const Volume = () => {
         </Stack>
     );
 };
-
-export default Volume;

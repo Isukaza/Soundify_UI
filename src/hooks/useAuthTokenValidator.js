@@ -1,8 +1,10 @@
 import dayjs from "dayjs";
-import {useAuthStore} from "@/stores/useAuthStore.js";
+import {useStore} from "@/stores/index";
 
 const useAuthTokenValidator = () => {
-    const {jwt, refresh, exp} = useAuthStore();
+    const jwt = useStore.getState().auth.jwt;
+    const refresh = useStore.getState().auth.refresh;
+    const exp = useStore.getState().auth.exp;
 
     return () => {
         if (!jwt || jwt.trim().length === 0 || !refresh || refresh.trim().length === 0)
@@ -11,7 +13,7 @@ const useAuthTokenValidator = () => {
         const now = dayjs();
         const expirationDate = dayjs(exp * 1000);
 
-        return exp !== 0 || expirationDate.isAfter(now);
+        return exp !== 0 && expirationDate.isAfter(now);
     };
 };
 

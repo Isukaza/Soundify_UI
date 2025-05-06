@@ -1,11 +1,11 @@
-import {Link} from "react-router-dom";
+import {Link} from 'react-router-dom';
+import Button from '@mui/joy/Button';
+import {Stack} from '@mui/joy';
+import Typography from '@mui/joy/Typography';
 
-import Button from "@mui/joy/Button";
-import {Stack} from "@mui/joy";
-import Typography from "@mui/joy/Typography";
-
-import Logo from "@/components/common/Logo.jsx";
-import {borderRadiusStyle} from "@/styles/common/borderRadiusStyle.js";
+import Logo from '@/components/common/Logo.jsx';
+import {borderRadiusStyle} from '@/styles/common/borderRadiusStyle.js';
+import {AuthManager} from '@/managers/AuthManager';
 
 export default function HomePage() {
     return (
@@ -24,6 +24,7 @@ export default function HomePage() {
             <Button
                 component={Link}
                 to="/Login"
+                onClick={() => AuthManager.clearAuthData()}
                 variant="solid"
                 color="primary"
                 size='lg'

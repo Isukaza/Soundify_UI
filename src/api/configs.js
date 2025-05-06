@@ -1,5 +1,5 @@
 import axios from "axios";
-import {useAuthStore} from "@/stores/useAuthStore.js";
+import {useStore} from "@/stores/index";
 
 export const authAPI = axios.create({
     baseURL: 'https://localhost:7433/Authorization'
@@ -10,10 +10,9 @@ export const cdnAPI = axios.create({
 })
 
 cdnAPI.interceptors.request.use((config) => {
-    const jwt = useAuthStore.getState().jwt;
-    if (jwt) {
+    const jwt = useStore.getState().auth.jwt;
+    if (jwt)
         config.headers.Authorization = `Bearer ${jwt}`;
-    }
     return config;
 }, (error) => {
     return Promise.reject(error);
