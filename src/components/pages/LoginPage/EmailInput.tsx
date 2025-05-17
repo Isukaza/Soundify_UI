@@ -1,6 +1,6 @@
-import { Input, FormControl, FormLabel, Typography } from '@mui/joy';
-import { useStore } from "@/stores";
-import React, { useRef, useCallback } from 'react';
+import {Input, FormControl, FormLabel, Typography} from '@mui/joy';
+import {useStore} from "@/stores";
+import React, {useRef, useCallback} from 'react';
 
 export default function EmailInput() {
     console.log("Email Input");
@@ -20,9 +20,9 @@ export default function EmailInput() {
     }, [setEmail]);
 
     return (
-        <FormControl sx={{ pb: 2 }}>
+        <FormControl sx={{pb: 2}}>
             <FormLabel>
-                <Typography level="title-sm" sx={{ fontWeight: 'bold' }}>
+                <Typography level="title-sm" sx={{fontWeight: 'bold'}}>
                     Email
                 </Typography>
             </FormLabel>

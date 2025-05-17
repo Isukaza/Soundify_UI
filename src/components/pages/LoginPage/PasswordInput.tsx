@@ -1,7 +1,7 @@
-import { useState, useRef, useCallback } from 'react';
-import { Visibility, VisibilityOff } from '@mui/icons-material';
-import { FormControl, FormLabel, IconButton, Input, Typography } from '@mui/joy';
-import { useStore } from "@/stores";
+import {useState, useRef, useCallback} from 'react';
+import {Visibility, VisibilityOff} from '@mui/icons-material';
+import {FormControl, FormLabel, IconButton, Input, Typography} from '@mui/joy';
+import {useStore} from "@/stores";
 import React from 'react';
 
 export default function PasswordInput() {
@@ -24,9 +24,9 @@ export default function PasswordInput() {
     }, [setPassword]);
 
     return (
-        <FormControl sx={{ pb: 2 }}>
+        <FormControl sx={{pb: 2}}>
             <FormLabel>
-                <Typography level="title-sm" sx={{ fontWeight: 'bold' }}>
+                <Typography level="title-sm" sx={{fontWeight: 'bold'}}>
                     Password
                 </Typography>
             </FormLabel>
@@ -38,7 +38,7 @@ export default function PasswordInput() {
                 placeholder="Password"
                 endDecorator={
                     <IconButton onClick={() => setShowPassword(!showPassword)} variant="plain">
-                        {showPassword ? <Visibility /> : <VisibilityOff />}
+                        {showPassword ? <Visibility/> : <VisibilityOff/>}
                     </IconButton>
                 }
             />

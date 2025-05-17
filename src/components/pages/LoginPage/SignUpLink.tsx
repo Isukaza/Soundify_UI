@@ -1,7 +1,7 @@
-import { Link as RouterLink } from 'react-router-dom';
-import { Link, Typography } from '@mui/joy';
+import {Link as RouterLink} from 'react-router-dom';
+import {Link, Typography} from '@mui/joy';
 
-export default function SignUpLink()  {
+export default function SignUpLink() {
     return (
         <Typography
             endDecorator={
