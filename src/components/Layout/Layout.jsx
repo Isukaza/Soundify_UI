@@ -1,7 +1,7 @@
 import {Stack, Box} from '@mui/joy';
 
-import Header from '@/components/Layout/Header.jsx';
-import Footer from '@/components/Layout/Footer.jsx';
+import Header from '@/components/layout/Header.jsx';
+import Footer from '@/components/layout/Footer.jsx';
 
 // eslint-disable-next-line react/prop-types
 const Layout = ({children}) => {

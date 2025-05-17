@@ -1,30 +1,26 @@
-import {Link as LinkRout} from "react-router-dom";
+import { Link as RouterLink } from 'react-router-dom';
+import { Link, Typography } from '@mui/joy';
 
-import Link from "@mui/joy/Link";
-import Typography from "@mui/joy/Typography";
-
-import {linkStyles} from "@/styles/login/styles.js";
-
-export default function SignUpLink() {
+export default function SignUpLink()  {
     return (
         <Typography
             endDecorator={
                 <Link
-                    component={LinkRout}
-                    href="#"
+                    component={RouterLink}
                     to="/InDevelop"
                     level="title-sm"
                     underline="none"
                     color="neutral"
-                    sx={linkStyles}>
+                >
                     Sign up for Soundtify
                 </Link>
             }
             sx={{
                 fontSize: 'sm',
-                alignSelf: 'center'
+                alignSelf: 'center',
             }}
         >
             Don&apos;t have an account?
-        </Typography>);
+        </Typography>
+    );
 };

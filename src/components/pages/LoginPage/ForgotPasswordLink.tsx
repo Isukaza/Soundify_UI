@@ -1,22 +1,17 @@
-import {Link as LinkDom} from "react-router-dom";
-
-import Link from "@mui/joy/Link";
-import Typography from "@mui/joy/Typography";
-
-import {linkStyles} from "@/styles/login/styles.js";
+import {Link as RouterLink} from 'react-router-dom';
+import {Link, Typography} from '@mui/joy';
 
 export default function ForgotPasswordLink() {
     return (
         <Typography
             endDecorator={
                 <Link
-                    component={LinkDom}
-                    href="#"
+                    component={RouterLink}
                     to="/InDevelop"
                     level="title-sm"
                     underline="none"
                     color="neutral"
-                    sx={linkStyles}>
+                >
                     Forgot your password?
                 </Link>
             }
@@ -25,5 +20,6 @@ export default function ForgotPasswordLink() {
                 py: 2,
                 fontSize: 'sm',
             }}
-        />);
+        />
+    );
 };
