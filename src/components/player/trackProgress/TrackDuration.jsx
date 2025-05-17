@@ -6,7 +6,7 @@ import {useStore} from '@/stores/index';
 const TrackDuration = () => {
     console.log("TrackDuration");
 
-    const duration = useStore((state) => state.player.duration);
+    const duration = useStore(state => state.player.duration);
 
     return <Typography style={{width: '50px'}}>{formatTime(duration)}</Typography>;
 };

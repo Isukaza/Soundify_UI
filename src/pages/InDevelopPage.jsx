@@ -4,7 +4,7 @@ import Button from "@mui/joy/Button";
 import { Box } from "@mui/joy";
 import Typography from "@mui/joy/Typography";
 
-import Logo from "@/components/common/Logo.jsx";
+import Logo from "@/components/common/Logo.tsx";
 
 import { centerStyles } from "@/styles/common/centerStyles.js";
 import { borderRadiusStyle } from "@/styles/common/borderRadiusStyle.js";

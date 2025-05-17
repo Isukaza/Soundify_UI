@@ -2,66 +2,60 @@ import {useEffect, useState} from 'react';
 import {useLocation, useNavigate} from 'react-router-dom';
 
 import Divider from '@mui/joy/Divider';
-import Sheet from '@mui/joy/Sheet';
-import Stack from '@mui/joy/Stack';
-import {Box} from '@mui/joy';
+import {Box, Stack, Sheet, CircularProgress} from '@mui/joy';
 
 import {containerStyles} from '@/styles/login/styles.js';
 import {centerStyles} from '@/styles/common/centerStyles.js';
 
-import EmailInput from '@/components/login/EmailInput.jsx';
-import PasswordInput from '@/components/login/PasswordInput.jsx';
-import ForgotPasswordLink from '@/components/login/ForgotPasswordLink.jsx';
-import SignUpLink from '@/components/login/SignUpLink.jsx';
-import GoogleLoginButton from '@/components/login/GoogleLoginButton.jsx';
-import LoginButton from '@/components/login/LoginButton.jsx';
-import LoginTitle from '@/components/login/LoginTitle.jsx';
-import Logo from '@/components/common/Logo.jsx';
+import EmailInput from '@/components/pages/LoginPage/EmailInput';
+import PasswordInput from '@/components/pages/LoginPage/PasswordInput';
+import ForgotPasswordLink from '@/components/pages/LoginPage/ForgotPasswordLink';
+import SignUpLink from '@/components/pages/LoginPage/SignUpLink';
+import GoogleLoginButton from '@/components/pages/LoginPage/GoogleLoginButton';
+import LoginButton from '@/components/pages/LoginPage/LoginButton';
+import LoginTitle from '@/components/pages/LoginPage/LoginTitle';
+import Logo from '@/components/common/Logo';
 
-import AuthApi from '@/api/AuthApi.js';
-import {useFetching} from '@/hooks/useFetching.js';
 import {AuthManager} from '@/managers/AuthManager';
 
-
 export default function LoginPage() {
-    const [email, setEmail] = useState("");
-    const [pass, setPass] = useState("");
-
-    const navigate = useNavigate();
     const location = useLocation();
-
+    const navigate = useNavigate();
     const fromPage = location.state?.from?.pathname || '/';
-    const nextPage = () => navigate(fromPage, {replace: true});
 
-    const [fetching, isLoading] = useFetching(async (code) => {
-        const resp = await AuthApi.HandleGoogleCallback(code);
-
-        if (!resp.status || !resp.data) {
-            throw new Error("Failed to authenticate");
-        }
-
-        AuthManager.refreshTokens(resp.data.bearer, resp.data.refreshToken);
-        nextPage();
-    });
+    const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
-        const queryParams = new URLSearchParams(window.location.search);
-        const code = queryParams.get('code');
+        const code = new URLSearchParams(window.location.search).get('code');
 
         if (code) {
-            console.log("Code parameter found:", code);
-            (async () => {
-                try {
-                    await fetching(code);
-                } catch (e) {
-                    console.error("Error fetching credentials:", e.message);
-                }
-            })();
+            AuthManager.handleGoogleCallback(code)
+                .then((success) => {
+                    if (success) {
+                        navigate(fromPage, {replace: true});
+                    } else {
+                        console.error('Google login failed');
+                        setIsLoading(false);
+                    }
+                });
+        } else {
+            setIsLoading(false);
         }
     }, []);
 
     if (isLoading) {
-        return (<main className="main-container"></main>)
+        return (
+            <main
+                className="main-container"
+                style={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    height: '100vh'
+                }}>
+                <CircularProgress/>
+            </main>
+        );
     }
 
     return (
@@ -110,13 +104,13 @@ export default function LoginPage() {
 
                 {/*Email&Pass login*/}
                 <Box sx={containerStyles}>
-                    <EmailInput setEmail={setEmail}/>
-                    <PasswordInput setPass={setPass}/>
-                    <LoginButton email={email} pass={pass} callback={nextPage}/>
+                    <EmailInput/>
+                    <PasswordInput/>
+                    <LoginButton redirectTo={fromPage}/>
                     <ForgotPasswordLink/>
                     <SignUpLink/>
                 </Box>
             </Sheet>
         </main>
     );
-};
+}
