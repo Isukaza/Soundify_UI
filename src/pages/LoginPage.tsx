@@ -1,22 +1,21 @@
 import {useEffect, useState} from 'react';
 import {useLocation, useNavigate} from 'react-router-dom';
 
-import Divider from '@mui/joy/Divider';
-import {Box, Stack, Sheet, CircularProgress} from '@mui/joy';
+import {Box, CircularProgress, Divider, Sheet, Stack} from '@mui/joy';
 
-import {containerStyles} from '@/styles/login/styles.js';
-import {centerStyles} from '@/styles/common/centerStyles.js';
-
-import EmailInput from '@/components/pages/LoginPage/EmailInput';
-import PasswordInput from '@/components/pages/LoginPage/PasswordInput';
+import Logo from '@/components/common/Logo';
 import ForgotPasswordLink from '@/components/pages/LoginPage/ForgotPasswordLink';
-import SignUpLink from '@/components/pages/LoginPage/SignUpLink';
 import GoogleLoginButton from '@/components/pages/LoginPage/GoogleLoginButton';
 import LoginButton from '@/components/pages/LoginPage/LoginButton';
 import LoginTitle from '@/components/pages/LoginPage/LoginTitle';
-import Logo from '@/components/common/Logo';
+import EmailInput from '@/components/pages/LoginPage/EmailInput';
+import PasswordInput from '@/components/pages/LoginPage/PasswordInput';
+import SignUpLink from '@/components/pages/LoginPage/SignUpLink';
 
-import {AuthManager} from '@/managers/AuthManager';
+import AuthManager from '@/managers/AuthManager';
+
+import {centerStyles} from '@/styles/common/centerStyles.js';
+import {containerStyles} from '@/styles/login/styles.js';
 
 export default function LoginPage() {
     const location = useLocation();
@@ -27,12 +26,14 @@ export default function LoginPage() {
 
     useEffect(() => {
         const code = new URLSearchParams(window.location.search).get('code');
-
         if (code) {
             AuthManager.handleGoogleCallback(code)
                 .then((success) => {
                     if (success) {
-                        navigate(fromPage, {replace: true});
+                        navigate(fromPage, {
+                            replace: true,
+                            state: {fromLogin: true},
+                        });
                     } else {
                         console.error('Google login failed');
                         setIsLoading(false);
@@ -43,7 +44,7 @@ export default function LoginPage() {
         }
     }, []);
 
-    if (isLoading) {
+    if (isLoading)
         return (
             <main
                 className="main-container"
@@ -56,7 +57,6 @@ export default function LoginPage() {
                 <CircularProgress/>
             </main>
         );
-    }
 
     return (
         <main className="main-container">

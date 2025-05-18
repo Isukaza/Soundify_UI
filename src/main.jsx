@@ -1,20 +1,17 @@
-import {StrictMode} from 'react'
-import {createRoot} from 'react-dom/client'
-import {BrowserRouter} from 'react-router-dom'
-import {StyledEngineProvider, CssVarsProvider} from '@mui/joy/styles'
+import {createRoot} from 'react-dom/client';
+import {BrowserRouter} from 'react-router-dom';
+import {CssVarsProvider, StyledEngineProvider} from '@mui/joy/styles';
 
-import App from './App.jsx'
-import './index.css'
-import './App.css'
+import App from './App.jsx';
+import './App.css';
+import './index.css';
 
 createRoot(document.getElementById('root')).render(
-    <StrictMode>
-        <BrowserRouter>
-            <StyledEngineProvider injectFirst>
-                <CssVarsProvider defaultMode={"dark"}>
-                    <App/>
-                </CssVarsProvider>
-            </StyledEngineProvider>
-        </BrowserRouter>
-    </StrictMode>
+    <BrowserRouter>
+        <StyledEngineProvider injectFirst>
+            <CssVarsProvider defaultMode={"dark"}>
+                <App/>
+            </CssVarsProvider>
+        </StyledEngineProvider>
+    </BrowserRouter>
 );
