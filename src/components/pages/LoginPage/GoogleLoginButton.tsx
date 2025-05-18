@@ -1,13 +1,22 @@
-import {Button, Typography} from '@mui/joy';
-import GoogleIcon from '@/assets/GoogleIcon';
-import {AuthManager} from '@/managers/AuthManager';
 import React from 'react';
-import {borderRadiusStyle} from "@/styles/common/borderRadiusStyle";
+
+import {Button, Typography} from '@mui/joy';
+
+import GoogleIcon from '@/assets/GoogleIcon';
+import AuthManager from '@/managers/AuthManager';
+import {borderRadiusStyle} from '@/styles/common/borderRadiusStyle';
 
 export default function GoogleLoginButton() {
+    const handleClick = async () => {
+        const url = await AuthManager.getGoogleSsoUrl();
+        if (url) {
+            window.location.href = url;
+        }
+    };
+
     return (
         <Button
-            onClick={AuthManager.redirectToGoogleSSO}
+            onClick={handleClick}
             size="lg"
             variant="outlined"
             sx={borderRadiusStyle}
