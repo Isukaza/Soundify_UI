@@ -1,12 +1,11 @@
-import {useState, useRef, useCallback} from 'react';
-import {Visibility, VisibilityOff} from '@mui/icons-material';
-import {FormControl, FormLabel, IconButton, Input, Typography} from '@mui/joy';
-import {useStore} from "@/stores";
-import React from 'react';
+import React, { useCallback, useRef, useState } from 'react';
+
+import { Visibility, VisibilityOff } from '@mui/icons-material';
+import { FormControl, FormLabel, IconButton, Input, Typography } from '@mui/joy';
+
+import { useStore } from '@/stores';
 
 export default function PasswordInput() {
-    console.log("Password Input");
-
     const password = useStore(state => state.auth.password);
     const setPassword = useStore.getState().auth.setPassword;
 
