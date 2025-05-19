@@ -1,7 +1,7 @@
-import {AuthCoordinator} from '@/coordinators/AuthCoordinator';
+import {AuthCoordinator} from '@/domain/coordinators/AuthCoordinator';
 import {ServiceLocator} from '@/di/ServiceLocator';
-import AudioPlayerService from '@/services/AudioPlayerService';
-import AuthService from '@/services/AuthService';
+import AudioPlayerService from '@/domain/services/AudioPlayerService';
+import AuthService from '@/domain/services/AuthService';
 
 import {useStore} from '@/stores';
 

@@ -1,4 +1,4 @@
-import audioPlayerProvider from "@/services/AudioPlayerService";
+import audioPlayerProvider from "@/domain/services/AudioPlayerService";
 import {useStore} from "@/stores";
 
 export class AudioPlayerManager {

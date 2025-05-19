@@ -12,7 +12,7 @@ import EmailInput from '@/components/pages/LoginPage/EmailInput';
 import PasswordInput from '@/components/pages/LoginPage/PasswordInput';
 import SignUpLink from '@/components/pages/LoginPage/SignUpLink';
 
-import AuthManager from '@/managers/AuthManager';
+import AuthManager from '@/domain/managers/AuthManager';
 
 import {centerStyles} from '@/styles/common/centerStyles.js';
 import {containerStyles} from '@/styles/login/styles.js';

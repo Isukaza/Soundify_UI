@@ -2,7 +2,7 @@ import {useEffect, useState} from 'react';
 import {CircularProgress} from '@mui/joy';
 import {Navigate, Outlet, useLocation} from 'react-router-dom';
 
-import AuthManager from '@/managers/AuthManager';
+import AuthManager from '@/domain/managers/AuthManager';
 import {useStore} from '@/stores';
 
 export default function ProtectedRoutes() {

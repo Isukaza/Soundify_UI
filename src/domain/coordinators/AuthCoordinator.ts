@@ -1,5 +1,5 @@
-import AuthManager from "@/managers/AuthManager";
-import AuthService from "@/services/AuthService";
+import AuthManager from "@/domain/managers/AuthManager";
+import AuthService from "@/domain/services/AuthService";
 
 export class AuthCoordinator {
     static start(exp?: number) {

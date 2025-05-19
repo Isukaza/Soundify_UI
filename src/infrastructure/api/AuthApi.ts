@@ -1,5 +1,5 @@
-import {LoginRequest} from "@/models/requests/LoginRequest";
-import {RefreshTokensRequest} from "@/models/requests/RefreshTokensRequest";
+import {LoginRequest} from "@/domain/models/requests/LoginRequest";
+import {RefreshTokensRequest} from "@/domain/models/requests/RefreshTokensRequest";
 import {authAPI} from './configs';
 
 export default class AuthApi {

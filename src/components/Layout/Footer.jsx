@@ -2,7 +2,7 @@ import {useEffect} from 'react';
 import {Box} from '@mui/joy';
 
 import Player from '@/components/player/Player';
-import {AudioPlayerManager} from '@/managers/AudioPlayerManager';
+import {AudioPlayerManager} from '@/domain/managers/AudioPlayerManager';
 
 const Footer = () => {
     const musicName = "tmpdob60llg";

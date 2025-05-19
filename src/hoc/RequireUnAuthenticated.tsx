@@ -1,5 +1,5 @@
 import {Navigate, Outlet, useLocation} from 'react-router-dom';
-import AuthManager from '@/managers/AuthManager';
+import AuthManager from '@/domain/managers/AuthManager';
 
 interface LocationState {
     from?: { pathname?: string };

@@ -1,4 +1,4 @@
-import {Track} from "@/models/Track";
+import {Track} from "@/domain/models/Track";
 
 export interface Playlist {
     PlayListId: string;

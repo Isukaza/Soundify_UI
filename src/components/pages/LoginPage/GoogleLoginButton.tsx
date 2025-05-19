@@ -3,7 +3,7 @@ import React from 'react';
 import {Button, Typography} from '@mui/joy';
 
 import GoogleIcon from '@/shared/assets/GoogleIcon';
-import AuthManager from '@/managers/AuthManager';
+import AuthManager from '@/domain/managers/AuthManager';
 import {borderRadiusStyle} from '@/styles/common/borderRadiusStyle';
 
 export default function GoogleLoginButton() {

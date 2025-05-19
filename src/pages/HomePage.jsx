@@ -5,7 +5,7 @@ import Typography from '@mui/joy/Typography';
 
 import Logo from '@/components/common/Logo';
 import {borderRadiusStyle} from '@/styles/common/borderRadiusStyle.js';
-import AuthManager from '@/managers/AuthManager';
+import AuthManager from '@/domain/managers/AuthManager';
 
 export default function HomePage() {
     return (

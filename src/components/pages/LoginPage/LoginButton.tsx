@@ -2,8 +2,8 @@ import { useNavigate } from 'react-router-dom';
 
 import { Button } from '@mui/joy';
 
-import { useFetching } from '@/hooks/useFetching';
-import AuthManager from '@/managers/AuthManager';
+import { useFetching } from '@/domain/hooks/useFetching';
+import AuthManager from '@/domain/managers/AuthManager';
 import { borderRadiusStyle } from '@/styles/common/borderRadiusStyle';
 import { useStore } from '@/stores';
 

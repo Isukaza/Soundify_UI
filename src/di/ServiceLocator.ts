@@ -1,5 +1,5 @@
-import audioPlayerService from '@/services/AudioPlayerService';
-import authService from '@/services/AuthService';
+import audioPlayerService from '@/domain/services/AudioPlayerService';
+import authService from '@/domain/services/AuthService';
 
 type Services = {
     authService: typeof authService;

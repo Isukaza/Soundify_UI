@@ -2,7 +2,7 @@ import {Slider, IconButton, Stack} from '@mui/joy';
 import {VolumeDown, VolumeMute, VolumeOff, VolumeUp} from '@mui/icons-material';
 
 import {useStore} from '@/stores/index';
-import {AudioPlayerManager} from '@/managers/AudioPlayerManager';
+import {AudioPlayerManager} from '@/domain/managers/AudioPlayerManager';
 
 // eslint-disable-next-line react/prop-types
 export default function Volume({sx}) {
