@@ -1,7 +1,7 @@
-import {Album} from '@/models/Album';
-import {Artist} from '@/models/Artist';
-import {Playlist} from '@/models/Playlist';
-import {Track} from '@/models/Track';
+import {Album} from '@/domain/models/Album';
+import {Artist} from '@/domain/models/Artist';
+import {Playlist} from '@/domain/models/Playlist';
+import {Track} from '@/domain/models/Track';
 
 import {createSliceSetters, SliceCreator} from '@/stores/utils';
 
