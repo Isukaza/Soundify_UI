@@ -1,46 +1,64 @@
-import {jwtDecode} from "jwt-decode";
-import {useStore} from "@/stores";
-import AuthApi from '@/api/AuthApi.js';
+import dayjs from 'dayjs';
+import {jwtDecode} from 'jwt-decode';
 
-export class AuthManager {
+import AuthApi from '@/api/AuthApi.js';
+import AppDIManager from '@/di/AppDIManager';
+import {ServiceLocator} from '@/di/ServiceLocator';
+import {useStore} from '@/stores';
+
+export default class AuthManager {
     private constructor() {
     }
 
     static async loginWithEmail(email: string, password: string): Promise<boolean> {
-        const {setJwt, setRefresh, setExp} = useStore.getState().auth;
+        const {setJwt, setRefresh, setExp, setIsAuthenticated, setUserId} = useStore.getState().auth;
 
-        const resp = await AuthApi.login(email, password);
-        if (resp.status) {
-            const {bearer, refreshToken} = resp.data;
-            const exp = jwtDecode<{ exp: number }>(bearer).exp;
+        const resp = await AuthApi.login({Email: email, Password: password});
+        if (!resp.status)
+            return false;
 
-            setJwt(bearer);
-            setRefresh(refreshToken);
-            setExp(exp);
+        const {userId, bearer, refreshToken} = resp.data;
+        if (!bearer || !refreshToken || !userId)
+            return false;
 
-            return true;
+
+        let exp = 0;
+        try {
+            exp = jwtDecode<{ exp: number }>(bearer)?.exp ?? 0;
+        } catch (error) {
+            return false;
         }
-        return false;
+
+        if (!exp || isNaN(exp))
+            return false;
+
+        setJwt(bearer.trim());
+        setUserId(userId.trim());
+        setRefresh(refreshToken.trim());
+        setExp(exp);
+        setIsAuthenticated(true);
+
+        return true;
     }
 
-    static async redirectToGoogleSSO(): Promise<void> {
+    static async getGoogleSsoUrl(): Promise<string | null> {
         const resp = await AuthApi.GetLoginGoogleSsoURL();
-        if (resp.status) {
-            window.location.href = resp.data;
-        }
+        return resp.status ? resp.data : null;
     }
 
     static async handleGoogleCallback(code: string): Promise<boolean> {
-        const {setJwt, setRefresh, setExp} = useStore.getState().auth;
+        const {setJwt, setRefresh, setExp, setIsAuthenticated, setUserId} = useStore.getState().auth;
 
         const resp = await AuthApi.HandleGoogleCallback(code);
         if (resp.status) {
-            const {bearer, refreshToken} = resp.data;
+            const {userId, bearer, refreshToken} = resp.data;
             const exp = jwtDecode<{ exp: number }>(bearer).exp;
 
-            setJwt(bearer);
-            setRefresh(refreshToken);
+            setUserId(userId.trim());
+            setJwt(bearer.trim());
+            setRefresh(refreshToken.trim());
             setExp(exp);
+            setIsAuthenticated(true);
 
             return true;
         } else {
@@ -49,28 +67,95 @@ export class AuthManager {
         }
     }
 
-    static refreshTokens(newJwt: string, newRefresh: string) {
-        let newExp = 0;
+    static async forceRefresh(): Promise<boolean> {
         try {
-            const decodedJwt = jwtDecode(newJwt);
-            newExp = decodedJwt?.exp ?? 0;
+            const {refresh, userId} = useStore.getState().auth;
+
+            const isValidRefresh = refresh && userId && /^[0-9a-f-]{36}$/.test(userId);
+            if (!isValidRefresh)
+                return false;
+
+            if (AppDIManager.isStarted()) {
+                const authService = ServiceLocator.get('authService');
+                if (authService.isRunning())
+                    await authService.forceRefreshNow();
+            } else {
+                const tokenResult = await AuthManager.getRefreshedAuthTokens();
+                if (!tokenResult) {
+                    AuthManager.clearAuthData();
+                    return false;
+                }
+
+                const {userId, jwt, refresh} = tokenResult;
+                this.applyTokens(userId, jwt, refresh);
+            }
+
+            return this.isAuthDataValid();
+        } catch (outerErr) {
+            console.error('[AuthManager] Unexpected error in forceRefresh:', outerErr);
+            return false;
+        }
+    }
+
+    static async getRefreshedAuthTokens(): Promise<{ userId: string, jwt: string, refresh: string } | null> {
+        const {userId, refresh} = useStore.getState().auth;
+        if (!refresh) return null;
+
+        try {
+            const resp = await AuthApi.RefreshTokens({UserId: userId, RefreshToken: refresh});
+            if (resp.status) {
+                const {userId, bearer, refreshToken} = resp.data;
+                return {userId: userId, jwt: bearer, refresh: refreshToken};
+            } else {
+                return null;
+            }
+        } catch (e) {
+            console.error('[AuthManager] Refresh error', e);
+            return null;
+        }
+    }
+
+    static applyTokens(userId: string, jwt: string, refresh: string): number {
+        let exp = 0;
+        try {
+            exp = jwtDecode<{ exp: number }>(jwt)?.exp ?? 0;
         } catch (error) {
-            console.error('Failed to decode token:', error);
+            console.error('[AuthManager] Failed to decode token', error);
         }
 
-        const state = useStore.getState();
-        state.auth.setEmail('');
-        state.auth.setPassword('');
+        const state = useStore.getState().auth;
+        state.setUserId(userId);
+        state.setJwt(jwt);
+        state.setRefresh(refresh);
+        state.setExp(exp);
+        state.setIsAuthenticated(true);
 
-        state.auth.setJwt(newJwt);
-        state.auth.setRefresh(newRefresh);
-        state.auth.setExp(newExp);
+        return exp;
     }
 
     static clearAuthData() {
-        const state = useStore.getState();
-        state.auth.setJwt('');
-        state.auth.setRefresh('');
-        state.auth.setExp(0);
+        const state = useStore.getState().auth;
+        state.setIsAuthenticated(false);
+        state.setUserId('');
+        state.setJwt('');
+        state.setRefresh('');
+        state.setExp(0);
+    }
+
+    static isAuthDataValid(): boolean {
+        const {jwt, refresh, userId, exp} = useStore.getState().auth;
+
+        const isValidJwt = jwt.trim().length > 0;
+        const isValidRefresh = refresh.trim().length > 0;
+        const isValidUserId = /^[0-9a-f-]{36}$/i.test(userId);
+        const isValidExp = exp > 0;
+
+        if (!isValidJwt || !isValidRefresh || !isValidUserId || !isValidExp)
+            return false;
+
+        const now = dayjs();
+        const expiration = dayjs(exp * 1000);
+
+        return expiration.isAfter(now.add(30, 'second'));
     }
 }

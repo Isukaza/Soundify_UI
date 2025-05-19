@@ -1,9 +1,11 @@
-import {Button} from '@mui/joy';
-import {AuthManager} from '@/managers/AuthManager';
-import {useFetching} from '@/hooks/useFetching';
-import {useNavigate} from 'react-router-dom';
-import {useStore} from '@/stores';
-import {borderRadiusStyle} from '@/styles/common/borderRadiusStyle';
+import { useNavigate } from 'react-router-dom';
+
+import { Button } from '@mui/joy';
+
+import { useFetching } from '@/hooks/useFetching';
+import AuthManager from '@/managers/AuthManager';
+import { borderRadiusStyle } from '@/styles/common/borderRadiusStyle';
+import { useStore } from '@/stores';
 
 interface Props {
     redirectTo: string;
@@ -12,14 +14,16 @@ interface Props {
 export default function LoginButton({redirectTo}: Props) {
     const navigate = useNavigate();
 
-    const [fetchAuth, isLoading, error] = useFetching(auth);
+    const [fetchAuth, isLoading] = useFetching(auth);
 
     async function auth() {
-        const {email, password} = useStore.getState().auth;
+        const {email, setEmail, password, setPassword} = useStore.getState().auth;
 
         const success = await AuthManager.loginWithEmail(email, password);
         if (success) {
-            navigate(redirectTo, {replace: true});
+            setEmail('');
+            setPassword('');
+            navigate(redirectTo, {replace: true, state: {fromLogin: true}});
         }
     }
 

@@ -26,6 +26,7 @@ export const useStore = create<Index>()(
                 name: 'AppData',
                 partialize: (state) => ({
                     auth: {
+                        userId: state.auth.userId,
                         jwt: state.auth.jwt,
                         refresh: state.auth.refresh,
                         exp: state.auth.exp,

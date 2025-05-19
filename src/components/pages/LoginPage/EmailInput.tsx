@@ -1,10 +1,8 @@
-import {Input, FormControl, FormLabel, Typography} from '@mui/joy';
-import {useStore} from "@/stores";
-import React, {useRef, useCallback} from 'react';
+import React, {useCallback, useRef} from 'react';
+import {FormControl, FormLabel, Input, Typography} from '@mui/joy';
+import {useStore} from '@/stores';
 
 export default function EmailInput() {
-    console.log("Email Input");
-
     const email = useStore(state => state.auth.email);
     const setEmail = useStore.getState().auth.setEmail;
 

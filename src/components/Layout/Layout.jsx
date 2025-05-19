@@ -1,10 +1,11 @@
 import {Stack, Box} from '@mui/joy';
+import {Outlet} from "react-router-dom";
 
 import Header from '@/components/layout/Header.jsx';
 import Footer from '@/components/layout/Footer.jsx';
 
 // eslint-disable-next-line react/prop-types
-const Layout = ({children}) => {
+const Layout = () => {
     return (
         <Stack
             sx={{
@@ -28,7 +29,7 @@ const Layout = ({children}) => {
                     background: 'linear-gradient(rgba(255, 255, 255, 0.1) 0%, rgb(0, 0, 0) 100%)'
                 }}
             >
-                {children}
+                <Outlet />
             </Box>
 
             <Footer/>
