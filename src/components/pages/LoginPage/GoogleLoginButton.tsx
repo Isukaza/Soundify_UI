@@ -2,7 +2,7 @@ import React from 'react';
 
 import {Button, Typography} from '@mui/joy';
 
-import GoogleIcon from '@/assets/GoogleIcon';
+import GoogleIcon from '@/shared/assets/GoogleIcon';
 import AuthManager from '@/managers/AuthManager';
 import {borderRadiusStyle} from '@/styles/common/borderRadiusStyle';
 
