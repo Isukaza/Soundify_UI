@@ -2,8 +2,8 @@ import dayjs from 'dayjs';
 import {jwtDecode} from 'jwt-decode';
 
 import AuthApi from '@/infrastructure/api/AuthApi.js';
-import AppDIManager from '@/di/AppDIManager';
-import {ServiceLocator} from '@/di/ServiceLocator';
+import AppDIManager from '@/app/di/AppDIManager';
+import {ServiceLocator} from '@/app/di/ServiceLocator';
 import {useStore} from '@/stores';
 
 export default class AuthManager {

@@ -1,5 +1,5 @@
 import {AuthCoordinator} from '@/domain/coordinators/AuthCoordinator';
-import {ServiceLocator} from '@/di/ServiceLocator';
+import {ServiceLocator} from '@/app/di/ServiceLocator';
 import AudioPlayerService from '@/domain/services/AudioPlayerService';
 import AuthService from '@/domain/services/AuthService';
 

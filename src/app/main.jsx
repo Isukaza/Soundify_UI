@@ -3,8 +3,8 @@ import {BrowserRouter} from 'react-router-dom';
 import {CssVarsProvider, StyledEngineProvider} from '@mui/joy/styles';
 
 import App from './App.jsx';
-import './App.css';
-import './index.css';
+import '../App.css';
+import '../index.css';
 
 createRoot(document.getElementById('root')).render(
     <BrowserRouter>

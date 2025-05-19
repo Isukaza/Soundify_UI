@@ -8,7 +8,7 @@ import Layout from '@/presentation/components/layout/Layout';
 import ProtectedRoutes from '@/presentation/hoc/ProtectedRoutes';
 import RequireUnAuthenticated from '@/presentation/hoc/RequireUnAuthenticated';
 
-import AppDIManager from '@/di/AppDIManager';
+import AppDIManager from '@/app/di/AppDIManager';
 
 import DetailsTrackPage from '@/presentation/pages/DetailsTrackPage';
 import HomePage from '@/presentation/pages/HomePage';
@@ -16,7 +16,7 @@ import InDevelopPage from '@/presentation/pages/InDevelopPage';
 import LoginPage from '@/presentation/pages/LoginPage';
 import NotFoundPage from '@/presentation/pages/NotFoundPage';
 
-import {useStore} from '@/stores';
+import {useStore} from '@/stores/index';
 
 export default function App() {
     const isAuthenticated = useStore(state => state.auth.isAuthenticated);
