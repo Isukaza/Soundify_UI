@@ -3,9 +3,10 @@ import AuthService from "@/services/AuthService";
 
 export class AuthCoordinator {
     static start(exp?: number) {
-        const delay = exp
-            ? Math.max(exp * 1000 - Date.now() - 30_000, 30_000)
-            : 1000 * 60 * 4;
+        const now = Date.now();
+        const expirationMs = (exp ?? Math.floor(now / 1000) + 5 * 60) * 1000;
+        const refreshAtMs = expirationMs - 30_000;
+        const delay = Math.max(0, refreshAtMs - now);
 
         AuthService.stopTokenAutoRefresh();
         AuthService.startTokenAutoRefresh(() => this.refreshToken(), delay);
@@ -17,7 +18,6 @@ export class AuthCoordinator {
 
     static async refreshToken() {
         const tokenResult = await AuthManager.getRefreshedAuthTokens();
-
         if (!tokenResult) {
             AuthManager.clearAuthData();
             return;

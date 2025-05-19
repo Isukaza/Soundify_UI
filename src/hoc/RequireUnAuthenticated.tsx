@@ -1,9 +1,8 @@
 import {Navigate, Outlet, useLocation} from 'react-router-dom';
-
 import AuthManager from '@/managers/AuthManager';
 
 interface LocationState {
-    from?: { pathname?: string; };
+    from?: { pathname?: string };
 }
 
 export default function RequireUnAuthenticated() {
@@ -12,7 +11,6 @@ export default function RequireUnAuthenticated() {
     const nextPage = state?.from?.pathname || '/';
 
     const isValidToken = AuthManager.isAuthDataValid();
-    return !isValidToken
-        ? <Outlet/>
-        : <Navigate to={nextPage} replace/>;
-};
+
+    return isValidToken ? <Navigate to={nextPage} replace/> : <Outlet/>;
+}

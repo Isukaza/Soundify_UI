@@ -9,9 +9,9 @@ export default class AppDIManager {
     private static initialized = false;
 
     static start() {
-        if (this.initialized) {
+        if (this.initialized)
             return;
-        }
+
         this.initialized = true;
 
         const exp = useStore.getState().auth.exp;
@@ -23,9 +23,9 @@ export default class AppDIManager {
     }
 
     static stop() {
-        if (!this.initialized) {
+        if (!this.initialized)
             return;
-        }
+
         this.initialized = false;
 
         ServiceLocator.reset();
