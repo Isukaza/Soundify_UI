@@ -1,7 +1,7 @@
 import dayjs from 'dayjs';
 import {jwtDecode} from 'jwt-decode';
 
-import AuthApi from '@/api/AuthApi.js';
+import AuthApi from '@/infrastructure/api/AuthApi.js';
 import AppDIManager from '@/di/AppDIManager';
 import {ServiceLocator} from '@/di/ServiceLocator';
 import {useStore} from '@/stores';

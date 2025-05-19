@@ -1,4 +1,4 @@
-import HlsLoader from "@/utils/HlsLoader";
+import HlsLoader from "@/infrastructure/utils/HlsLoader";
 import {useStore} from '@/stores';
 
 const hlsLoader = new HlsLoader();

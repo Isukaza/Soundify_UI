@@ -1,7 +1,7 @@
 import Hls from "hls.js";
 import axios from "axios";
-import CdnApi from "@/api/CdnApi.js";
-import {parseUrl} from "@/utils/urlUtils.js";
+import CdnApi from "@/infrastructure/api/CdnApi.js";
+import {parseUrl} from "@/infrastructure/utils/urlUtils.js";
 
 export default class HlsLoader {
     private hlsInstance: Hls | null = null;

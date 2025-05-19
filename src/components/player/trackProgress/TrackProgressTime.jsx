@@ -1,6 +1,6 @@
 import {Typography} from "@mui/joy";
 
-import {formatTime} from "@/utils/formatters.js";
+import {formatTime} from "@/infrastructure/utils/formatters.js";
 import {useStore} from '@/stores/index';
 
 const TrackProgressTime = () => {

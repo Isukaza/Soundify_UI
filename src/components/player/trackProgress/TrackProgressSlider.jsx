@@ -1,7 +1,7 @@
 import {useCallback, useEffect, useRef, useState} from 'react';
 
 import {AudioPlayerManager} from '@/managers/AudioPlayerManager';
-import {formatTime} from '@/utils/formatters';
+import {formatTime} from '@/infrastructure/utils/formatters';
 import {useStore} from '@/stores/index';
 
 import {Slider} from '@mui/joy';
