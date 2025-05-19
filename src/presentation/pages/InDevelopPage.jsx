@@ -4,10 +4,10 @@ import Button from "@mui/joy/Button";
 import { Box } from "@mui/joy";
 import Typography from "@mui/joy/Typography";
 
-import Logo from "@/components/common/Logo.tsx";
+import Logo from "@/presentation/components/common/Logo";
 
-import { centerStyles } from "@/styles/common/centerStyles.js";
-import { borderRadiusStyle } from "@/styles/common/borderRadiusStyle.js";
+import { centerStyles } from "@/presentation/styles/common/centerStyles";
+import { borderRadiusStyle } from "@/presentation/styles/common/borderRadiusStyle";
 
 export default function InDevelopPage() {
     return (

@@ -3,8 +3,8 @@ import Button from '@mui/joy/Button';
 import {Stack} from '@mui/joy';
 import Typography from '@mui/joy/Typography';
 
-import Logo from '@/components/common/Logo';
-import {borderRadiusStyle} from '@/styles/common/borderRadiusStyle.js';
+import Logo from '@/presentation/components/common/Logo';
+import {borderRadiusStyle} from '@/presentation/styles/common/borderRadiusStyle';
 import AuthManager from '@/domain/managers/AuthManager';
 
 export default function HomePage() {

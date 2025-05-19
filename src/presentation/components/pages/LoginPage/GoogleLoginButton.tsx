@@ -4,7 +4,7 @@ import {Button, Typography} from '@mui/joy';
 
 import GoogleIcon from '@/shared/assets/GoogleIcon';
 import AuthManager from '@/domain/managers/AuthManager';
-import {borderRadiusStyle} from '@/styles/common/borderRadiusStyle';
+import {borderRadiusStyle} from '@/presentation/styles/common/borderRadiusStyle';
 
 export default function GoogleLoginButton() {
     const handleClick = async () => {

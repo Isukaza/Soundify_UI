@@ -2,7 +2,7 @@ import React from "react";
 import {Repeat, Shuffle, SkipNext, SkipPrevious} from "@mui/icons-material";
 import {IconButton, Stack} from "@mui/joy";
 
-import PlayButton from "@/components/player/playbackControls/PlayButton.jsx";
+import PlayButton from "@/presentation/components/player/playbackControls/PlayButton";
 
 const PlaybackControls = React.memo(function PlaybackControls() {
     console.log("PlaybackControls");

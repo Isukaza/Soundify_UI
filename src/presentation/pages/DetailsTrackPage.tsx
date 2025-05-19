@@ -4,8 +4,8 @@ import { Box } from '@mui/joy';
 import Button from '@mui/joy/Button';
 import Typography from '@mui/joy/Typography';
 
-import { borderRadiusStyle } from '@/styles/common/borderRadiusStyle.js';
-import { centerStyles } from '@/styles/common/centerStyles.js';
+import { borderRadiusStyle } from '@/presentation/styles/common/borderRadiusStyle';
+import { centerStyles } from '@/presentation/styles/common/centerStyles';
 
 export default function DetailsTrackPage() {
     return (

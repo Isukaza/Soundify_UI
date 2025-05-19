@@ -1,8 +1,8 @@
 import {Stack} from "@mui/joy";
 
-import TrackDuration from "@/components/player/trackProgress/TrackDuration.jsx";
-import TrackProgressSlider from "@/components/player/trackProgress/TrackProgressSlider.jsx";
-import TrackProgressTime from "@/components/player/trackProgress/TrackProgressTime.jsx";
+import TrackDuration from "@/presentation/components/player/trackProgress/TrackDuration";
+import TrackProgressSlider from "@/presentation/components/player/trackProgress/TrackProgressSlider";
+import TrackProgressTime from "@/presentation/components/player/trackProgress/TrackProgressTime";
 
 const TrackProgress = () => {
     console.log("TrackProgress");

@@ -3,19 +3,19 @@ import {useLocation, useNavigate} from 'react-router-dom';
 
 import {Box, CircularProgress, Divider, Sheet, Stack} from '@mui/joy';
 
-import Logo from '@/components/common/Logo';
-import ForgotPasswordLink from '@/components/pages/LoginPage/ForgotPasswordLink';
-import GoogleLoginButton from '@/components/pages/LoginPage/GoogleLoginButton';
-import LoginButton from '@/components/pages/LoginPage/LoginButton';
-import LoginTitle from '@/components/pages/LoginPage/LoginTitle';
-import EmailInput from '@/components/pages/LoginPage/EmailInput';
-import PasswordInput from '@/components/pages/LoginPage/PasswordInput';
-import SignUpLink from '@/components/pages/LoginPage/SignUpLink';
+import Logo from '@/presentation/components/common/Logo';
+import ForgotPasswordLink from '@/presentation/components/pages/LoginPage/ForgotPasswordLink';
+import GoogleLoginButton from '@/presentation/components/pages/LoginPage/GoogleLoginButton';
+import LoginButton from '@/presentation/components/pages/LoginPage/LoginButton';
+import LoginTitle from '@/presentation/components/pages/LoginPage/LoginTitle';
+import EmailInput from '@/presentation/components/pages/LoginPage/EmailInput';
+import PasswordInput from '@/presentation/components/pages/LoginPage/PasswordInput';
+import SignUpLink from '@/presentation/components/pages/LoginPage/SignUpLink';
 
 import AuthManager from '@/domain/managers/AuthManager';
 
-import {centerStyles} from '@/styles/common/centerStyles.js';
-import {containerStyles} from '@/styles/login/styles.js';
+import {centerStyles} from '@/presentation/styles/common/centerStyles';
+import {containerStyles} from '@/presentation/styles/login/styles';
 
 export default function LoginPage() {
     const location = useLocation();

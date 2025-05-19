@@ -1,7 +1,7 @@
 import {useEffect} from 'react';
 import {Box} from '@mui/joy';
 
-import Player from '@/components/player/Player';
+import Player from '@/presentation/components/player/Player';
 import {AudioPlayerManager} from '@/domain/managers/AudioPlayerManager';
 
 const Footer = () => {

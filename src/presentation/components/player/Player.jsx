@@ -1,8 +1,8 @@
 import {Stack} from "@mui/joy";
 
-import Playback from "@/components/player/Playback.jsx";
-import TrackInfo from "@/components/player/TrackInfo.jsx";
-import Volume from "@/components/player/playbackControls/Volume.jsx";
+import Playback from "@/presentation/components/player/Playback";
+import TrackInfo from "@/presentation/components/player/TrackInfo";
+import Volume from "@/presentation/components/player/playbackControls/Volume";
 
 export default function Player() {
     console.log("Player");

@@ -1,11 +1,11 @@
-import { useNavigate } from 'react-router-dom';
+import {useNavigate} from 'react-router-dom';
 
-import { Button } from '@mui/joy';
+import {Button} from '@mui/joy';
 
-import { useFetching } from '@/domain/hooks/useFetching';
+import {useFetching} from '@/domain/hooks/useFetching';
 import AuthManager from '@/domain/managers/AuthManager';
-import { borderRadiusStyle } from '@/styles/common/borderRadiusStyle';
-import { useStore } from '@/stores';
+import {borderRadiusStyle} from '@/presentation/styles/common/borderRadiusStyle';
+import {useStore} from '@/stores';
 
 interface Props {
     redirectTo: string;

@@ -1,7 +1,7 @@
 import {Box, Input} from '@mui/joy';
 import {Search} from "@mui/icons-material";
 
-import Logo from '@/components/common/Logo';
+import Logo from '@/presentation/components/common/Logo';
 
 const Header = () => {
     return (
