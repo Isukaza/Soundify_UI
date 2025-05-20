@@ -11,7 +11,7 @@ type Services = ServiceMap<{
 
 let container: Partial<Services> = {};
 
-export const ServiceLocator = {
+const DIContainer = {
     register<K extends keyof Services>(key: K, service: Services[K]) {
         container[key] = service;
         service.start();
@@ -32,4 +32,6 @@ export const ServiceLocator = {
 
         container = {};
     }
-}
+};
+
+export default DIContainer;

@@ -1,6 +1,6 @@
 import {useStore} from "@/stores";
 import AppDIManager from "@/app/di/AppDIManager";
-import {ServiceLocator} from "@/app/di/ServiceLocator";
+import DIContainer from "@/app/di/DIContainer";
 
 import AudioPlayerServiceBase from "@/domain/services/types/AudioPlayerServiceBase";
 
@@ -12,7 +12,7 @@ export default class AudioPlayerManager {
         if (!AppDIManager.isInitialized())
             throw new Error("[AudioPlayerManager] AppDIManager is not started");
 
-        return ServiceLocator.get('audioPlayerService');
+        return DIContainer.get('audioPlayerService');
     }
 
     static async play() {

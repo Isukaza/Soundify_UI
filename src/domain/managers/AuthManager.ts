@@ -3,7 +3,7 @@ import {jwtDecode} from 'jwt-decode';
 
 import AuthApi from '@/infrastructure/api/AuthApi.js';
 import AppDIManager from '@/app/di/AppDIManager';
-import {ServiceLocator} from '@/app/di/ServiceLocator';
+import DIContainer from '@/app/di/DIContainer';
 import {useStore} from '@/stores';
 
 import AuthServiceBase from "@/domain/services/types/AuthServiceBase";
@@ -16,7 +16,7 @@ export default class AuthManager {
         if (!AppDIManager.isInitialized())
             throw new Error("[AuthManager] AppDIManager is not started");
 
-        return ServiceLocator.get('authService');
+        return DIContainer.get('authService');
     }
 
     static async loginWithEmail(email: string, password: string): Promise<boolean> {

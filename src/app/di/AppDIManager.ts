@@ -1,4 +1,4 @@
-import {ServiceLocator} from '@/app/di/ServiceLocator';
+import DIContainer from '@/app/di/DIContainer';
 import AudioPlayerService from '@/domain/services/AudioPlayerService';
 import AuthService from '@/domain/services/AuthService';
 
@@ -11,8 +11,8 @@ export default class AppDIManager {
 
         this.initialized = true;
 
-        ServiceLocator.register('authService', AuthService);
-        ServiceLocator.register('audioPlayerService', AudioPlayerService);
+        DIContainer.register('authService', AuthService);
+        DIContainer.register('audioPlayerService', AudioPlayerService);
     }
 
     static stop() {
@@ -21,7 +21,7 @@ export default class AppDIManager {
 
         this.initialized = false;
 
-        ServiceLocator.reset();
+        DIContainer.reset();
     }
 
     static isInitialized(): boolean {
