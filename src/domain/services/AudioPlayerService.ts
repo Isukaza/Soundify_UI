@@ -1,15 +1,15 @@
 import HlsLoader from "@/infrastructure/utils/HlsLoader";
-import {useStore} from '@/stores';
+import {useStore} from "@/stores";
 
-const hlsLoader = new HlsLoader();
+import AudioPlayerServiceBase from "@/domain/services/types/AudioPlayerServiceBase";
 
-class AudioPlayerService {
+class AudioPlayerService extends AudioPlayerServiceBase {
     private static instance: AudioPlayerService;
-    private readonly audioRef: HTMLAudioElement;
+    private audioRef?: HTMLAudioElement;
+    private readonly hlsLoader = new HlsLoader();
 
     private constructor() {
-        this.audioRef = new Audio();
-        this.attachListeners();
+        super();
     }
 
     public static getInstance(): AudioPlayerService {
@@ -19,45 +19,105 @@ class AudioPlayerService {
         return this.instance;
     }
 
-    private attachListeners() {
-        this.audioRef.addEventListener('timeupdate', () => {
-            if (this.audioRef.currentTime - useStore.getState().player.currentTime > 0.5)
-                useStore.getState().player.setCurrentTime(this.audioRef.currentTime);
-        });
-
-        this.audioRef.addEventListener('ended', () => {
-            useStore.getState().player.setIsPlaying(false);
-            useStore.getState().player.setIsEnded(true);
-        });
-
-        this.audioRef.addEventListener('volumechange', () => {
-            useStore.getState().player.setVolume(this.audioRef.volume);
-        });
-
-        this.audioRef.addEventListener('loadedmetadata', () => {
-            useStore.getState().player.setDuration(this.audioRef.duration);
-        });
+    public override start(): void {
+        if (!this.audioRef) {
+            this.audioRef = new Audio();
+            this.attachListeners();
+        }
     }
 
-    public async loadSource(musicName: string) {
-        await hlsLoader.loadToAudioElement(this.audioRef, musicName);
+    public override stop(): void {
+        if (this.audioRef) {
+            this.detachListeners();
+            this.audioRef.pause();
+            this.audioRef.src = '';
+            this.audioRef.load();
+            this.audioRef = undefined;
+        }
+
+        this.hlsLoader.destroy();
     }
 
-    public async play() {
+    public async loadTrack(musicName: string): Promise<void> {
+        if (!this.audioRef)
+            throw new Error('AudioPlayerService not started');
+
+        await this.hlsLoader.loadToAudioElement(this.audioRef, musicName);
+    }
+
+    public async play(): Promise<void> {
+        if (!this.audioRef)
+            throw new Error('AudioPlayerService not started');
+
         await this.audioRef.play();
     }
 
-    public pause() {
-        this.audioRef.pause();
+    public pause(): void {
+        this.audioRef?.pause();
     }
 
-    public setTime(time: number) {
+    public setTime(time: number): void {
+        if (!this.audioRef)
+            return;
+
         this.audioRef.currentTime = time;
     }
 
-    public setVolume(volume: number) {
+    public setVolume(volume: number): void {
+        if (!this.audioRef)
+            return;
+
         this.audioRef.volume = volume;
     }
+
+    private attachListeners() {
+        if (!this.audioRef)
+            return;
+
+        this.audioRef.addEventListener('timeupdate', this.onTimeUpdate);
+        this.audioRef.addEventListener('ended', this.onEnded);
+        this.audioRef.addEventListener('volumechange', this.onVolumeChange);
+        this.audioRef.addEventListener('loadedmetadata', this.onLoadedMetadata);
+    }
+
+    private detachListeners() {
+        if (!this.audioRef)
+            return;
+
+        this.audioRef.removeEventListener('timeupdate', this.onTimeUpdate);
+        this.audioRef.removeEventListener('ended', this.onEnded);
+        this.audioRef.removeEventListener('volumechange', this.onVolumeChange);
+        this.audioRef.removeEventListener('loadedmetadata', this.onLoadedMetadata);
+    }
+
+    private onTimeUpdate = () => {
+        if (!this.audioRef)
+            return;
+
+        const state = useStore.getState().player;
+        if (this.audioRef.currentTime - state.currentTime > 0.5)
+            state.setCurrentTime(this.audioRef.currentTime);
+    };
+
+    private onEnded = () => {
+        const player = useStore.getState().player;
+        player.setIsPlaying(false);
+        player.setIsEnded(true);
+    };
+
+    private onVolumeChange = () => {
+        if (!this.audioRef)
+            return;
+
+        useStore.getState().player.setVolume(this.audioRef.volume);
+    };
+
+    private onLoadedMetadata = () => {
+        if (!this.audioRef)
+            return;
+
+        useStore.getState().player.setDuration(this.audioRef.duration);
+    };
 }
 
 export default AudioPlayerService.getInstance();

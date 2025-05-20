@@ -1,7 +1,7 @@
 import Button from '@mui/joy/Button';
 import {PlayArrow as PlayArrowIcon, Pause as PauseIcon} from '@mui/icons-material';
 
-import {AudioPlayerManager} from '@/domain/managers/AudioPlayerManager';
+import AudioPlayerManager from '@/domain/managers/AudioPlayerManager';
 import {useStore} from '@/stores/index';
 
 export default function PlayButton() {

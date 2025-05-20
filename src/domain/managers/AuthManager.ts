@@ -6,8 +6,17 @@ import AppDIManager from '@/app/di/AppDIManager';
 import {ServiceLocator} from '@/app/di/ServiceLocator';
 import {useStore} from '@/stores';
 
+import AuthServiceBase from "@/domain/services/types/AuthServiceBase";
+
 export default class AuthManager {
     private constructor() {
+    }
+
+    private static getAuthServiceFromDI(): AuthServiceBase {
+        if (!AppDIManager.isInitialized())
+            throw new Error("[AuthManager] AppDIManager is not started");
+
+        return ServiceLocator.get('authService');
     }
 
     static async loginWithEmail(email: string, password: string): Promise<boolean> {
@@ -20,7 +29,6 @@ export default class AuthManager {
         const {userId, bearer, refreshToken} = resp.data;
         if (!bearer || !refreshToken || !userId)
             return false;
-
 
         let exp = 0;
         try {
@@ -75,8 +83,8 @@ export default class AuthManager {
             if (!isValidRefresh)
                 return false;
 
-            if (AppDIManager.isStarted()) {
-                const authService = ServiceLocator.get('authService');
+            if (AppDIManager.isInitialized()) {
+                const authService = this.getAuthServiceFromDI();
                 if (authService.isRunning())
                     await authService.forceRefreshNow();
             } else {
@@ -91,15 +99,17 @@ export default class AuthManager {
             }
 
             return this.isAuthDataValid();
-        } catch (outerErr) {
-            console.error('[AuthManager] Unexpected error in forceRefresh:', outerErr);
+        } catch (error) {
+            console.error('[AuthManager] Unexpected error in forceRefresh:', error);
             return false;
         }
     }
 
     static async getRefreshedAuthTokens(): Promise<{ userId: string, jwt: string, refresh: string } | null> {
         const {userId, refresh} = useStore.getState().auth;
-        if (!refresh) return null;
+
+        if (!refresh)
+            return null;
 
         try {
             const resp = await AuthApi.RefreshTokens({UserId: userId, RefreshToken: refresh});
@@ -109,8 +119,8 @@ export default class AuthManager {
             } else {
                 return null;
             }
-        } catch (e) {
-            console.error('[AuthManager] Refresh error', e);
+        } catch (error) {
+            console.error('[AuthManager] Refresh error', error);
             return null;
         }
     }

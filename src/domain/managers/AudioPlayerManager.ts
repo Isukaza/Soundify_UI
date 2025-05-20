@@ -1,54 +1,69 @@
-import audioPlayerProvider from "@/domain/services/AudioPlayerService";
 import {useStore} from "@/stores";
+import AppDIManager from "@/app/di/AppDIManager";
+import {ServiceLocator} from "@/app/di/ServiceLocator";
 
-export class AudioPlayerManager {
+import AudioPlayerServiceBase from "@/domain/services/types/AudioPlayerServiceBase";
+
+export default class AudioPlayerManager {
     private constructor() {
     }
 
-    static play() {
-        if (!useStore.getState().player.isPlaying) {
-            useStore.getState().player.setIsEnded(false);
+    private static getInjected(): AudioPlayerServiceBase {
+        if (!AppDIManager.isInitialized())
+            throw new Error("[AudioPlayerManager] AppDIManager is not started");
 
-            audioPlayerProvider.play();
-            useStore.getState().player.setIsPlaying(true);
+        return ServiceLocator.get('audioPlayerService');
+    }
+
+    static async play() {
+        const state = useStore.getState().player;
+        if (!state.isPlaying) {
+            state.setIsEnded(false);
+
+            await this.getInjected().play();
+            state.setIsPlaying(true);
         }
     }
 
     static pause() {
-        if (useStore.getState().player.isPlaying) {
-            audioPlayerProvider.pause();
-            useStore.getState().player.setIsPlaying(false);
+        const state = useStore.getState().player;
+        if (state.isPlaying) {
+            this.getInjected().pause();
+            state.setIsPlaying(false);
         }
     }
 
     static setTime(time: number) {
-        audioPlayerProvider.setTime(time);
+        this.getInjected().setTime(time);
         useStore.getState().player.setCurrentTime(time);
     }
 
     static setVolume(volume: number) {
-        audioPlayerProvider.setVolume(volume);
+        this.getInjected().setVolume(volume);
         useStore.getState().player.setVolume(volume);
     }
 
     static togglePlay() {
         const isPlaying = useStore.getState().player.isPlaying;
-        isPlaying ? AudioPlayerManager.pause() : AudioPlayerManager.play();
+        isPlaying ? this.pause() : this.play();
     }
 
     static toggleMute() {
         const state = useStore.getState();
+        const service = this.getInjected();
+
         if (state.player.volume > 0) {
             state.player.setPrevVolume(state.player.volume);
             state.player.setVolume(0);
-            audioPlayerProvider.setVolume(0);
+            service.setVolume(0);
         } else {
-            audioPlayerProvider.setVolume(state.player.prevVolume || 1);
-            state.player.setVolume(state.player.volume);
+            const restoredVolume = state.player.prevVolume || 1;
+            state.player.setVolume(restoredVolume);
+            service.setVolume(restoredVolume);
         }
     }
 
-    static async loadSource(musicName: string) {
-        await audioPlayerProvider.loadSource(musicName);
+    static async loadTrack(musicName: string) {
+        await this.getInjected().loadTrack(musicName);
     }
 }

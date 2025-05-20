@@ -1,9 +1,6 @@
-import {AuthCoordinator} from '@/domain/coordinators/AuthCoordinator';
 import {ServiceLocator} from '@/app/di/ServiceLocator';
 import AudioPlayerService from '@/domain/services/AudioPlayerService';
 import AuthService from '@/domain/services/AuthService';
-
-import {useStore} from '@/stores';
 
 export default class AppDIManager {
     private static initialized = false;
@@ -14,12 +11,8 @@ export default class AppDIManager {
 
         this.initialized = true;
 
-        const exp = useStore.getState().auth.exp;
-
         ServiceLocator.register('authService', AuthService);
         ServiceLocator.register('audioPlayerService', AudioPlayerService);
-
-        AuthCoordinator.start(exp);
     }
 
     static stop() {
@@ -29,10 +22,9 @@ export default class AppDIManager {
         this.initialized = false;
 
         ServiceLocator.reset();
-        AuthCoordinator.stop();
     }
 
-    static isStarted(): boolean {
+    static isInitialized(): boolean {
         return this.initialized;
     }
 }

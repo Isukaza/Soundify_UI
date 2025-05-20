@@ -1,16 +1,20 @@
-import audioPlayerService from '@/domain/services/AudioPlayerService';
-import authService from '@/domain/services/AuthService';
+import AudioPlayerServiceBase from '@/domain/services/types/AudioPlayerServiceBase';
+import AuthServiceBase from '@/domain/services/types/AuthServiceBase';
+import BackTaskBase from '@/domain/services/types/BackTaskBase';
 
-type Services = {
-    authService: typeof authService;
-    audioPlayerService: typeof audioPlayerService;
-};
+type ServiceMap<T extends Record<string, BackTaskBase>> = T;
+
+type Services = ServiceMap<{
+    authService: AuthServiceBase;
+    audioPlayerService: AudioPlayerServiceBase;
+}>;
 
 let container: Partial<Services> = {};
 
 export const ServiceLocator = {
     register<K extends keyof Services>(key: K, service: Services[K]) {
         container[key] = service;
+        service.start();
     },
 
     get<K extends keyof Services>(key: K): Services[K] {
@@ -22,6 +26,10 @@ export const ServiceLocator = {
     },
 
     reset() {
+        for (const service of Object.values(container)) {
+            service.stop();
+        }
+
         container = {};
-    },
+    }
 }

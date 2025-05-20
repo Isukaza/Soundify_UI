@@ -1,6 +1,6 @@
 import {useCallback, useEffect, useRef, useState} from 'react';
 
-import {AudioPlayerManager} from '@/domain/managers/AudioPlayerManager';
+import AudioPlayerManager from '@/domain/managers/AudioPlayerManager';
 import {formatTime} from '@/infrastructure/utils/formatters';
 import {useStore} from '@/stores/index';
 
