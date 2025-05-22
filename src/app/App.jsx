@@ -22,11 +22,15 @@ export default function App() {
     const isAuthenticated = useStore(state => state.auth.isAuthenticated);
 
     useEffect(() => {
-        if (isAuthenticated) {
-            AppDIManager.start();
-        } else {
-            AppDIManager.stop();
-        }
+        const manageDI = async () => {
+            if (isAuthenticated) {
+                await AppDIManager.start();
+            } else {
+                await AppDIManager.stop();
+            }
+        };
+
+        manageDI();
     }, [isAuthenticated]);
 
     return (

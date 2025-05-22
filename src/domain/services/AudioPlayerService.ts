@@ -4,29 +4,17 @@ import {useStore} from "@/stores";
 import AudioPlayerServiceBase from "@/domain/services/types/AudioPlayerServiceBase";
 
 class AudioPlayerService extends AudioPlayerServiceBase {
-    private static instance: AudioPlayerService;
     private audioRef?: HTMLAudioElement;
     private readonly hlsLoader = new HlsLoader();
 
-    private constructor() {
-        super();
-    }
-
-    public static getInstance(): AudioPlayerService {
-        if (!this.instance)
-            this.instance = new AudioPlayerService();
-
-        return this.instance;
-    }
-
-    public override start(): void {
+    public override async start(): Promise<void> {
         if (!this.audioRef) {
             this.audioRef = new Audio();
             this.attachListeners();
         }
     }
 
-    public override stop(): void {
+    public override async stop(): Promise<void> {
         if (this.audioRef) {
             this.detachListeners();
             this.audioRef.pause();
@@ -120,4 +108,4 @@ class AudioPlayerService extends AudioPlayerServiceBase {
     };
 }
 
-export default AudioPlayerService.getInstance();
+export default AudioPlayerService;

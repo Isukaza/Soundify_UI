@@ -22,6 +22,24 @@ export default function Volume({sx}) {
         }
     };
 
+    const handleToggleMute = async () => {
+        try {
+            await AudioPlayerManager.toggleMute();
+        } catch (err) {
+            console.error("Failed to toggle mute:", err);
+        }
+    };
+
+    const handleChangeVolume = async (_, value) => {
+        if (typeof value === 'number') {
+            try {
+                await AudioPlayerManager.setVolume(value);
+            } catch (err) {
+                console.error("Failed to set volume:", err);
+            }
+        }
+    };
+
     return (
         <Stack
             sx={{display: 'flex', justifyContent: 'center', alignItems: 'center', ...sx}}
@@ -30,7 +48,7 @@ export default function Volume({sx}) {
         >
             <IconButton
                 sx={{height: '36px', width: '36px'}}
-                onClick={() => AudioPlayerManager.toggleMute()}
+                onClick={handleToggleMute}
             >
                 {getVolumeIcon(playerVolume)}
             </IconButton>
@@ -41,12 +59,8 @@ export default function Volume({sx}) {
                 max={1}
                 step={0.01}
                 value={playerVolume}
-                onChange={(_, value) => {
-                    if (typeof value === 'number') {
-                        AudioPlayerManager.setVolume(value);
-                    }
-                }}
+                onChange={handleChangeVolume}
             />
         </Stack>
     );
-};
+}

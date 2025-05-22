@@ -1,6 +1,6 @@
-import BackTaskBase from "@/domain/services/types/BackTaskBase";
+import HostedService from "@/domain/services/types/HostedService";
 
-export default abstract class AudioPlayerServiceBase extends BackTaskBase {
+export default abstract class AudioPlayerServiceBase extends HostedService {
     abstract loadTrack(musicName: string): Promise<void>;
     abstract play(): Promise<void>;
     abstract pause(): void;

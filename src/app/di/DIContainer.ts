@@ -1,37 +1,46 @@
-import AudioPlayerServiceBase from '@/domain/services/types/AudioPlayerServiceBase';
-import AuthServiceBase from '@/domain/services/types/AuthServiceBase';
-import BackTaskBase from '@/domain/services/types/BackTaskBase';
+import HostedService from '@/domain/services/types/HostedService';
 
-type ServiceMap<T extends Record<string, BackTaskBase>> = T;
-
-type Services = ServiceMap<{
-    authService: AuthServiceBase;
-    audioPlayerService: AudioPlayerServiceBase;
-}>;
-
-let container: Partial<Services> = {};
+type HostedServiceConstructor = new () => HostedService;
 
 const DIContainer = {
-    register<K extends keyof Services>(key: K, service: Services[K]) {
-        container[key] = service;
-        service.start();
+    services: new Map<string, HostedServiceConstructor>(),
+    instances: new Map<string, HostedService>(),
+
+    async register(Service: HostedServiceConstructor, options?: { eager?: boolean }) {
+        const key = Service.name;
+        if (!this.services.has(key)) {
+            this.services.set(key, Service);
+
+            if (options?.eager)
+                await this.get(Service);
+        }
     },
 
-    get<K extends keyof Services>(key: K): Services[K] {
-        const service = container[key];
-        if (!service) {
-            throw new Error(`[ServiceLocator] '${key}' is not registered`);
+    async get<T extends HostedService>(Service: new () => T): Promise<T> {
+        const key = Service.name;
+
+        if (!this.instances.has(key)) {
+            const service = this.services.get(key);
+            if (!service)
+                throw new Error(`Service ${key} is not registered`);
+
+            const instance = new service();
+            await instance.start();
+
+            this.instances.set(key, instance);
         }
-        return service;
+
+        return this.instances.get(key)! as T;
     },
 
-    reset() {
-        for (const service of Object.values(container)) {
-            service.stop();
+    async stopAll(): Promise<void> {
+        for (const instance of this.instances.values()) {
+            await instance.stop();
         }
 
-        container = {};
-    }
+        this.instances.clear();
+        this.services.clear();
+    },
 };
 
 export default DIContainer;

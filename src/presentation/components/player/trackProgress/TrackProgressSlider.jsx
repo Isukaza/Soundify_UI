@@ -28,10 +28,10 @@ const TrackProgressSlider = () => {
         setCurrentSliderTime(value);
     }, []);
 
-    const handleCommited = useCallback((_, value) => {
+    const handleCommited = useCallback(async (_, value) => {
         console.log("TrackProgressSlider handleCommited", value);
 
-        AudioPlayerManager.setTime(value);
+        await AudioPlayerManager.setTime(value);
 
         const sliderDOM = sliderRef.current?.querySelector('input');
         if (sliderDOM) {

@@ -1,22 +1,26 @@
 import dayjs from 'dayjs';
 import {jwtDecode} from 'jwt-decode';
 
-import AuthApi from '@/infrastructure/api/AuthApi.js';
 import AppDIManager from '@/app/di/AppDIManager';
 import DIContainer from '@/app/di/DIContainer';
+
+import AuthApi from '@/infrastructure/api/AuthApi.js';
+
+import AuthService from "@/domain/services/AuthService";
+import AuthServiceBase from "@/domain/services/types/AuthServiceBase";
+
 import {useStore} from '@/stores';
 
-import AuthServiceBase from "@/domain/services/types/AuthServiceBase";
 
 export default class AuthManager {
     private constructor() {
     }
 
-    private static getAuthServiceFromDI(): AuthServiceBase {
+    private static async getAuthServiceFromDI(): Promise<AuthServiceBase> {
         if (!AppDIManager.isInitialized())
             throw new Error("[AuthManager] AppDIManager is not started");
 
-        return DIContainer.get('authService');
+        return await DIContainer.get<AuthServiceBase>(AuthService);
     }
 
     static async loginWithEmail(email: string, password: string): Promise<boolean> {
@@ -84,7 +88,7 @@ export default class AuthManager {
                 return false;
 
             if (AppDIManager.isInitialized()) {
-                const authService = this.getAuthServiceFromDI();
+                const authService = await this.getAuthServiceFromDI();
                 if (authService.isRunning())
                     await authService.forceRefreshNow();
             } else {

@@ -42,7 +42,6 @@ const Footer = () => {
         if (isAuthenticated && !isRetrying.current)
             loadWithRetry();
 
-
         return () => {
             isCancelled = true;
             clearTimer();

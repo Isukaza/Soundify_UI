@@ -1,27 +1,27 @@
-import DIContainer from '@/app/di/DIContainer';
-import AudioPlayerService from '@/domain/services/AudioPlayerService';
+import DIContainer from './DIContainer';
+import AudioPlayerService from "@/domain/services/AudioPlayerService";
 import AuthService from '@/domain/services/AuthService';
 
 export default class AppDIManager {
     private static initialized = false;
 
-    static start() {
+    static async start() {
         if (this.initialized)
             return;
 
-        this.initialized = true;
+        await DIContainer.register(AuthService, {eager: true});
+        await DIContainer.register(AudioPlayerService);
 
-        DIContainer.register('authService', AuthService);
-        DIContainer.register('audioPlayerService', AudioPlayerService);
+        this.initialized = true;
     }
 
-    static stop() {
+    static async stop() {
         if (!this.initialized)
             return;
 
-        this.initialized = false;
+        await DIContainer.stopAll();
 
-        DIContainer.reset();
+        this.initialized = false;
     }
 
     static isInitialized(): boolean {

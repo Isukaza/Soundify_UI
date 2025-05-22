@@ -1,57 +1,62 @@
-import {useStore} from "@/stores";
 import AppDIManager from "@/app/di/AppDIManager";
 import DIContainer from "@/app/di/DIContainer";
 
+import AudioPlayerService from "@/domain/services/AudioPlayerService";
 import AudioPlayerServiceBase from "@/domain/services/types/AudioPlayerServiceBase";
+
+import {useStore} from "@/stores";
 
 export default class AudioPlayerManager {
     private constructor() {
     }
 
-    private static getInjected(): AudioPlayerServiceBase {
+    private static async getAudioPlayerServiceFromDI(): Promise<AudioPlayerServiceBase> {
         if (!AppDIManager.isInitialized())
-            throw new Error("[AudioPlayerManager] AppDIManager is not started");
+            throw new Error("[AuthManager] AppDIManager is not started");
 
-        return DIContainer.get('audioPlayerService');
+        return await DIContainer.get<AudioPlayerServiceBase>(AudioPlayerService);
     }
 
-    static async play() {
+    static async play(): Promise<void> {
         const state = useStore.getState().player;
         if (!state.isPlaying) {
             state.setIsEnded(false);
 
-            await this.getInjected().play();
+            const service = await this.getAudioPlayerServiceFromDI();
+            await service.play();
             state.setIsPlaying(true);
         }
     }
 
-    static pause() {
+    static async pause(): Promise<void> {
         const state = useStore.getState().player;
         if (state.isPlaying) {
-            this.getInjected().pause();
+            const service = await this.getAudioPlayerServiceFromDI();
+            service.pause();
             state.setIsPlaying(false);
         }
     }
 
-    static setTime(time: number) {
-        this.getInjected().setTime(time);
+    static async setTime(time: number): Promise<void> {
+        const service = await this.getAudioPlayerServiceFromDI();
+        service.setTime(time);
         useStore.getState().player.setCurrentTime(time);
     }
 
-    static setVolume(volume: number) {
-        this.getInjected().setVolume(volume);
+    static async setVolume(volume: number): Promise<void> {
+        const service = await this.getAudioPlayerServiceFromDI();
+        service.setVolume(volume);
         useStore.getState().player.setVolume(volume);
     }
 
-    static togglePlay() {
+    static async togglePlay(): Promise<void> {
         const isPlaying = useStore.getState().player.isPlaying;
-        isPlaying ? this.pause() : this.play();
+        isPlaying ? await this.pause() : await this.play();
     }
 
-    static toggleMute() {
+    static async toggleMute(): Promise<void> {
         const state = useStore.getState();
-        const service = this.getInjected();
-
+        const service = await this.getAudioPlayerServiceFromDI();
         if (state.player.volume > 0) {
             state.player.setPrevVolume(state.player.volume);
             state.player.setVolume(0);
@@ -63,7 +68,8 @@ export default class AudioPlayerManager {
         }
     }
 
-    static async loadTrack(musicName: string) {
-        await this.getInjected().loadTrack(musicName);
+    static async loadTrack(musicName: string): Promise<void> {
+        const service = await this.getAudioPlayerServiceFromDI();
+        await service.loadTrack(musicName);
     }
 }

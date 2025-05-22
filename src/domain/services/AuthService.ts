@@ -4,28 +4,15 @@ import AuthCoordinator from '@/domain/coordinators/AuthCoordinator';
 import AuthServiceBase from "@/domain/services/types/AuthServiceBase";
 
 class AuthService extends AuthServiceBase {
-    private static instance: AuthService;
-
     private refreshTimer?: ReturnType<typeof setTimeout>;
     private isRefreshing = false;
 
-    private constructor() {
-        super();
-    }
-
-    public static getInstance(): AuthService {
-        if (!this.instance)
-            this.instance = new AuthService();
-
-        return this.instance;
-    }
-
-    public start(): void {
+    public override async start(): Promise<void> {
         const delay = this.getTokenRefreshDelay();
         this.scheduleNextRefresh(delay);
     }
 
-    public stop(): void {
+    public override async stop(): Promise<void> {
         this.clearRefreshTimer();
     }
 
@@ -86,4 +73,4 @@ class AuthService extends AuthServiceBase {
     }
 }
 
-export default AuthService.getInstance();
+export default AuthService;

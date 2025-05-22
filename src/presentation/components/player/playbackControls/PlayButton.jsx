@@ -7,8 +7,8 @@ import {useStore} from '@/stores/index';
 export default function PlayButton() {
     const isPlaying = useStore(state => state.player.isPlaying);
 
-    const handlePlay = () => {
-        AudioPlayerManager.togglePlay();
+    const handlePlay = async () => {
+        await AudioPlayerManager.togglePlay();
     };
 
     return (
