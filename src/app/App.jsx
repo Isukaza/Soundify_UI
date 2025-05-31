@@ -18,16 +18,14 @@ import NotFoundPage from '@/presentation/pages/NotFoundPage';
 
 import {useStore} from '@/stores/index';
 
+import AppInitGate from "@/presentation/hoc/AppInitGate";
+
 export default function App() {
     const isAuthenticated = useStore(state => state.auth.isAuthenticated);
 
     useEffect(() => {
         const manageDI = async () => {
-            if (isAuthenticated) {
-                await AppDIManager.start();
-            } else {
-                await AppDIManager.stop();
-            }
+            isAuthenticated ? await AppDIManager.start() : await AppDIManager.stop();
         };
 
         manageDI();
@@ -36,21 +34,23 @@ export default function App() {
     return (
         <>
             <CssBaseline/>
-            <Routes>
-                <Route element={<ProtectedRoutes/>}>
-                    <Route element={<Layout/>}>
-                        <Route path="/" element={<HomePage/>}/>
-                        <Route path="/DetailsTrack" element={<DetailsTrackPage/>}/>
+            <AppInitGate>
+                <Routes>
+                    <Route element={<ProtectedRoutes/>}>
+                        <Route element={<Layout/>}>
+                            <Route path="/" element={<HomePage/>}/>
+                            <Route path="/DetailsTrack" element={<DetailsTrackPage/>}/>
+                        </Route>
                     </Route>
-                </Route>
 
-                <Route element={<RequireUnAuthenticated/>}>
-                    <Route path="/Login" element={<LoginPage/>}/>
-                </Route>
+                    <Route element={<RequireUnAuthenticated/>}>
+                        <Route path="/Login" element={<LoginPage/>}/>
+                    </Route>
 
-                <Route path="/InDevelop" element={<InDevelopPage/>}/>
-                <Route path="*" element={<NotFoundPage/>}/>
-            </Routes>
+                    <Route path="/InDevelop" element={<InDevelopPage/>}/>
+                    <Route path="*" element={<NotFoundPage/>}/>
+                </Routes>
+            </AppInitGate>
         </>
     );
 }

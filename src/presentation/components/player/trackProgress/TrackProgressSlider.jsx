@@ -1,6 +1,7 @@
+import useInject from "@/domain/hooks/useInject";
+import AbstractAudioPlayerManager from "@/domain/managers/Base/AbstractAudioPlayerManager";
 import {useCallback, useEffect, useRef, useState} from 'react';
 
-import AudioPlayerManager from '@/domain/managers/AudioPlayerManager';
 import {formatTime} from '@/infrastructure/utils/formatters';
 import {useStore} from '@/stores/index';
 
@@ -12,6 +13,8 @@ const TrackProgressSlider = () => {
     const currentTime = useStore((state) => state.player.currentTime);
     const duration = useStore((state) => state.player.duration);
     const isEnded = useStore((state) => state.player.isEnded);
+
+    const {instance: manager, loading} = useInject(AbstractAudioPlayerManager);
 
     const sliderRef = useRef(null);
     const onFocusRef = useRef(false);
@@ -30,14 +33,20 @@ const TrackProgressSlider = () => {
 
     const handleCommited = useCallback(async (_, value) => {
         console.log("TrackProgressSlider handleCommited", value);
+        if (!manager)
+            return;
 
-        await AudioPlayerManager.setTime(value);
+        try {
+            await manager.setTime(value);
+        } catch (err) {
+            console.error("Failed to set time:", err);
+        }
 
         const sliderDOM = sliderRef.current?.querySelector('input');
-        if (sliderDOM) {
+        if (sliderDOM)
             sliderDOM.blur();
-        }
-    }, []);
+
+    }, [manager]);
 
     return (
         <Slider
@@ -59,6 +68,7 @@ const TrackProgressSlider = () => {
             onChange={handleChangeSlider}
             onChangeCommitted={handleCommited}
             valueLabelFormat={formatTime}
+            disabled={loading || !manager}
         />
     );
 };

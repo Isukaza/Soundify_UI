@@ -1,9 +1,9 @@
 import HlsLoader from "@/infrastructure/utils/HlsLoader";
 import {useStore} from "@/stores";
 
-import AudioPlayerServiceBase from "@/domain/services/types/AudioPlayerServiceBase";
+import AbstractAudioPlayerService from "@/domain/services/types/AbstractAudioPlayerService";
 
-class AudioPlayerService extends AudioPlayerServiceBase {
+class AudioPlayerService extends AbstractAudioPlayerService {
     private audioRef?: HTMLAudioElement;
     private readonly hlsLoader = new HlsLoader();
 

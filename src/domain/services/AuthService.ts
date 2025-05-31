@@ -1,11 +1,13 @@
 import {useStore} from '@/stores';
-import AuthCoordinator from '@/domain/coordinators/AuthCoordinator';
+import AbstractAuthService from "@/domain/services/types/AbstractAuthService";
 
-import AuthServiceBase from "@/domain/services/types/AuthServiceBase";
-
-class AuthService extends AuthServiceBase {
+class AuthService extends AbstractAuthService {
     private refreshTimer?: ReturnType<typeof setTimeout>;
     private isRefreshing = false;
+
+    constructor() {
+        super();
+    }
 
     public override async start(): Promise<void> {
         const delay = this.getTokenRefreshDelay();
@@ -39,7 +41,7 @@ class AuthService extends AuthServiceBase {
 
         this.isRefreshing = true;
         try {
-            await AuthCoordinator.refreshToken();
+            //auth func
         } catch (err) {
             console.warn('[AuthService] Error during scheduled refresh:', err);
         } finally {

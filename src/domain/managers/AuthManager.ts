@@ -1,48 +1,33 @@
 import dayjs from 'dayjs';
 import {jwtDecode} from 'jwt-decode';
 
-import AppDIManager from '@/app/di/AppDIManager';
-import DIContainer from '@/app/di/DIContainer';
-
-import AuthApi from '@/infrastructure/api/AuthApi.js';
-
-import AuthService from "@/domain/services/AuthService";
-import AuthServiceBase from "@/domain/services/types/AuthServiceBase";
-
+import AbstractAuthManager from "@/domain/managers/Base/AbstractAuthManager";
+import AuthApi from '@/infrastructure/api/AuthApi';
 import {useStore} from '@/stores';
 
+export default class AuthManager extends AbstractAuthManager {
 
-export default class AuthManager {
-    private constructor() {
+    constructor() {
+        super();
     }
 
-    private static async getAuthServiceFromDI(): Promise<AuthServiceBase> {
-        if (!AppDIManager.isInitialized())
-            throw new Error("[AuthManager] AppDIManager is not started");
-
-        return await DIContainer.get<AuthServiceBase>(AuthService);
-    }
-
-    static async loginWithEmail(email: string, password: string): Promise<boolean> {
+    async loginWithEmail(email: string, password: string): Promise<boolean> {
         const {setJwt, setRefresh, setExp, setIsAuthenticated, setUserId} = useStore.getState().auth;
 
         const resp = await AuthApi.login({Email: email, Password: password});
-        if (!resp.status)
-            return false;
+        if (!resp.status) return false;
 
         const {userId, bearer, refreshToken} = resp.data;
-        if (!bearer || !refreshToken || !userId)
-            return false;
+        if (!bearer || !refreshToken || !userId) return false;
 
         let exp = 0;
         try {
             exp = jwtDecode<{ exp: number }>(bearer)?.exp ?? 0;
-        } catch (error) {
+        } catch {
             return false;
         }
 
-        if (!exp || isNaN(exp))
-            return false;
+        if (!exp || isNaN(exp)) return false;
 
         setJwt(bearer.trim());
         setUserId(userId.trim());
@@ -53,83 +38,70 @@ export default class AuthManager {
         return true;
     }
 
-    static async getGoogleSsoUrl(): Promise<string | null> {
+    async getGoogleSsoUrl(): Promise<string | null> {
         const resp = await AuthApi.GetLoginGoogleSsoURL();
         return resp.status ? resp.data : null;
     }
 
-    static async handleGoogleCallback(code: string): Promise<boolean> {
+    async handleGoogleCallback(code: string): Promise<boolean> {
         const {setJwt, setRefresh, setExp, setIsAuthenticated, setUserId} = useStore.getState().auth;
 
         const resp = await AuthApi.HandleGoogleCallback(code);
-        if (resp.status) {
-            const {userId, bearer, refreshToken} = resp.data;
-            const exp = jwtDecode<{ exp: number }>(bearer).exp;
+        if (!resp.status) return false;
 
-            setUserId(userId.trim());
-            setJwt(bearer.trim());
-            setRefresh(refreshToken.trim());
-            setExp(exp);
-            setIsAuthenticated(true);
+        const {userId, bearer, refreshToken} = resp.data;
+        const exp = jwtDecode<{ exp: number }>(bearer).exp;
 
-            return true;
-        } else {
-            console.error('Google Auth Failed');
-            return false;
-        }
+        setUserId(userId.trim());
+        setJwt(bearer.trim());
+        setRefresh(refreshToken.trim());
+        setExp(exp);
+        setIsAuthenticated(true);
+
+        return true;
     }
 
-    static async forceRefresh(): Promise<boolean> {
+    async forceRefresh(): Promise<boolean> {
         try {
-            const {refresh, userId} = useStore.getState().auth;
+            const {refresh: currentRefresh, userId: currentUserId} = useStore.getState().auth;
 
-            const isValidRefresh = refresh && userId && /^[0-9a-f-]{36}$/.test(userId);
-            if (!isValidRefresh)
+            const isValid = currentRefresh && currentUserId && /^[0-9a-fA-F-]{36}$/.test(currentUserId);
+            if (!isValid) return false;
+
+            const tokens = await this.getRefreshedAuthTokens();
+            if (!tokens) {
+                this.clearAuthData();
                 return false;
-
-            if (AppDIManager.isInitialized()) {
-                const authService = await this.getAuthServiceFromDI();
-                if (authService.isRunning())
-                    await authService.forceRefreshNow();
-            } else {
-                const tokenResult = await AuthManager.getRefreshedAuthTokens();
-                if (!tokenResult) {
-                    AuthManager.clearAuthData();
-                    return false;
-                }
-
-                const {userId, jwt, refresh} = tokenResult;
-                this.applyTokens(userId, jwt, refresh);
             }
+
+            const {userId: newUserId, jwt, refresh: newRefresh} = tokens;
+            this.applyTokens(newUserId, jwt, newRefresh);
 
             return this.isAuthDataValid();
         } catch (error) {
-            console.error('[AuthManager] Unexpected error in forceRefresh:', error);
+            console.error('[AuthManager] forceRefresh error:', error);
             return false;
         }
     }
 
-    static async getRefreshedAuthTokens(): Promise<{ userId: string, jwt: string, refresh: string } | null> {
-        const {userId, refresh} = useStore.getState().auth;
+    async getRefreshedAuthTokens(): Promise<{ userId: string; jwt: string; refresh: string } | null> {
+        const {userId: uid, refresh} = useStore.getState().auth;
 
-        if (!refresh)
-            return null;
+        if (!refresh) return null;
 
         try {
-            const resp = await AuthApi.RefreshTokens({UserId: userId, RefreshToken: refresh});
-            if (resp.status) {
-                const {userId, bearer, refreshToken} = resp.data;
-                return {userId: userId, jwt: bearer, refresh: refreshToken};
-            } else {
-                return null;
-            }
+            const resp = await AuthApi.RefreshTokens({UserId: uid, RefreshToken: refresh});
+            if (!resp.status) return null;
+
+            const {userId, bearer, refreshToken} = resp.data;
+            return {userId, jwt: bearer, refresh: refreshToken};
         } catch (error) {
-            console.error('[AuthManager] Refresh error', error);
+            console.error('[AuthManager] Token refresh error:', error);
             return null;
         }
     }
 
-    static applyTokens(userId: string, jwt: string, refresh: string): number {
+    applyTokens(userId: string, jwt: string, refresh: string): number {
         let exp = 0;
         try {
             exp = jwtDecode<{ exp: number }>(jwt)?.exp ?? 0;
@@ -147,25 +119,21 @@ export default class AuthManager {
         return exp;
     }
 
-    static clearAuthData() {
+    clearAuthData(): void {
         const state = useStore.getState().auth;
-        state.setIsAuthenticated(false);
         state.setUserId('');
         state.setJwt('');
         state.setRefresh('');
         state.setExp(0);
+        state.setIsAuthenticated(false);
     }
 
-    static isAuthDataValid(): boolean {
+    isAuthDataValid(): boolean {
         const {jwt, refresh, userId, exp} = useStore.getState().auth;
 
-        const isValidJwt = jwt.trim().length > 0;
-        const isValidRefresh = refresh.trim().length > 0;
-        const isValidUserId = /^[0-9a-f-]{36}$/i.test(userId);
-        const isValidExp = exp > 0;
+        const valid = jwt.trim().length > 0 && refresh.trim().length > 0 && /^[0-9a-f-]{36}$/i.test(userId) && exp > 0;
 
-        if (!isValidJwt || !isValidRefresh || !isValidUserId || !isValidExp)
-            return false;
+        if (!valid) return false;
 
         const now = dayjs();
         const expiration = dayjs(exp * 1000);

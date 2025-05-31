@@ -1,10 +1,14 @@
 import {useNavigate} from 'react-router-dom';
 
-import {Button} from '@mui/joy';
+import {Button, CircularProgress} from '@mui/joy';
 
+import useInject from "@/domain/hooks/useInject";
 import {useFetching} from '@/domain/hooks/useFetching';
-import AuthManager from '@/domain/managers/AuthManager';
+
 import {borderRadiusStyle} from '@/presentation/styles/common/borderRadiusStyle';
+
+import AbstractAuthManager from "@/domain/managers/Base/AbstractAuthManager";
+
 import {useStore} from '@/stores';
 
 interface Props {
@@ -13,13 +17,17 @@ interface Props {
 
 export default function LoginButton({redirectTo}: Props) {
     const navigate = useNavigate();
+    const {instance: authManager, loading: authManagerLoading} = useInject(AbstractAuthManager);
 
     const [fetchAuth, isLoading] = useFetching(auth);
 
     async function auth() {
-        const {email, setEmail, password, setPassword} = useStore.getState().auth;
+        if (!authManager)
+            return;
 
-        const success = await AuthManager.loginWithEmail(email, password);
+        const {email, setEmail, password, setPassword} = useStore.getState().auth;
+        const success = await authManager.loginWithEmail(email, password);
+
         if (success) {
             setEmail('');
             setPassword('');
@@ -27,19 +35,22 @@ export default function LoginButton({redirectTo}: Props) {
         }
     }
 
+    const isDisabled = isLoading || authManagerLoading || !authManager;
+
     return (
         <Button
-            loading={isLoading}
+            loading={isLoading || authManagerLoading}
+            disabled={isDisabled}
             size="lg"
             onClick={fetchAuth}
             sx={{
                 width: '100%',
                 mt: 1,
                 ...borderRadiusStyle,
-                [`&:hover`]: {transform: 'scale(1.1)'},
+                '&:hover': {transform: 'scale(1.1)'},
             }}
         >
-            Log in
+            {authManagerLoading ? <CircularProgress size="sm"/> : 'Log in'}
         </Button>
     );
 }

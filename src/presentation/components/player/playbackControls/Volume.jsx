@@ -1,66 +1,85 @@
-import {Slider, IconButton, Stack} from '@mui/joy';
+import {CircularProgress, IconButton, Slider, Stack} from '@mui/joy';
 import {VolumeDown, VolumeMute, VolumeOff, VolumeUp} from '@mui/icons-material';
 
-import {useStore} from '@/stores/index';
-import AudioPlayerManager from '@/domain/managers/AudioPlayerManager';
+import useInject from "@/domain/hooks/useInject";
+
+import AbstractAudioPlayerManager from "@/domain/managers/Base/AbstractAudioPlayerManager";
+
+import {useStore} from '@/stores';
 
 // eslint-disable-next-line react/prop-types
 export default function Volume({sx}) {
-    console.log("Volume");
-
-    const playerVolume = useStore((state) => state.player.volume);
+    const {instance: manager, loading} = useInject(AbstractAudioPlayerManager);
+    const playerVolume = useStore(state => state.player.volume);
 
     const getVolumeIcon = (volume) => {
-        if (volume === 0) {
+        if (volume === 0)
             return <VolumeOff/>;
-        } else if (volume <= 0.33) {
+
+        if (volume <= 0.33)
             return <VolumeMute/>;
-        } else if (volume <= 0.66) {
+
+        if (volume <= 0.66)
             return <VolumeDown/>;
-        } else {
-            return <VolumeUp/>;
-        }
+
+        return <VolumeUp/>;
     };
 
     const handleToggleMute = async () => {
+        if (!manager)
+            return;
+
         try {
-            await AudioPlayerManager.toggleMute();
+            await manager.toggleMute();
         } catch (err) {
             console.error("Failed to toggle mute:", err);
         }
     };
 
     const handleChangeVolume = async (_, value) => {
-        if (typeof value === 'number') {
-            try {
-                await AudioPlayerManager.setVolume(value);
-            } catch (err) {
-                console.error("Failed to set volume:", err);
-            }
+        if (!manager || typeof value !== 'number')
+            return;
+
+        try {
+            await manager.setVolume(value);
+        } catch (err) {
+            console.error("Failed to set volume:", err);
         }
     };
 
     return (
         <Stack
-            sx={{display: 'flex', justifyContent: 'center', alignItems: 'center', ...sx}}
+            sx={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                ...sx
+            }}
             direction="row"
             spacing={1}
         >
-            <IconButton
-                sx={{height: '36px', width: '36px'}}
-                onClick={handleToggleMute}
-            >
-                {getVolumeIcon(playerVolume)}
-            </IconButton>
+            {
+                loading || !manager
+                    ? <CircularProgress size="sm"/>
+                    :
+                    <>
+                        <IconButton
+                            sx={{height: '36px', width: '36px'}}
+                            onClick={handleToggleMute}
+                        >
+                            {getVolumeIcon(playerVolume)}
+                        </IconButton>
 
-            <Slider
-                sx={{'--Slider-thumbSize': '14px', width: '100px'}}
-                min={0}
-                max={1}
-                step={0.01}
-                value={playerVolume}
-                onChange={handleChangeVolume}
-            />
+                        <Slider
+                            sx={{'--Slider-thumbSize': '14px', width: '100px'}}
+                            min={0}
+                            max={1}
+                            step={0.01}
+                            value={playerVolume}
+                            onChange={handleChangeVolume}
+                        />
+                    </>
+            }
         </Stack>
     );
 }
