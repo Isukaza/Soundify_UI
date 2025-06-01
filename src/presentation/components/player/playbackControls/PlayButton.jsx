@@ -1,18 +1,32 @@
 import Button from '@mui/joy/Button';
 import {PlayArrow as PlayArrowIcon, Pause as PauseIcon} from '@mui/icons-material';
 
-import {AudioPlayerManager} from '@/domain/managers/AudioPlayerManager';
-import {useStore} from '@/stores/index';
+import useInject from "@/domain/hooks/useInject";
+
+import AbstractAudioPlayerManager from "@/domain/managers/Base/AbstractAudioPlayerManager";
+
+import {useStore} from '@/stores';
 
 export default function PlayButton() {
     const isPlaying = useStore(state => state.player.isPlaying);
+    const {instance: manager, loading} = useInject(AbstractAudioPlayerManager);
 
-    const handlePlay = () => {
-        AudioPlayerManager.togglePlay();
+    const handlePlay = async () => {
+        if (!manager)
+            return;
+
+        try {
+            await manager.togglePlay();
+        } catch (err) {
+            console.error("Failed to toggle play:", err);
+        }
     };
+
+    const isDisabled = loading || !manager;
 
     return (
         <Button
+            disabled={isDisabled}
             sx={{
                 borderRadius: '50%',
                 width: "36px",

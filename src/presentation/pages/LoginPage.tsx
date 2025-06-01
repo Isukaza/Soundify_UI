@@ -1,7 +1,12 @@
 import {useEffect, useState} from 'react';
-import {useLocation, useNavigate} from 'react-router-dom';
 
-import {Box, CircularProgress, Divider, Sheet, Stack} from '@mui/joy';
+import {useLocation, useNavigate} from 'react-router-dom';
+import {Box, Divider, Sheet, Stack} from '@mui/joy';
+
+import useInject from "@/domain/hooks/useInject";
+
+import AbstractAuthManager from "@/domain/managers/Base/AbstractAuthManager";
+import LoadingPage from "@/presentation/pages/LoadingPage";
 
 import Logo from '@/presentation/components/common/Logo';
 import ForgotPasswordLink from '@/presentation/components/pages/LoginPage/ForgotPasswordLink';
@@ -12,8 +17,6 @@ import EmailInput from '@/presentation/components/pages/LoginPage/EmailInput';
 import PasswordInput from '@/presentation/components/pages/LoginPage/PasswordInput';
 import SignUpLink from '@/presentation/components/pages/LoginPage/SignUpLink';
 
-import AuthManager from '@/domain/managers/AuthManager';
-
 import {centerStyles} from '@/presentation/styles/common/centerStyles';
 import {containerStyles} from '@/presentation/styles/login/styles';
 
@@ -23,40 +26,32 @@ export default function LoginPage() {
     const fromPage = location.state?.from?.pathname || '/';
 
     const [isLoading, setIsLoading] = useState(true);
+    const {instance: authManager, loading} = useInject(AbstractAuthManager);
 
     useEffect(() => {
         const code = new URLSearchParams(window.location.search).get('code');
-        if (code) {
-            AuthManager.handleGoogleCallback(code)
-                .then((success) => {
-                    if (success) {
-                        navigate(fromPage, {
-                            replace: true,
-                            state: {fromLogin: true},
-                        });
-                    } else {
-                        console.error('Google login failed');
-                        setIsLoading(false);
-                    }
-                });
-        } else {
-            setIsLoading(false);
-        }
-    }, []);
 
-    if (isLoading)
-        return (
-            <main
-                className="main-container"
-                style={{
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    height: '100vh'
-                }}>
-                <CircularProgress/>
-            </main>
-        );
+        if (!code || !authManager || loading) {
+            setIsLoading(false);
+            return;
+        }
+
+        (async () => {
+            const success = await authManager.handleGoogleCallback(code);
+            if (success) {
+                navigate(fromPage, {
+                    replace: true,
+                    state: {fromLogin: true},
+                });
+            } else {
+                console.error('Google login failed');
+                setIsLoading(false);
+            }
+        })();
+    }, [authManager, loading, navigate, fromPage]);
+
+    if (isLoading || loading || !authManager)
+        return <LoadingPage/>
 
     return (
         <main className="main-container">

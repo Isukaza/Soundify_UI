@@ -1,54 +1,45 @@
-import audioPlayerProvider from "@/domain/services/AudioPlayerService";
+import AbstractAudioPlayerManager from "@/domain/managers/Base/AbstractAudioPlayerManager";
 import {useStore} from "@/stores";
 
-export class AudioPlayerManager {
-    private constructor() {
-    }
-
-    static play() {
-        if (!useStore.getState().player.isPlaying) {
-            useStore.getState().player.setIsEnded(false);
-
-            audioPlayerProvider.play();
-            useStore.getState().player.setIsPlaying(true);
+export default class AudioPlayerManager extends AbstractAudioPlayerManager {
+    async play(): Promise<void> {
+        const player = useStore.getState().player;
+        if (!player.isPlaying) {
+            player.setIsEnded(false);
+            player.setIsPlaying(true);
         }
     }
 
-    static pause() {
-        if (useStore.getState().player.isPlaying) {
-            audioPlayerProvider.pause();
-            useStore.getState().player.setIsPlaying(false);
-        }
+    async pause(): Promise<void> {
+        const player = useStore.getState().player;
+        if (player.isPlaying)
+            player.setIsPlaying(false);
     }
 
-    static setTime(time: number) {
-        audioPlayerProvider.setTime(time);
+    async setTime(time: number): Promise<void> {
         useStore.getState().player.setCurrentTime(time);
     }
 
-    static setVolume(volume: number) {
-        audioPlayerProvider.setVolume(volume);
+    async setVolume(volume: number): Promise<void> {
         useStore.getState().player.setVolume(volume);
     }
 
-    static togglePlay() {
-        const isPlaying = useStore.getState().player.isPlaying;
-        isPlaying ? AudioPlayerManager.pause() : AudioPlayerManager.play();
+    async togglePlay(): Promise<void> {
+        useStore.getState().player.isPlaying ? await this.pause() : await this.play();
     }
 
-    static toggleMute() {
-        const state = useStore.getState();
-        if (state.player.volume > 0) {
-            state.player.setPrevVolume(state.player.volume);
-            state.player.setVolume(0);
-            audioPlayerProvider.setVolume(0);
+    async toggleMute(): Promise<void> {
+        const player = useStore.getState().player;
+        if (player.volume > 0) {
+            player.setPrevVolume(player.volume);
+            player.setVolume(0);
         } else {
-            audioPlayerProvider.setVolume(state.player.prevVolume || 1);
-            state.player.setVolume(state.player.volume);
+            const restoredVolume = player.prevVolume || 1;
+            player.setVolume(restoredVolume);
         }
     }
 
-    static async loadSource(musicName: string) {
-        await audioPlayerProvider.loadSource(musicName);
+    async loadTrack(musicName: string): Promise<void> {
+        useStore.getState().player.setCurrentTrack(musicName);
     }
 }

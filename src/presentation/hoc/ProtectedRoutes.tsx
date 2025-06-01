@@ -1,8 +1,13 @@
 import {useEffect, useState} from 'react';
-import {CircularProgress} from '@mui/joy';
+
 import {Navigate, Outlet, useLocation} from 'react-router-dom';
 
-import AuthManager from '@/domain/managers/AuthManager';
+import useInject from "@/domain/hooks/useInject";
+
+import AbstractAuthManager from "@/domain/managers/Base/AbstractAuthManager";
+
+import LoadingPage from "@/presentation/pages/LoadingPage";
+
 import {useStore} from '@/stores';
 
 export default function ProtectedRoutes() {
@@ -14,8 +19,37 @@ export default function ProtectedRoutes() {
     const [isValid, setIsValid] = useState(false);
     const [hasTriedRefresh, setHasTriedRefresh] = useState(false);
 
-    const redirectToLogin = (
-        <Navigate
+    const {instance: authManager, loading} = useInject(AbstractAuthManager);
+
+    useEffect(() => {
+        checkAuth();
+    }, [authManager, loading, location.pathname]);
+
+    const checkAuth = async () => {
+        if (loading || !authManager)
+            return;
+
+        let valid = authManager.isAuthDataValid();
+        if (!valid && !hasTriedRefresh) {
+            const refreshed = await authManager.jwtRefresh();
+            if (refreshed) {
+                setHasTriedRefresh(true);
+                valid = true;
+            }
+        }
+
+        if (valid)
+            setIsAuthenticated(true);
+
+        setIsValid(valid);
+        setChecking(false);
+    };
+
+    if (checking)
+        return <LoadingPage/>
+
+    if (!isAuthenticated || !isValid)
+        return <Navigate
             to="/login"
             replace
             state={{
@@ -24,50 +58,7 @@ export default function ProtectedRoutes() {
                     search: location.search,
                 },
             }}
-        />
-    );
-
-    useEffect(() => {
-        const checkAuth = async () => {
-            let valid = AuthManager.isAuthDataValid();
-
-            if (!valid && !hasTriedRefresh) {
-                const refreshed = await AuthManager.forceRefresh();
-                if (refreshed) {
-                    setHasTriedRefresh(true);
-                    valid = true;
-                }
-            }
-
-            if (valid) {
-                setIsAuthenticated(true);
-            }
-
-            setIsValid(valid);
-            setChecking(false);
-        };
-
-        checkAuth();
-    }, [location.pathname]);
-
-    if (checking) {
-        return (
-            <main
-                className="main-container"
-                style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    height: "100vh",
-                }}
-            >
-                <CircularProgress/>
-            </main>
-        );
-    }
-
-    if (!isAuthenticated || !isValid)
-        return redirectToLogin;
+        />;
 
     return <Outlet/>;
 }

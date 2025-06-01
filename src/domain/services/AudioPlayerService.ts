@@ -1,63 +1,144 @@
 import HlsLoader from "@/infrastructure/utils/HlsLoader";
-import {useStore} from '@/stores';
+import AbstractAudioPlayerService from "@/domain/services/types/AbstractAudioPlayerService";
+import {useStore} from "@/stores";
 
-const hlsLoader = new HlsLoader();
+class AudioPlayerService extends AbstractAudioPlayerService {
+    private audioRef?: HTMLAudioElement;
+    private readonly hlsLoader = new HlsLoader();
+    private subscriptions: Array<() => void> = [];
 
-class AudioPlayerService {
-    private static instance: AudioPlayerService;
-    private readonly audioRef: HTMLAudioElement;
-
-    private constructor() {
-        this.audioRef = new Audio();
-        this.attachListeners();
+    public override async start(): Promise<void> {
+        if (!this.audioRef) {
+            this.audioRef = new Audio();
+            this.attachListeners();
+            this.setupSubscriptions();
+        }
     }
 
-    public static getInstance(): AudioPlayerService {
-        if (!this.instance)
-            this.instance = new AudioPlayerService();
+    public override async stop(): Promise<void> {
+        if (this.audioRef) {
+            this.detachListeners();
+            this.audioRef.pause();
+            this.audioRef.src = '';
+            this.audioRef.load();
+            this.audioRef = undefined;
+        }
 
-        return this.instance;
+        try {
+            this.unsubscribe();
+            this.hlsLoader.destroy();
+        } catch (ex) {
+            console.error('Error while stopping AudioPlayerService', ex);
+        }
     }
 
     private attachListeners() {
-        this.audioRef.addEventListener('timeupdate', () => {
-            if (this.audioRef.currentTime - useStore.getState().player.currentTime > 0.5)
-                useStore.getState().player.setCurrentTime(this.audioRef.currentTime);
-        });
+        if (!this.audioRef)
+            return;
 
-        this.audioRef.addEventListener('ended', () => {
-            useStore.getState().player.setIsPlaying(false);
-            useStore.getState().player.setIsEnded(true);
-        });
-
-        this.audioRef.addEventListener('volumechange', () => {
-            useStore.getState().player.setVolume(this.audioRef.volume);
-        });
-
-        this.audioRef.addEventListener('loadedmetadata', () => {
-            useStore.getState().player.setDuration(this.audioRef.duration);
-        });
+        this.audioRef.addEventListener('timeupdate', this.onTimeUpdate);
+        this.audioRef.addEventListener('ended', this.onEnded);
+        this.audioRef.addEventListener('volumechange', this.onVolumeChange);
+        this.audioRef.addEventListener('loadedmetadata', this.onLoadedMetadata);
     }
 
-    public async loadSource(musicName: string) {
-        await hlsLoader.loadToAudioElement(this.audioRef, musicName);
+    private detachListeners() {
+        if (!this.audioRef)
+            return;
+
+        this.audioRef.removeEventListener('timeupdate', this.onTimeUpdate);
+        this.audioRef.removeEventListener('ended', this.onEnded);
+        this.audioRef.removeEventListener('volumechange', this.onVolumeChange);
+        this.audioRef.removeEventListener('loadedmetadata', this.onLoadedMetadata);
     }
 
-    public async play() {
-        await this.audioRef.play();
+    private onTimeUpdate = () => {
+        if (!this.audioRef)
+            return;
+
+        const state = useStore.getState().player;
+        if (this.audioRef.currentTime - state.currentTime > 0.5)
+            state.setCurrentTime(this.audioRef.currentTime);
+    };
+
+    private onEnded = () => {
+        const player = useStore.getState().player;
+        player.setIsPlaying(false);
+        player.setIsEnded(true);
+    };
+
+    private onVolumeChange = () => {
+        if (!this.audioRef)
+            return;
+
+        useStore.getState().player.setVolume(this.audioRef.volume);
+    };
+
+    private onLoadedMetadata = () => {
+        if (!this.audioRef)
+            return;
+
+        useStore.getState().player.setDuration(this.audioRef.duration);
+    };
+
+    private setupSubscriptions() {
+        const subscribeIsPlaying = useStore.subscribe(
+            (state) => state.player.isPlaying,
+            async (isPlaying: boolean) => {
+                if (!this.audioRef)
+                    return;
+
+                if (isPlaying) {
+                    try {
+                        await this.audioRef.play();
+                    } catch (ex) {
+                        console.error('Audio play failed', ex);
+                    }
+                } else {
+                    this.audioRef.pause();
+                }
+            }
+        );
+
+        const subscribeCurrentTrack = useStore.subscribe(
+            (state) => state.player.currentTrack,
+            async (track: string) => {
+                if (!this.audioRef)
+                    return;
+
+                if (track)
+                    await this.hlsLoader.loadToAudioElement(this.audioRef, track);
+            }
+        );
+
+        const subscribeVolume = useStore.subscribe(
+            (state) => state.player.volume,
+            (volume: number) => {
+                if (this.audioRef)
+                    this.audioRef.volume = volume;
+            }
+        );
+
+        const subscribeCurrentTime = useStore.subscribe(
+            (state) => state.player.currentTime,
+            (time: number) => {
+                if (this.audioRef && Math.abs(this.audioRef.currentTime - time) > 0.5)
+                    this.audioRef.currentTime = time;
+            }
+        );
+
+        this.subscriptions.push(
+            subscribeIsPlaying,
+            subscribeCurrentTrack,
+            subscribeVolume,
+            subscribeCurrentTime
+        );
     }
 
-    public pause() {
-        this.audioRef.pause();
-    }
-
-    public setTime(time: number) {
-        this.audioRef.currentTime = time;
-    }
-
-    public setVolume(volume: number) {
-        this.audioRef.volume = volume;
+    private unsubscribe() {
+        this.subscriptions.forEach((unsubscribe) => unsubscribe());
+        this.subscriptions = [];
     }
 }
 
-export default AudioPlayerService.getInstance();
+export default AudioPlayerService;
