@@ -1,6 +1,7 @@
 import {createSliceSetters, SliceCreator} from '@/stores/utils';
 
 export interface PlayerSlice {
+    currentTrack: string;
     isPlaying: boolean;
     isEnded: boolean;
     currentTime: number;
@@ -8,6 +9,7 @@ export interface PlayerSlice {
     prevVolume: number;
     duration: number;
 
+    setCurrentTrack: (volume: string) => void;
     setIsPlaying: (value: boolean) => void;
     setIsEnded: (value: boolean) => void;
     setCurrentTime: (time: number) => void;
@@ -17,6 +19,7 @@ export interface PlayerSlice {
 }
 
 const initialState: PlayerSlice = {
+    currentTrack: '',
     isPlaying: false,
     isEnded: false,
     currentTime: 0,
@@ -24,6 +27,8 @@ const initialState: PlayerSlice = {
     prevVolume: 1,
     duration: 0,
 
+    setCurrentTrack: () => {
+    },
     setIsPlaying: () => {
     },
     setIsEnded: () => {

@@ -2,6 +2,7 @@ import {create} from 'zustand';
 import {devtools} from 'zustand/middleware';
 import {persist} from 'zustand/middleware';
 import {immer} from 'zustand/middleware/immer';
+import {subscribeWithSelector} from 'zustand/middleware';
 import {mergeDeepLeft} from 'ramda';
 
 import {playerSlice, PlayerSlice} from '@/stores/slices/playerSlice';
@@ -17,11 +18,13 @@ export interface Index {
 export const useStore = create<Index>()(
     devtools(
         persist(
-            immer((...args) => ({
-                player: playerSlice(...args),
-                library: librarySlice(...args),
-                auth: authSlice(...args),
-            })),
+            subscribeWithSelector(
+                immer((...args) => ({
+                    player: playerSlice(...args),
+                    library: librarySlice(...args),
+                    auth: authSlice(...args),
+                }))
+            ),
             {
                 name: 'AppData',
                 partialize: (state) => ({

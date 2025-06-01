@@ -1,36 +1,34 @@
-import {useStore} from '@/stores';
 import AbstractAuthService from "@/domain/services/types/AbstractAuthService";
+import AbstractAuthManager from "@/domain/managers/Base/AbstractAuthManager";
+import {useStore} from '@/stores';
 
 class AuthService extends AbstractAuthService {
+    static override inject = [AbstractAuthManager];
+
     private refreshTimer?: ReturnType<typeof setTimeout>;
     private isRefreshing = false;
+    private readonly authManager: AbstractAuthManager;
+    private subscriptions: Array<() => void> = [];
 
-    constructor() {
+    constructor(authManager: AbstractAuthManager) {
         super();
+        this.authManager = authManager;
     }
 
     public override async start(): Promise<void> {
-        const delay = this.getTokenRefreshDelay();
-        this.scheduleNextRefresh(delay);
+        this.setupSubscriptions();
+
+        if (useStore.getState().auth.isAuthenticated)
+            this.scheduleNextRefresh(this.getTokenRefreshDelay());
     }
 
     public override async stop(): Promise<void> {
-        this.clearRefreshTimer();
-    }
-
-    public async forceRefreshNow(): Promise<void> {
-        if (this.isRefreshing) {
-            console.warn('[AuthService] Skipping force refresh — already running');
-            return;
+        try {
+            this.clearRefreshTimer();
+            this.unsubscribe();
+        } catch (ex) {
+            console.error('Error while stopping AuthService', ex);
         }
-
-        console.log('[AuthService] force refresh');
-        this.clearRefreshTimer();
-        await this.refresh();
-    }
-
-    public isRunning(): boolean {
-        return this.refreshTimer !== undefined;
     }
 
     private async refresh(): Promise<void> {
@@ -41,13 +39,18 @@ class AuthService extends AbstractAuthService {
 
         this.isRefreshing = true;
         try {
-            //auth func
+            await this.authManager.jwtRefresh();
         } catch (err) {
             console.warn('[AuthService] Error during scheduled refresh:', err);
         } finally {
             this.isRefreshing = false;
-            const nextDelay = this.getTokenRefreshDelay();
-            this.scheduleNextRefresh(nextDelay);
+
+            if (useStore.getState().auth.isAuthenticated) {
+                const nextDelay = this.getTokenRefreshDelay();
+                this.scheduleNextRefresh(nextDelay);
+            } else {
+                console.warn('[AuthService] Skipping next refresh — user is not authenticated');
+            }
         }
     }
 
@@ -72,6 +75,26 @@ class AuthService extends AbstractAuthService {
         const refreshAtMs = expirationMs - 30_000;
 
         return Math.max(0, refreshAtMs - now);
+    }
+
+    private setupSubscriptions() {
+        const subscribeIsAuth = useStore.subscribe(
+            (state) => state.auth.isAuthenticated,
+            (isAuthenticated: boolean) => {
+                if (isAuthenticated) {
+                    this.scheduleNextRefresh(this.getTokenRefreshDelay());
+                } else {
+                    this.clearRefreshTimer();
+                }
+            }
+        );
+
+        this.subscriptions.push(subscribeIsAuth);
+    }
+
+    private unsubscribe() {
+        this.subscriptions.forEach((unsubscribe) => unsubscribe());
+        this.subscriptions = [];
     }
 }
 

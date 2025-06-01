@@ -31,7 +31,7 @@ export default function ProtectedRoutes() {
 
         let valid = authManager.isAuthDataValid();
         if (!valid && !hasTriedRefresh) {
-            const refreshed = await authManager.forceRefresh();
+            const refreshed = await authManager.jwtRefresh();
             if (refreshed) {
                 setHasTriedRefresh(true);
                 valid = true;

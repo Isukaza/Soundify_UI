@@ -1,16 +1,17 @@
 import HlsLoader from "@/infrastructure/utils/HlsLoader";
-import {useStore} from "@/stores";
-
 import AbstractAudioPlayerService from "@/domain/services/types/AbstractAudioPlayerService";
+import {useStore} from "@/stores";
 
 class AudioPlayerService extends AbstractAudioPlayerService {
     private audioRef?: HTMLAudioElement;
     private readonly hlsLoader = new HlsLoader();
+    private subscriptions: Array<() => void> = [];
 
     public override async start(): Promise<void> {
         if (!this.audioRef) {
             this.audioRef = new Audio();
             this.attachListeners();
+            this.setupSubscriptions();
         }
     }
 
@@ -23,39 +24,12 @@ class AudioPlayerService extends AbstractAudioPlayerService {
             this.audioRef = undefined;
         }
 
-        this.hlsLoader.destroy();
-    }
-
-    public async loadTrack(musicName: string): Promise<void> {
-        if (!this.audioRef)
-            throw new Error('AudioPlayerService not started');
-
-        await this.hlsLoader.loadToAudioElement(this.audioRef, musicName);
-    }
-
-    public async play(): Promise<void> {
-        if (!this.audioRef)
-            throw new Error('AudioPlayerService not started');
-
-        await this.audioRef.play();
-    }
-
-    public pause(): void {
-        this.audioRef?.pause();
-    }
-
-    public setTime(time: number): void {
-        if (!this.audioRef)
-            return;
-
-        this.audioRef.currentTime = time;
-    }
-
-    public setVolume(volume: number): void {
-        if (!this.audioRef)
-            return;
-
-        this.audioRef.volume = volume;
+        try {
+            this.unsubscribe();
+            this.hlsLoader.destroy();
+        } catch (ex) {
+            console.error('Error while stopping AudioPlayerService', ex);
+        }
     }
 
     private attachListeners() {
@@ -106,6 +80,65 @@ class AudioPlayerService extends AbstractAudioPlayerService {
 
         useStore.getState().player.setDuration(this.audioRef.duration);
     };
+
+    private setupSubscriptions() {
+        const subscribeIsPlaying = useStore.subscribe(
+            (state) => state.player.isPlaying,
+            async (isPlaying: boolean) => {
+                if (!this.audioRef)
+                    return;
+
+                if (isPlaying) {
+                    try {
+                        await this.audioRef.play();
+                    } catch (ex) {
+                        console.error('Audio play failed', ex);
+                    }
+                } else {
+                    this.audioRef.pause();
+                }
+            }
+        );
+
+        const subscribeCurrentTrack = useStore.subscribe(
+            (state) => state.player.currentTrack,
+            async (track: string) => {
+                if (!this.audioRef)
+                    return;
+
+                if (track)
+                    await this.hlsLoader.loadToAudioElement(this.audioRef, track);
+            }
+        );
+
+        const subscribeVolume = useStore.subscribe(
+            (state) => state.player.volume,
+            (volume: number) => {
+                if (this.audioRef)
+                    this.audioRef.volume = volume;
+            }
+        );
+
+        const subscribeCurrentTime = useStore.subscribe(
+            (state) => state.player.currentTime,
+            (time: number) => {
+                if (this.audioRef && Math.abs(this.audioRef.currentTime - time) > 0.5)
+                    this.audioRef.currentTime = time;
+            }
+        );
+
+        this.subscriptions.push(
+            subscribeIsPlaying,
+            subscribeCurrentTrack,
+            subscribeVolume,
+            subscribeCurrentTime
+        );
+    }
+
+    private unsubscribe() {
+        this.subscriptions.forEach((unsubscribe) => unsubscribe());
+        this.subscriptions = [];
+    }
 }
 
 export default AudioPlayerService;
