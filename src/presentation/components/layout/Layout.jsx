@@ -4,7 +4,6 @@ import {Outlet} from "react-router-dom";
 import Header from '@/presentation/components/layout/Header';
 import Footer from '@/presentation/components/layout/Footer';
 
-// eslint-disable-next-line react/prop-types
 const Layout = () => {
     return (
         <Stack
