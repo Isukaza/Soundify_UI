@@ -1,3 +1,5 @@
+import AbstractTrackManager from "@/domain/managers/Base/AbstractTrackManager";
+import {useEffect} from "react";
 import {Link} from 'react-router-dom';
 import Button from '@mui/joy/Button';
 import {Stack} from '@mui/joy';
@@ -6,18 +8,33 @@ import Typography from '@mui/joy/Typography';
 import Logo from '@/presentation/components/common/Logo';
 import {borderRadiusStyle} from '@/presentation/styles/common/borderRadiusStyle';
 
-import useInject from '@/domain/hooks/useInject';
+import useInjectMap from "@/domain/hooks/useInjectMap";
 import AbstractAuthManager from '@/domain/managers/Base/AbstractAuthManager';
 
 export default function HomePage() {
-    const {instance: authManager, loading} = useInject(AbstractAuthManager);
+    const {instances, loading} = useInjectMap({
+        authManager: AbstractAuthManager,
+        trackManager: AbstractTrackManager
+    });
 
     const handleLogout = () => {
-        if (!authManager)
+        if (!instances.authManager)
             return;
 
-        authManager.clearAuthData();
+        instances.authManager.clearAuthData();
     };
+
+    useEffect(() => {
+        if (!instances.trackManager)
+            return;
+
+        const fetchTrack = async () => {
+            const t = await instances.trackManager?.LoadInitialTracksAsync();
+            console.log(JSON.stringify(t));
+        };
+
+        fetchTrack();
+    }, [instances.trackManager]);
 
     return (
         <Stack spacing={2} sx={{height: "auto", width: '734px', alignItems: 'center'}}>
@@ -27,10 +44,10 @@ export default function HomePage() {
                 Thank you for visiting!
             </Typography>
             <Typography level="h1" sx={{textAlign: 'center', fontWeight: 'bold'}}>
-                We're in the early stages of developing something exciting, and we're glad you're here.
+                {"We're in the early stages of developing something exciting, and we're glad you're here."}
             </Typography>
             <Typography level="h1" sx={{textAlign: 'center', fontWeight: 'bold'}}>
-                Our app is still under construction, but we're working hard to bring you a great experience.
+                {'Our app is still under construction, but we\'re working hard to bring you a great experience.'}
             </Typography>
 
             <Button
@@ -40,7 +57,7 @@ export default function HomePage() {
                 variant="solid"
                 color="primary"
                 size="lg"
-                disabled={loading || !authManager}
+                disabled={loading || !instances.authManager}
                 sx={{
                     width: {xs: 'auto', sm: '25%'},
                     ...borderRadiusStyle,
