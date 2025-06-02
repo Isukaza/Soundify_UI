@@ -1,3 +1,4 @@
+import {Index} from "@/stores";
 import {Album} from '@/domain/models/Album';
 import {Artist} from '@/domain/models/Artist';
 import {Playlist} from '@/domain/models/Playlist';
@@ -17,6 +18,8 @@ export interface LibrarySlice {
     setArtists: (artists: Artist[]) => void;
     setPlaylists: (playlists: Playlist[]) => void;
     setCurrentTrack: (track: Track | null) => void;
+
+    addTracks: (tracks: Track[]) => void;
 }
 
 const initialState: LibrarySlice = {
@@ -35,6 +38,9 @@ const initialState: LibrarySlice = {
     setPlaylists: () => {
     },
     setCurrentTrack: () => {
+    },
+
+    addTracks: () => {
     }
 };
 
@@ -43,5 +49,11 @@ export const librarySlice: SliceCreator<LibrarySlice> = (set) => {
     return {
         ...initialState,
         ...setters,
+
+        addTracks: (tracks: Track[]) => {
+            set((state: Index) => {
+                state.library.tracks.push(...tracks);
+            });
+        },
     };
 };
