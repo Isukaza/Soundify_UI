@@ -11,7 +11,7 @@ import Player from '@/presentation/components/player/Player';
 
 const Footer = () => {
     const isAuthenticated = useStore(state => state.auth.isAuthenticated);
-    const musicName: string = "tmpdob60llg";
+    const musicName: string = "6ee20702-aa07-4f61-872e-e41d43c962a8/81992926-f894-45ed-9fd6-3847f105bf87";
 
     const {instance: manager, loading} = useInject(AbstractAudioPlayerManager);
 

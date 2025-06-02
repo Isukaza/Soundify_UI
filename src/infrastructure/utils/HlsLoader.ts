@@ -16,7 +16,7 @@ export default class HlsLoader {
                 throw new Error("Failed to get signed URL");
 
             const signedURL = res.data;
-            const modifiedManifestUrl = await this.prepareModifiedManifest(signedURL, musicName);
+            const modifiedManifestUrl = await this.prepareModifiedManifest(signedURL, '52164a7d-5ac6-4687-9085-acc5edc487d1');
 
             if (!modifiedManifestUrl)
                 throw new Error("Failed to create modified manifest URL");
