@@ -11,6 +11,8 @@ import {borderRadiusStyle} from '@/presentation/styles/common/borderRadiusStyle'
 import useInjectMap from "@/domain/hooks/useInjectMap";
 import AbstractAuthManager from '@/domain/managers/Base/AbstractAuthManager';
 
+import TrackTable from '@/presentation/components/tables/trackTable';
+
 export default function HomePage() {
     const {instances, loading} = useInjectMap({
         authManager: AbstractAuthManager,
@@ -37,7 +39,7 @@ export default function HomePage() {
     }, [instances.trackManager]);
 
     return (
-        <Stack spacing={2} sx={{height: "auto", width: '734px', alignItems: 'center'}}>
+        <Stack spacing={2} sx={{height: "auto", width: '1734px', alignItems: 'center'}}>
             <Logo/>
 
             <Typography level="h1" sx={{textAlign: 'center', fontWeight: 'bold'}}>
@@ -66,6 +68,9 @@ export default function HomePage() {
             >
                 Log Out
             </Button>
+
+            <TrackTable/>
+
         </Stack>
     );
 }
