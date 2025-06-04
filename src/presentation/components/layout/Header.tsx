@@ -28,8 +28,7 @@ export function Header() {
 
             try {
                 if (debouncedSearchText.trim() === '') {
-                    console.info('Header: Loading initial tracks');
-                    console.info(JSON.stringify(await instances.trackManager.LoadInitialTracksAsync()));
+                    await instances.trackManager.LoadInitialTracksAsync();
                 } else if (debouncedSearchText.length >= 3) {
                     const filter: TrackFilterRequest = {
                         page: 1,
@@ -37,8 +36,8 @@ export function Header() {
                         trackName: debouncedSearchText
                     };
 
-                    console.info('Header: Performing search');
-                    console.info(JSON.stringify(await instances.trackManager.LoadTracksByFilterAsync(filter)));
+
+                    await instances.trackManager.LoadTracksByFilterAsync(filter);
                 }
             } catch (error) {
                 console.error('Header: Failed to perform track loading', error);

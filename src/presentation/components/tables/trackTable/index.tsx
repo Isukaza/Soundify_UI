@@ -69,7 +69,7 @@ export default function TrackTable() {
     });
 
     if (loading)
-        return <CircularProgress/>;
+        return null;
 
     return (
         <Table
