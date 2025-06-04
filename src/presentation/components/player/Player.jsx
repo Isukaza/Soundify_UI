@@ -1,4 +1,4 @@
-import {Stack} from "@mui/joy";
+import {Box} from "@mui/joy";
 
 import Playback from "@/presentation/components/player/Playback";
 import TrackInfo from "@/presentation/components/player/TrackInfo";
@@ -8,15 +8,36 @@ export default function Player() {
     console.log("Player");
 
     return (
-        <Stack
-            direction="row"
-            justifyContent="center"
-            alignItems="center"
-            sx={{width: "100%", height: "auto", position: "relative"}}
+        <Box
+            sx={{
+                position: 'relative',
+                width: '100%',
+                height: '75px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                padding: '0 20px'
+            }}
         >
-            <TrackInfo sx={{position: "absolute", left: 0}}/>
-            <Playback sx={{flex: 1, textAlign: "center"}}/>
-            <Volume sx={{position: "absolute", right: 0}}/>
-        </Stack>
+            <Box sx={{flexShrink: 0}}>
+                <TrackInfo/>
+            </Box>
+
+            <Box
+                sx={{
+                    position: 'absolute',
+                    left: '50%',
+                    transform: 'translateX(-50%)',
+                    maxWidth: '500px',
+                    width: '100%',
+                }}
+            >
+                <Playback/>
+            </Box>
+
+            <Box sx={{flexShrink: 0}}>
+                <Volume/>
+            </Box>
+        </Box>
     );
 }
