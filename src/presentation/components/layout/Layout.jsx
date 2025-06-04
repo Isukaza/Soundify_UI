@@ -1,7 +1,7 @@
 import {Stack, Box} from '@mui/joy';
 import {Outlet} from "react-router-dom";
 
-import Header from '@/presentation/components/layout/Header';
+import {Header} from '@/presentation/components/layout/Header';
 import Footer from '@/presentation/components/layout/Footer';
 
 const Layout = () => {
