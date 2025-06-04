@@ -35,8 +35,6 @@ export const TrackRow = ({row, columnStyles, audioPlayerManager}: TrackRowProps)
         }
     };
 
-    console.log("TrackRow rendered", row.index + 1);
-
     return (
         <tr className={`track-row ${isActive ? 'active' : ''}`}>
             {row.getVisibleCells().map(cell => {

@@ -8,7 +8,7 @@ const Layout = () => {
     return (
         <Stack
             sx={{
-                minHeight: '100vh',
+                height: '100vh',
                 display: 'flex',
                 flexDirection: 'column',
             }}
@@ -17,18 +17,13 @@ const Layout = () => {
 
             <Box
                 sx={{
-                    height: 'calc(100vh - 160px)',
                     flexGrow: 1,
                     overflowY: 'auto',
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    flexDirection: 'column',
                     padding: 2,
                     background: 'linear-gradient(rgba(255, 255, 255, 0.1) 0%, rgb(0, 0, 0) 100%)'
                 }}
             >
-                <Outlet />
+                <Outlet/>
             </Box>
 
             <Footer/>

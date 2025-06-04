@@ -8,7 +8,7 @@ import {useEffect, useState} from 'react';
 import {useDebouncedValue} from '@/domain/hooks/useDebouncedValue';
 import AbstractTrackManager from '@/domain/managers/Base/AbstractTrackManager';
 import useInjectMap from '@/domain/hooks/useInjectMap';
-import {TrackFilterRequest} from '@/domain/models/requests/TrackFilterRequest';
+import TrackFilterRequest from '@/domain/models/requests/TrackFilterRequest';
 import HomeIcon from '@mui/icons-material/Home';
 import {Link} from "react-router-dom";
 
@@ -26,23 +26,27 @@ export function Header() {
             if (loading || !instances.trackManager)
                 return;
 
-            if (debouncedSearchText.length >= 3) {
-                const filter: TrackFilterRequest = {
-                    page: 1,
-                    size: 20,
-                    trackName: debouncedSearchText
-                };
+            try {
+                if (debouncedSearchText.trim() === '') {
+                    console.info('Header: Loading initial tracks');
+                    console.info(JSON.stringify(await instances.trackManager.LoadInitialTracksAsync()));
+                } else if (debouncedSearchText.length >= 3) {
+                    const filter: TrackFilterRequest = {
+                        page: 1,
+                        size: 20,
+                        trackName: debouncedSearchText
+                    };
 
-                try {
+                    console.info('Header: Performing search');
                     console.info(JSON.stringify(await instances.trackManager.LoadTracksByFilterAsync(filter)));
-                } catch (error) {
-                    console.error('Header: Failed to perform search', error);
                 }
+            } catch (error) {
+                console.error('Header: Failed to perform track loading', error);
             }
         };
 
         performSearch();
-    }, [debouncedSearchText, loading]);
+    }, [debouncedSearchText, loading, instances.trackManager]);
 
     const handleLogout = () => {
         if (!instances.authManager)
