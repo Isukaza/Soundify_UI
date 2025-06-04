@@ -1,5 +1,5 @@
 import InjectableBase from "@/app/di/Base/InjectableBase";
-import {TrackFilterRequest} from "@/domain/models/requests/TrackFilterRequest";
+import TrackFilterRequest from "@/domain/models/requests/TrackFilterRequest";
 import {Track} from "@/domain/models/Track";
 
 export default abstract class AbstractTrackManager extends InjectableBase {

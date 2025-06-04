@@ -12,12 +12,14 @@ export interface LibrarySlice {
     artists: Artist[];
     playlists: Playlist[];
     currentTrack: Track | null;
+    nextPage: number | null;
 
     setTracks: (tracks: Track[]) => void;
     setAlbums: (albums: Album[]) => void;
     setArtists: (artists: Artist[]) => void;
     setPlaylists: (playlists: Playlist[]) => void;
     setCurrentTrack: (track: Track | null) => void;
+    setNextPage: (nextPage: number | null) => void;
 
     addTracks: (tracks: Track[]) => void;
 }
@@ -28,6 +30,7 @@ const initialState: LibrarySlice = {
     artists: [],
     playlists: [],
     currentTrack: null,
+    nextPage: null,
 
     setTracks: () => {
     },
@@ -38,6 +41,8 @@ const initialState: LibrarySlice = {
     setPlaylists: () => {
     },
     setCurrentTrack: () => {
+    },
+    setNextPage: () => {
     },
 
     addTracks: () => {
