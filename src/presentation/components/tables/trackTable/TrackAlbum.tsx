@@ -1,7 +1,22 @@
-import { Typography } from '@mui/joy';
+import {Link as RouterLink} from 'react-router-dom';
+import {Link} from '@mui/joy';
 
-export function TrackAlbum({ albumName }: { albumName: string; }) {
+export function TrackAlbum({albumId, albumName}: { albumId: string; albumName: string; }) {
     return (
-        <Typography /*level="body2"*/ sx={{ opacity: 0.8 }}>{albumName}</Typography>
+        <Link
+            component={RouterLink}
+            to={`/album/${albumId}`}
+            underline="none"
+            color="neutral"
+            sx={{
+                opacity: 0.8,
+                '&:hover': {
+                    textDecoration: 'underline',
+                    opacity: 1,
+                },
+            }}
+        >
+            {albumName}
+        </Link>
     );
 }

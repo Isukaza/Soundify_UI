@@ -1,23 +1,63 @@
-import {Stack, Typography} from '@mui/joy';
-// @ts-ignore
-import placeholder from '@/shared/assets/placeholder.png';
+import {Link as RouterLink} from 'react-router-dom';
+import {Link, Stack} from '@mui/joy';
+import {InsertPhoto} from '@mui/icons-material';
+import {useState} from 'react';
 
-export function TrackInfo({thumbnail, trackName, artistName}: {
+export function TrackInfo({thumbnail, trackId, trackName, artistId, artistName}: {
     thumbnail?: string;
+    trackId: string;
     trackName: string;
+    artistId: string;
     artistName: string;
 }) {
+    const [imgError, setImgError] = useState(false);
+
+    const showPlaceholderIcon = imgError || !thumbnail;
+
     return (
         <Stack direction="row" spacing={1} alignItems="center">
-            <img
-                src={thumbnail || placeholder}
-                onError={(e) => { e.currentTarget.src = placeholder; }}
-                alt={trackName}
-                style={{ width: 32, height: 32, borderRadius: 4 }}
-            />
+            {showPlaceholderIcon ? (
+                <InsertPhoto sx={{width: 32, height: 32}} />
+            ) : (
+                <img
+                    src={thumbnail}
+                    onError={() => setImgError(true)}
+                    alt={trackName}
+                    style={{width: 32, height: 32, borderRadius: 4}}
+                />
+            )}
+
             <Stack>
-                <Typography level="body1" sx={{ fontSize: '1rem' }}>{trackName}</Typography>
-                <Typography level="body2" sx={{ opacity: 0.7 }}>{artistName}</Typography>
+                <Link
+                    component={RouterLink}
+                    to={`/track/${trackId}`}
+                    underline="none"
+                    color="neutral"
+                    sx={{
+                        fontSize: '1rem',
+                        '&:hover': {
+                            textDecoration: 'underline',
+                        },
+                    }}
+                >
+                    {trackName}
+                </Link>
+
+                <Link
+                    component={RouterLink}
+                    to={`/artist/${artistId}`}
+                    underline="none"
+                    color="neutral"
+                    sx={{
+                        opacity: 0.7,
+                        '&:hover': {
+                            textDecoration: 'underline',
+                            opacity: 1,
+                        },
+                    }}
+                >
+                    {artistName}
+                </Link>
             </Stack>
         </Stack>
     );
