@@ -10,6 +10,7 @@ import {useStore} from '@/stores';
 export default function PlayButton() {
     const isPlaying = useStore(state => state.player.isPlaying);
     const {instance: manager, loading} = useInject(AbstractAudioPlayerManager);
+    const currentTrack = useStore(state => state.library.currentTrack);
 
     const handlePlay = async () => {
         if (!manager)
@@ -22,7 +23,7 @@ export default function PlayButton() {
         }
     };
 
-    const isDisabled = loading || !manager;
+    const isDisabled = loading || !manager || !currentTrack;
 
     return (
         <Button

@@ -11,6 +11,7 @@ const TrackProgressSlider = () => {
     console.log("TrackProgressSlider");
 
     const currentTime = useStore((state) => state.player.currentTime);
+    const currentTrack = useStore(state => state.library.currentTrack);
     const duration = useStore((state) => state.player.duration);
     const isEnded = useStore((state) => state.player.isEnded);
 
@@ -68,7 +69,7 @@ const TrackProgressSlider = () => {
             onChange={handleChangeSlider}
             onChangeCommitted={handleCommited}
             valueLabelFormat={formatTime}
-            disabled={loading || !manager}
+            disabled={loading || !manager || !currentTrack}
         />
     );
 };

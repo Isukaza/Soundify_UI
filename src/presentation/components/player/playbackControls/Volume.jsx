@@ -8,6 +8,7 @@ import {useStore} from '@/stores';
 export default function Volume() {
     const {instance: manager, loading} = useInject(AbstractAudioPlayerManager);
     const playerVolume = useStore(state => state.player.volume);
+    const currentTrack = useStore(state => state.library.currentTrack);
 
     const getVolumeIcon = (volume) => {
         if (volume === 0)
@@ -43,6 +44,9 @@ export default function Volume() {
             console.error("Failed to set volume:", err);
         }
     };
+
+    if (!currentTrack)
+        return null;
 
     return (
         <Stack
