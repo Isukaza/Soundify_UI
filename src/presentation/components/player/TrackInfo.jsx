@@ -1,19 +1,20 @@
 import {InsertPhoto, PlaylistAdd} from '@mui/icons-material';
 import {IconButton, Stack, Typography} from '@mui/joy';
 
-// eslint-disable-next-line react/prop-types
-export default function TrackInfo({sx}) {
+import {useStore} from '@/stores';
+
+export default function TrackInfo() {
     console.log("TrackInfo");
+
+    const currentTrack = useStore(state => state.library.currentTrack);
+    if (!currentTrack)
+        return null;
 
     return (
         <Stack
             direction="row"
             spacing={1}
-            sx={{
-                justifyContent: "space-between",
-                alignItems: "center",
-                ...sx,
-            }}
+            alignItems="center"
         >
             <InsertPhoto fontSize="xl4"/>
             <Stack
@@ -23,8 +24,8 @@ export default function TrackInfo({sx}) {
                     justifyContent: 'center',
                 }}
             >
-                <Typography>Artist name</Typography>
-                <Typography>Album name</Typography>
+                <Typography>{currentTrack.Name}</Typography>
+                <Typography>{currentTrack.ArtistName}</Typography>
             </Stack>
             <IconButton>
                 <PlaylistAdd fontSize="xl3"/>

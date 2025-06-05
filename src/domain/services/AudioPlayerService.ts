@@ -1,5 +1,8 @@
-import HlsLoader from "@/infrastructure/utils/HlsLoader";
 import AbstractAudioPlayerService from "@/domain/services/types/AbstractAudioPlayerService";
+
+import HlsLoader from "@/infrastructure/utils/HlsLoader";
+import {getTrackPath} from "@/infrastructure/utils/formatters";
+
 import {useStore} from "@/stores";
 
 class AudioPlayerService extends AbstractAudioPlayerService {
@@ -16,17 +19,13 @@ class AudioPlayerService extends AbstractAudioPlayerService {
     }
 
     public override async stop(): Promise<void> {
-        if (this.audioRef) {
-            this.detachListeners();
-            this.audioRef.pause();
-            this.audioRef.src = '';
-            this.audioRef.load();
-            this.audioRef = undefined;
-        }
-
         try {
+            if (this.audioRef)
+                this.detachListeners();
+
             this.unsubscribe();
-            this.hlsLoader.destroy();
+            this.disposable();
+            this.audioRef = undefined;
         } catch (ex) {
             console.error('Error while stopping AudioPlayerService', ex);
         }
@@ -100,14 +99,32 @@ class AudioPlayerService extends AbstractAudioPlayerService {
             }
         );
 
-        const subscribeCurrentTrack = useStore.subscribe(
-            (state) => state.player.currentTrack,
-            async (track: string) => {
-                if (!this.audioRef)
-                    return;
+        const subscribeIsLoadingTrack = useStore.subscribe(
+            (state) => state.player.isLoadingTrack,
+            async (isLoading) => {
+                if (isLoading) {
+                    const currentTrack = useStore.getState().library.currentTrack;
+                    if (!currentTrack || !this.audioRef)
+                        return;
 
-                if (track)
-                    await this.hlsLoader.loadToAudioElement(this.audioRef, track);
+                    try {
+                        this.disposable();
+                        const currentTrackId = currentTrack.TrackId;
+
+                        await this.hlsLoader
+                            .loadToAudioElement(this.audioRef, getTrackPath(currentTrack), currentTrack.TrackId);
+
+                        const latestTrack = useStore.getState().library.currentTrack;
+                        if (latestTrack?.TrackId !== currentTrackId)
+                            return;
+
+                        this.setTrackAsLoaded();
+                    } catch (err) {
+                        console.error('Failed to load track', err);
+                    } finally {
+                        useStore.getState().player.setIsLoadingTrack(false);
+                    }
+                }
             }
         );
 
@@ -129,15 +146,32 @@ class AudioPlayerService extends AbstractAudioPlayerService {
 
         this.subscriptions.push(
             subscribeIsPlaying,
-            subscribeCurrentTrack,
+            subscribeIsLoadingTrack,
             subscribeVolume,
             subscribeCurrentTime
         );
     }
 
+    private setTrackAsLoaded() {
+        const player = useStore.getState().player;
+        player.setIsTrackLoaded(true);
+        player.setIsEnded(false);
+        player.setIsPlaying(true);
+    }
+
     private unsubscribe() {
         this.subscriptions.forEach((unsubscribe) => unsubscribe());
         this.subscriptions = [];
+    }
+
+    private disposable() {
+        this.hlsLoader.destroy();
+
+        if (this.audioRef) {
+            this.audioRef.pause();
+            this.audioRef.src = '';
+            this.audioRef.load();
+        }
     }
 }
 

@@ -3,6 +3,8 @@ import {Artist} from '@/domain/models/Artist';
 import {Playlist} from '@/domain/models/Playlist';
 import {Track} from '@/domain/models/Track';
 
+import {Index} from "@/stores";
+
 import {createSliceSetters, SliceCreator} from '@/stores/utils';
 
 export interface LibrarySlice {
@@ -11,12 +13,16 @@ export interface LibrarySlice {
     artists: Artist[];
     playlists: Playlist[];
     currentTrack: Track | null;
+    nextPage: number | null;
 
     setTracks: (tracks: Track[]) => void;
     setAlbums: (albums: Album[]) => void;
     setArtists: (artists: Artist[]) => void;
     setPlaylists: (playlists: Playlist[]) => void;
     setCurrentTrack: (track: Track | null) => void;
+    setNextPage: (nextPage: number | null) => void;
+
+    addTracks: (tracks: Track[]) => void;
 }
 
 const initialState: LibrarySlice = {
@@ -25,6 +31,7 @@ const initialState: LibrarySlice = {
     artists: [],
     playlists: [],
     currentTrack: null,
+    nextPage: null,
 
     setTracks: () => {
     },
@@ -35,6 +42,11 @@ const initialState: LibrarySlice = {
     setPlaylists: () => {
     },
     setCurrentTrack: () => {
+    },
+    setNextPage: () => {
+    },
+
+    addTracks: () => {
     }
 };
 
@@ -43,5 +55,11 @@ export const librarySlice: SliceCreator<LibrarySlice> = (set) => {
     return {
         ...initialState,
         ...setters,
+
+        addTracks: (tracks: Track[]) => {
+            set((state: Index) => {
+                state.library.tracks.push(...tracks);
+            });
+        },
     };
 };

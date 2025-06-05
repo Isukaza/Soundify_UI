@@ -3,8 +3,7 @@ import {Stack} from "@mui/joy";
 import PlaybackControls from "@/presentation/components/player/playbackControls/PlaybackControls";
 import TrackProgress from "@/presentation/components/player/trackProgress/TrackProgress";
 
-// eslint-disable-next-line react/prop-types
-export default function Playback({sx}) {
+export default function Playback() {
     console.log("Playback");
 
     return (
@@ -16,7 +15,6 @@ export default function Playback({sx}) {
                 alignItems: "center",
                 width: "100%",
                 maxWidth: "500px",
-                ...sx,
             }}
         >
             <PlaybackControls/>

@@ -1,16 +1,16 @@
 import {CircularProgress, IconButton, Slider, Stack} from '@mui/joy';
 import {VolumeDown, VolumeMute, VolumeOff, VolumeUp} from '@mui/icons-material';
 
-import useInject from "@/domain/hooks/useInject";
-
 import AbstractAudioPlayerManager from "@/domain/managers/Base/AbstractAudioPlayerManager";
+
+import useInject from "@/domain/hooks/useInject";
 
 import {useStore} from '@/stores';
 
-// eslint-disable-next-line react/prop-types
-export default function Volume({sx}) {
+export default function Volume() {
     const {instance: manager, loading} = useInject(AbstractAudioPlayerManager);
     const playerVolume = useStore(state => state.player.volume);
+    const currentTrack = useStore(state => state.library.currentTrack);
 
     const getVolumeIcon = (volume) => {
         if (volume === 0)
@@ -47,16 +47,14 @@ export default function Volume({sx}) {
         }
     };
 
+    if (!currentTrack)
+        return null;
+
     return (
         <Stack
-            sx={{
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                ...sx
-            }}
             direction="row"
             spacing={1}
+            alignItems="center"
         >
             {
                 loading || !manager

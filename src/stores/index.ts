@@ -5,9 +5,9 @@ import {immer} from 'zustand/middleware/immer';
 import {subscribeWithSelector} from 'zustand/middleware';
 import {mergeDeepLeft} from 'ramda';
 
-import {playerSlice, PlayerSlice} from '@/stores/slices/playerSlice';
-import {librarySlice, LibrarySlice} from '@/stores/slices/librarySlice';
 import {authSlice, AuthSlice} from '@/stores/slices/authSlice';
+import {librarySlice, LibrarySlice} from '@/stores/slices/librarySlice';
+import {playerSlice, PlayerSlice} from '@/stores/slices/playerSlice';
 
 export interface Index {
     player: PlayerSlice;

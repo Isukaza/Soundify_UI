@@ -1,9 +1,26 @@
 import AbstractAudioPlayerManager from "@/domain/managers/Base/AbstractAudioPlayerManager";
+import {Track} from "@/domain/models/Track";
+
 import {useStore} from "@/stores";
 
 export default class AudioPlayerManager extends AbstractAudioPlayerManager {
     async play(): Promise<void> {
         const player = useStore.getState().player;
+        const library = useStore.getState().library;
+
+        if (!library.currentTrack)
+            return;
+
+        if (!player.isTrackLoaded) {
+            if (!player.isLoadingTrack)
+                player.setIsLoadingTrack(true);
+
+            return;
+        }
+
+        if (player.isEnded)
+            player.setCurrentTime(0);
+
         if (!player.isPlaying) {
             player.setIsEnded(false);
             player.setIsPlaying(true);
@@ -14,6 +31,10 @@ export default class AudioPlayerManager extends AbstractAudioPlayerManager {
         const player = useStore.getState().player;
         if (player.isPlaying)
             player.setIsPlaying(false);
+    }
+
+    setCurrentTrack(track: Track): void {
+        useStore.getState().library.setCurrentTrack(track);
     }
 
     async setTime(time: number): Promise<void> {
@@ -39,7 +60,25 @@ export default class AudioPlayerManager extends AbstractAudioPlayerManager {
         }
     }
 
-    async loadTrack(musicName: string): Promise<void> {
-        useStore.getState().player.setCurrentTrack(musicName);
+    resetLibraryState(): void {
+        const library = useStore.getState().library;
+
+        library.setTracks([]);
+        library.setAlbums([]);
+        library.setArtists([]);
+        library.setPlaylists([]);
+        library.setCurrentTrack(null);
+        library.setNextPage(null);
+    }
+
+    resetPlayerState(): void {
+        const player = useStore.getState().player;
+
+        player.setIsPlaying(false);
+        player.setIsTrackLoaded(false);
+        player.setIsLoadingTrack(true);
+        player.setCurrentTime(0);
+        player.setDuration(0);
+        player.setIsEnded(false);
     }
 }

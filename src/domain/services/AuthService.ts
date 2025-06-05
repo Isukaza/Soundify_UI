@@ -1,5 +1,5 @@
-import AbstractAuthService from "@/domain/services/types/AbstractAuthService";
 import AbstractAuthManager from "@/domain/managers/Base/AbstractAuthManager";
+import AbstractAuthService from "@/domain/services/types/AbstractAuthService";
 import {useStore} from '@/stores';
 
 class AuthService extends AbstractAuthService {

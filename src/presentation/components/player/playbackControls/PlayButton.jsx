@@ -1,15 +1,16 @@
 import Button from '@mui/joy/Button';
 import {PlayArrow as PlayArrowIcon, Pause as PauseIcon} from '@mui/icons-material';
 
-import useInject from "@/domain/hooks/useInject";
-
 import AbstractAudioPlayerManager from "@/domain/managers/Base/AbstractAudioPlayerManager";
+
+import useInject from "@/domain/hooks/useInject";
 
 import {useStore} from '@/stores';
 
 export default function PlayButton() {
     const isPlaying = useStore(state => state.player.isPlaying);
     const {instance: manager, loading} = useInject(AbstractAudioPlayerManager);
+    const currentTrack = useStore(state => state.library.currentTrack);
 
     const handlePlay = async () => {
         if (!manager)
@@ -22,7 +23,7 @@ export default function PlayButton() {
         }
     };
 
-    const isDisabled = loading || !manager;
+    const isDisabled = loading || !manager || !currentTrack;
 
     return (
         <Button

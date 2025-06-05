@@ -1,23 +1,23 @@
-import Hls from "hls.js";
 import axios from "axios";
+import Hls from "hls.js";
+
 import CdnApi from "@/infrastructure/api/CdnApi.js";
 import {parseUrl} from "@/infrastructure/utils/urlUtils.js";
 
 export default class HlsLoader {
     private hlsInstance: Hls | null = null;
 
-    public async loadToAudioElement(audioElement: HTMLAudioElement, musicName: string) {
-        if (!audioElement || !musicName)
+    public async loadToAudioElement(audioElement: HTMLAudioElement, trackPath: string, trackId: string) {
+        if (!audioElement || !trackPath)
             return;
 
         try {
-            const res = await CdnApi.GetLinkToListenAsync(`${musicName}/*`);
+            const res = await CdnApi.GetLinkToListenAsync(`${trackPath}/*`);
             if (!res.status)
                 throw new Error("Failed to get signed URL");
 
             const signedURL = res.data;
-            const modifiedManifestUrl = await this.prepareModifiedManifest(signedURL, musicName);
-
+            const modifiedManifestUrl = await this.prepareModifiedManifest(signedURL, trackId);
             if (!modifiedManifestUrl)
                 throw new Error("Failed to create modified manifest URL");
 

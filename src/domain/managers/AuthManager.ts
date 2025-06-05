@@ -2,7 +2,9 @@ import dayjs from 'dayjs';
 import {jwtDecode} from 'jwt-decode';
 
 import AbstractAuthManager from "@/domain/managers/Base/AbstractAuthManager";
+
 import AuthApi from '@/infrastructure/api/AuthApi';
+
 import {useStore} from '@/stores';
 
 export default class AuthManager extends AbstractAuthManager {
