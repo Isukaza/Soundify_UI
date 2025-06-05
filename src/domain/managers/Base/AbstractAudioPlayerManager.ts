@@ -1,9 +1,12 @@
 import InjectableBase from "@/app/di/Base/InjectableBase";
+import {Track} from "@/domain/models/Track";
 
 export default abstract class AbstractAudioPlayerManager extends InjectableBase {
     abstract play(): Promise<void>;
 
     abstract pause(): Promise<void>;
+
+    abstract setCurrentTrack(track: Track): void;
 
     abstract setTime(time: number): Promise<void>;
 
@@ -13,5 +16,7 @@ export default abstract class AbstractAudioPlayerManager extends InjectableBase 
 
     abstract toggleMute(): Promise<void>;
 
-    abstract loadTrack(musicName: string): Promise<void>;
+    abstract resetLibraryState(): void;
+
+    abstract resetPlayerState(): void;
 }

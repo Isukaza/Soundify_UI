@@ -19,7 +19,6 @@ interface TrackRowProps {
 export const TrackRow = ({row, columnStyles, audioPlayerManager}: TrackRowProps) => {
     const isPlaying = useStore(state => state.player.isPlaying);
     const currentTrack = useStore(state => state.library.currentTrack);
-    const setCurrentTrack = useStore(state => state.library.setCurrentTrack);
 
     const isCurrent = currentTrack?.TrackId === row.original.TrackId;
     const isActive = isCurrent && isPlaying;
@@ -27,11 +26,16 @@ export const TrackRow = ({row, columnStyles, audioPlayerManager}: TrackRowProps)
     const handlePlayPause = async (e: React.MouseEvent) => {
         e.stopPropagation();
 
+        if (!audioPlayerManager) {
+            console.warn('AudioPlayerManager is not available');
+            return;
+        }
+
         if (isCurrent) {
-            await audioPlayerManager?.togglePlay();
+            await audioPlayerManager.togglePlay();
         } else {
-            setCurrentTrack(row.original);
-            await audioPlayerManager?.play();
+            audioPlayerManager.setCurrentTrack(row.original);
+            audioPlayerManager.resetPlayerState();
         }
     };
 
@@ -63,10 +67,7 @@ export const TrackRow = ({row, columnStyles, audioPlayerManager}: TrackRowProps)
                         break;
                     case 'album':
                         content = (
-                            <TrackAlbum
-                                albumId={row.original.AlbumId}
-                                albumName={row.original.AlbumName}
-                            />
+                            <TrackAlbum albumId={row.original.AlbumId} albumName={row.original.AlbumName}/>
                         );
                         break;
                     case 'addToPlaylist':

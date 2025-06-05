@@ -1,15 +1,16 @@
-import AbstractAuthManager from "@/domain/managers/Base/AbstractAuthManager";
 import {borderRadiusStyle} from "@/presentation/styles/common/borderRadiusStyle";
 import {Box, Input} from '@mui/joy';
 import {Search} from '@mui/icons-material';
 import Button from "@mui/joy/Button";
 import {useEffect, useState} from 'react';
 
-import {useDebouncedValue} from '@/domain/hooks/useDebouncedValue';
+import AbstractAudioPlayerManager from "@/domain/managers/Base/AbstractAudioPlayerManager";
+import AbstractAuthManager from "@/domain/managers/Base/AbstractAuthManager";
 import AbstractTrackManager from '@/domain/managers/Base/AbstractTrackManager';
-import useInjectMap from '@/domain/hooks/useInjectMap';
 import TrackFilterRequest from '@/domain/models/requests/TrackFilterRequest';
 import HomeIcon from '@mui/icons-material/Home';
+import {useDebouncedValue} from '@/domain/hooks/useDebouncedValue';
+import useInjectMap from '@/domain/hooks/useInjectMap';
 import {Link} from "react-router-dom";
 
 export function Header() {
@@ -18,7 +19,8 @@ export function Header() {
 
     const {instances, loading} = useInjectMap({
         authManager: AbstractAuthManager,
-        trackManager: AbstractTrackManager
+        trackManager: AbstractTrackManager,
+        audioPlayerManager: AbstractAudioPlayerManager
     });
 
     useEffect(() => {
@@ -48,10 +50,12 @@ export function Header() {
     }, [debouncedSearchText, loading, instances.trackManager]);
 
     const handleLogout = () => {
-        if (!instances.authManager)
+        if (!instances.authManager && !instances.audioPlayerManager)
             return;
 
-        instances.authManager.clearAuthData();
+        instances.audioPlayerManager?.resetPlayerState();
+        instances.audioPlayerManager?.resetLibraryState();
+        instances.authManager?.clearAuthData();
     };
 
     return (
