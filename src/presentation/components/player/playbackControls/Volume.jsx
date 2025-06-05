@@ -1,8 +1,10 @@
 import {CircularProgress, IconButton, Slider, Stack} from '@mui/joy';
 import {VolumeDown, VolumeMute, VolumeOff, VolumeUp} from '@mui/icons-material';
 
-import useInject from "@/domain/hooks/useInject";
 import AbstractAudioPlayerManager from "@/domain/managers/Base/AbstractAudioPlayerManager";
+
+import useInject from "@/domain/hooks/useInject";
+
 import {useStore} from '@/stores';
 
 export default function Volume() {

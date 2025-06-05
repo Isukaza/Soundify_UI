@@ -1,7 +1,9 @@
-import {useStore} from "@/stores";
 import React from "react";
+
 import {Repeat, Shuffle, SkipNext, SkipPrevious} from "@mui/icons-material";
 import {IconButton, Stack} from "@mui/joy";
+
+import {useStore} from "@/stores";
 
 import PlayButton from "@/presentation/components/player/playbackControls/PlayButton";
 

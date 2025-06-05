@@ -1,5 +1,6 @@
 import {InsertPhoto, PlaylistAdd} from '@mui/icons-material';
 import {IconButton, Stack, Typography} from '@mui/joy';
+
 import {useStore} from '@/stores';
 
 export default function TrackInfo() {

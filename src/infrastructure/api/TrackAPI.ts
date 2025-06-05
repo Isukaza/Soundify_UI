@@ -1,6 +1,7 @@
 import {Track} from "@/domain/models/Track";
-import {trackAPI} from './configs.js';
 import TrackFilterRequest from '@/domain/models/requests/TrackFilterRequest';
+
+import {trackAPI} from './configs.js';
 
 export default class TrackApi {
     static async GetTracksByFilterAsync(filter: TrackFilterRequest):

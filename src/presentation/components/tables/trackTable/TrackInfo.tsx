@@ -1,7 +1,8 @@
-import {Link as RouterLink} from 'react-router-dom';
-import {Link, Stack} from '@mui/joy';
-import {InsertPhoto} from '@mui/icons-material';
 import {useState} from 'react';
+import {Link as RouterLink} from 'react-router-dom';
+
+import {InsertPhoto} from '@mui/icons-material';
+import {Link, Stack} from '@mui/joy';
 
 export function TrackInfo({thumbnail, trackId, trackName, artistId, artistName}: {
     thumbnail?: string;

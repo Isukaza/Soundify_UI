@@ -1,6 +1,6 @@
-import {Box} from '@mui/joy';
 import React from "react";
 import ControlPoint from '@mui/icons-material/ControlPoint';
+import {Box} from '@mui/joy';
 
 export function AddToPlaylistButton({trackId}: { trackId: string }) {
     const handleClick = (e: React.MouseEvent) => {

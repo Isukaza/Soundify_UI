@@ -1,9 +1,9 @@
 import Button from '@mui/joy/Button';
 import {PlayArrow as PlayArrowIcon, Pause as PauseIcon} from '@mui/icons-material';
 
-import useInject from "@/domain/hooks/useInject";
-
 import AbstractAudioPlayerManager from "@/domain/managers/Base/AbstractAudioPlayerManager";
+
+import useInject from "@/domain/hooks/useInject";
 
 import {useStore} from '@/stores';
 

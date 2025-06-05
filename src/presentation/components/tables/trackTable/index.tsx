@@ -1,14 +1,17 @@
 import React from "react";
 
-import useInjectMap from "@/domain/hooks/useInjectMap";
-import AbstractAudioPlayerManager from "@/domain/managers/Base/AbstractAudioPlayerManager";
-import {CircularProgress, Table} from '@mui/joy';
-import {useReactTable, getCoreRowModel, createColumnHelper, flexRender,} from '@tanstack/react-table';
 import {AccessTimeRounded} from '@mui/icons-material';
+import {Table} from '@mui/joy';
+import {useReactTable, getCoreRowModel, createColumnHelper, flexRender} from '@tanstack/react-table';
+
+import AbstractAudioPlayerManager from '@/domain/managers/Base/AbstractAudioPlayerManager';
 import {Track} from '@/domain/models/Track';
 
-import {TrackRow} from './TrackRow';
+import useInjectMap from '@/domain/hooks/useInjectMap';
+
 import {useStore} from '@/stores';
+
+import {TrackRow} from './TrackRow';
 
 const columnStyles: Record<string, React.CSSProperties> = {
     indexOrPlay: {width: '32px', textAlign: 'center'},

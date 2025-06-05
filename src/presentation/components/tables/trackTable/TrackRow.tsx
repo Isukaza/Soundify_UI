@@ -1,14 +1,18 @@
-import AbstractAudioPlayerManager from "@/domain/managers/Base/AbstractAudioPlayerManager";
 import React from "react";
-import {useStore} from '@/stores';
+
 import {flexRender, Row} from '@tanstack/react-table';
+
+import AbstractAudioPlayerManager from "@/domain/managers/Base/AbstractAudioPlayerManager";
 import {Track} from '@/domain/models/Track';
+
+import {useStore} from '@/stores';
+
+import {AddToPlaylistButton} from './AddToPlaylistButton';
+import {MoreActionsButton} from './MoreActionsButton';
+import {TrackAlbum} from './TrackAlbum';
+import {TrackDuration} from './TrackDuration';
 import {TrackIndexOrPlayButton} from './TrackIndexOrPlayButton';
 import {TrackInfo} from './TrackInfo';
-import {TrackAlbum} from './TrackAlbum';
-import {AddToPlaylistButton} from './AddToPlaylistButton';
-import {TrackDuration} from './TrackDuration';
-import {MoreActionsButton} from './MoreActionsButton';
 
 interface TrackRowProps {
     row: Row<Track>;

@@ -1,5 +1,6 @@
 import AbstractAudioPlayerManager from "@/domain/managers/Base/AbstractAudioPlayerManager";
 import {Track} from "@/domain/models/Track";
+
 import {useStore} from "@/stores";
 
 export default class AudioPlayerManager extends AbstractAudioPlayerManager {

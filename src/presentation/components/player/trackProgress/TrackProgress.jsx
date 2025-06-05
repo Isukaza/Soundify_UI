@@ -24,5 +24,4 @@ const TrackProgress = () => {
     );
 };
 
-
 export default TrackProgress;

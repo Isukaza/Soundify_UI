@@ -1,5 +1,6 @@
-import Hls from "hls.js";
 import axios from "axios";
+import Hls from "hls.js";
+
 import CdnApi from "@/infrastructure/api/CdnApi.js";
 import {parseUrl} from "@/infrastructure/utils/urlUtils.js";
 

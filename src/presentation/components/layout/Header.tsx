@@ -1,17 +1,21 @@
-import {borderRadiusStyle} from "@/presentation/styles/common/borderRadiusStyle";
-import {Box, Input} from '@mui/joy';
-import {Search} from '@mui/icons-material';
-import Button from "@mui/joy/Button";
 import {useEffect, useState} from 'react';
+import {Link} from "react-router-dom";
+
+import {Box, Input} from '@mui/joy';
+import Button from "@mui/joy/Button";
+import {Search} from '@mui/icons-material';
+import HomeIcon from '@mui/icons-material/Home';
 
 import AbstractAudioPlayerManager from "@/domain/managers/Base/AbstractAudioPlayerManager";
 import AbstractAuthManager from "@/domain/managers/Base/AbstractAuthManager";
 import AbstractTrackManager from '@/domain/managers/Base/AbstractTrackManager';
+
 import TrackFilterRequest from '@/domain/models/requests/TrackFilterRequest';
-import HomeIcon from '@mui/icons-material/Home';
+
 import {useDebouncedValue} from '@/domain/hooks/useDebouncedValue';
 import useInjectMap from '@/domain/hooks/useInjectMap';
-import {Link} from "react-router-dom";
+
+import {borderRadiusStyle} from "@/presentation/styles/common/borderRadiusStyle";
 
 export function Header() {
     const [searchText, setSearchText] = useState<string>('');

@@ -1,8 +1,9 @@
-import {Index} from "@/stores";
 import {Album} from '@/domain/models/Album';
 import {Artist} from '@/domain/models/Artist';
 import {Playlist} from '@/domain/models/Playlist';
 import {Track} from '@/domain/models/Track';
+
+import {Index} from "@/stores";
 
 import {createSliceSetters, SliceCreator} from '@/stores/utils';
 

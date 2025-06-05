@@ -1,8 +1,11 @@
-import {Track} from "@/domain/models/Track";
-import TrackApi from "@/infrastructure/api/TrackAPI";
-import {useStore} from '@/stores';
-import TrackFilterRequest from '@/domain/models/requests/TrackFilterRequest';
 import AbstractTrackManager from "@/domain/managers/Base/AbstractTrackManager";
+
+import {Track} from "@/domain/models/Track";
+import TrackFilterRequest from '@/domain/models/requests/TrackFilterRequest';
+
+import TrackApi from "@/infrastructure/api/TrackAPI";
+
+import {useStore} from '@/stores';
 
 export default class TrackManager extends AbstractTrackManager {
     async LoadInitialTracksAsync(): Promise<Track[] | null> {

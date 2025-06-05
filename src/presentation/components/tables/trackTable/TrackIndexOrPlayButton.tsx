@@ -1,7 +1,8 @@
-import {Box} from '@mui/joy';
-import PlayArrowRounded from '@mui/icons-material/PlayArrowRounded';
-import PauseRounded from '@mui/icons-material/PauseRounded';
 import React from "react";
+
+import PauseRounded from '@mui/icons-material/PauseRounded';
+import PlayArrowRounded from '@mui/icons-material/PlayArrowRounded';
+import {Box} from '@mui/joy';
 
 export function TrackIndexOrPlayButton({index, isPlaying, playPauseHandler}: {
     index: number;

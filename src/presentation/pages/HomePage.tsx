@@ -1,9 +1,12 @@
 import {Stack, Button, CircularProgress} from '@mui/joy';
-import TrackTable from '@/presentation/components/tables/trackTable';
-import useInjectMap from '@/domain/hooks/useInjectMap';
+
 import AbstractTrackManager from '@/domain/managers/Base/AbstractTrackManager';
-import {Sentinel} from '@/presentation/components/common/Sentinel';
+
+import useInjectMap from '@/domain/hooks/useInjectMap';
 import {useInfiniteScrollObserver} from '@/domain/hooks/useInfiniteScrollObserver';
+
+import {Sentinel} from '@/presentation/components/common/Sentinel';
+import TrackTable from '@/presentation/components/tables/trackTable';
 
 export default function HomePage() {
     const {instances} = useInjectMap({
@@ -32,11 +35,11 @@ export default function HomePage() {
 
             <TrackTable/>
 
-            <Sentinel ref={sentinelRef} />
+            <Sentinel ref={sentinelRef}/>
 
             {isLoadingNextPage && (
                 <div style={{display: 'flex', justifyContent: 'center', padding: '10px'}}>
-                    <CircularProgress size="sm" />
+                    <CircularProgress size="sm"/>
                 </div>
             )}
         </Stack>

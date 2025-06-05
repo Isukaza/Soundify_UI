@@ -1,11 +1,14 @@
-import useInject from "@/domain/hooks/useInject";
-import AbstractAudioPlayerManager from "@/domain/managers/Base/AbstractAudioPlayerManager";
 import {useCallback, useEffect, useRef, useState} from 'react';
 
-import {formatTime} from '@/infrastructure/utils/formatters';
-import {useStore} from '@/stores/index';
-
 import {Slider} from '@mui/joy';
+
+import AbstractAudioPlayerManager from "@/domain/managers/Base/AbstractAudioPlayerManager";
+
+import useInject from "@/domain/hooks/useInject";
+
+import {formatTime} from '@/infrastructure/utils/formatters';
+
+import {useStore} from '@/stores/index';
 
 const TrackProgressSlider = () => {
     console.log("TrackProgressSlider");

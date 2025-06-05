@@ -1,6 +1,8 @@
-import HlsLoader from "@/infrastructure/utils/HlsLoader";
 import AbstractAudioPlayerService from "@/domain/services/types/AbstractAudioPlayerService";
+
+import HlsLoader from "@/infrastructure/utils/HlsLoader";
 import {getTrackPath} from "@/infrastructure/utils/formatters";
+
 import {useStore} from "@/stores";
 
 class AudioPlayerService extends AbstractAudioPlayerService {

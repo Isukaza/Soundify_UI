@@ -1,6 +1,6 @@
-import {Box} from '@mui/joy';
-import MoreHorizRounded from '@mui/icons-material/MoreHorizRounded';
 import React from "react";
+import MoreHorizRounded from '@mui/icons-material/MoreHorizRounded';
+import {Box} from '@mui/joy';
 
 export function MoreActionsButton({trackId}: { trackId: string }) {
     const handleClick = (e: React.MouseEvent) => {
