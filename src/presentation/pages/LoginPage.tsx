@@ -25,30 +25,32 @@ export default function LoginPage() {
     const navigate = useNavigate();
     const fromPage = location.state?.from?.pathname || '/';
 
-    const [isLoading, setIsLoading] = useState(true);
+    const [isLoading, setIsLoading] = useState(false);
     const {instance: authManager, loading} = useInject(AbstractAuthManager);
 
     useEffect(() => {
-        const code = new URLSearchParams(window.location.search).get('code');
-
-        if (!code || !authManager || loading) {
-            setIsLoading(false);
+        if (!authManager || loading) {
             return;
         }
 
-        (async () => {
-            const success = await authManager.handleGoogleCallback(code);
-            if (success) {
-                navigate(fromPage, {
-                    replace: true,
-                    state: {fromLogin: true},
-                });
-            } else {
-                console.error('Google login failed');
-                setIsLoading(false);
-            }
-        })();
-    }, [authManager, loading, navigate, fromPage]);
+        const code = new URLSearchParams(window.location.search).get('code');
+        if (code) {
+            setIsLoading(true);
+
+            (async () => {
+                const success = await authManager.handleGoogleCallback(code);
+                if (success) {
+                    navigate(fromPage, {
+                        replace: true,
+                        state: {fromLogin: true},
+                    });
+                } else {
+                    console.error('Google login failed');
+                    setIsLoading(false);
+                }
+            })();
+        }
+    }, [authManager, loading, navigate]);
 
     if (isLoading || loading || !authManager)
         return <LoadingPage/>
