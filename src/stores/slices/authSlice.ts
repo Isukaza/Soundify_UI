@@ -1,7 +1,9 @@
+import UserRole from "@/domain/models/enums/UserRole";
 import {createSliceSetters, SliceCreator} from '@/stores/utils';
 
 export interface AuthSlice {
     userId: string;
+    userRole: UserRole | null;
     isAuthenticated: boolean;
 
     email: string;
@@ -12,6 +14,7 @@ export interface AuthSlice {
     exp: number;
 
     setUserId: (userId: string) => void;
+    setUserRole: (userRole: UserRole | null) => void;
     setIsAuthenticated: (isAuthenticated: boolean) => void;
 
     setEmail: (email: string) => void;
@@ -24,6 +27,7 @@ export interface AuthSlice {
 
 const initialState: AuthSlice = {
     userId: '',
+    userRole: null,
     isAuthenticated: false,
 
     email: '',
@@ -34,6 +38,8 @@ const initialState: AuthSlice = {
     exp: 0,
 
     setUserId: () => {
+    },
+    setUserRole: () => {
     },
     setIsAuthenticated: () => {
     },

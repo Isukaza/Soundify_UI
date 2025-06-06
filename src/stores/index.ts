@@ -30,6 +30,7 @@ export const useStore = create<Index>()(
                 partialize: (state) => ({
                     auth: {
                         userId: state.auth.userId,
+                        userRole: state.auth.userRole,
                         jwt: state.auth.jwt,
                         refresh: state.auth.refresh,
                         exp: state.auth.exp,
