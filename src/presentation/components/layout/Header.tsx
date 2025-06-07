@@ -17,9 +17,13 @@ import useInjectMap from '@/domain/hooks/useInjectMap';
 
 import {borderRadiusStyle} from "@/presentation/styles/common/borderRadiusStyle";
 
+import {useStore} from "@/stores"
+
 export function Header() {
     const [searchText, setSearchText] = useState<string>('');
     const debouncedSearchText = useDebouncedValue<string>(searchText, 500);
+
+    const currentAlbum = useStore(state => state.library.currentAlbum);
 
     const {instances, loading} = useInjectMap({
         authManager: AbstractAuthManager,
@@ -34,14 +38,13 @@ export function Header() {
 
             try {
                 if (debouncedSearchText.trim() === '') {
-                    await instances.trackManager.LoadInitialTracksAsync();
+                    await instances.trackManager.LoadInitialTracksAsync(currentAlbum?.Id);
                 } else if (debouncedSearchText.length >= 3) {
                     const filter: TrackFilterRequest = {
                         page: 1,
                         size: 20,
                         trackName: debouncedSearchText
                     };
-
 
                     await instances.trackManager.LoadTracksByFilterAsync(filter);
                 }

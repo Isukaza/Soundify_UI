@@ -6,9 +6,11 @@ import AbstractAuthManager from "@/domain/managers/Base/AbstractAuthManager";
 import AuthManager from "@/domain/managers/AuthManager";
 import AbstractTrackManager from "@/domain/managers/Base/AbstractTrackManager";
 import TrackManager from "@/domain/managers/TrackManager";
+import AlbumManager from "@/domain/managers/AlbumManager";
 
 import AbstractAudioPlayerService from "@/domain/services/types/AbstractAudioPlayerService";
 import AbstractAuthService from "@/domain/services/types/AbstractAuthService";
+import AbstractAlbumManager from "@/domain/managers/Base/AbstractAlbumManager";
 import AudioPlayerService from "@/domain/services/AudioPlayerService";
 import AuthService from "@/domain/services/AuthService";
 
@@ -24,6 +26,7 @@ export default class AppDIManager {
         DIContainer.register(AbstractAudioPlayerManager, AudioPlayerManager, LifecycleScope.Session);
         DIContainer.register(AbstractAudioPlayerService, AudioPlayerService, LifecycleScope.Session);
         DIContainer.register(AbstractTrackManager, TrackManager, LifecycleScope.Session);
+        DIContainer.register(AbstractAlbumManager, AlbumManager, LifecycleScope.Session);
     }
 
     static async start() {

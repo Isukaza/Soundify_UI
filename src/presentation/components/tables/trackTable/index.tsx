@@ -24,46 +24,51 @@ const columnStyles: Record<string, React.CSSProperties> = {
 
 const columnHelper = createColumnHelper<Track>();
 
-const columns = [
-    columnHelper.display({
-        id: 'indexOrPlay',
-        header: '#',
-        cell: ({row}) => row.index + 1,
-    }),
-    columnHelper.accessor(row => row.Name, {
-        id: 'trackInfo',
-        header: 'Title',
-        cell: ({row}) => row.original,
-    }),
-    columnHelper.accessor(row => row.AlbumName, {
-        id: 'album',
-        header: 'Album',
-        cell: ({row}) => row.original,
-    }),
-    columnHelper.display({
-        id: 'addToPlaylist',
-        header: '',
-        cell: () => null,
-    }),
-    columnHelper.accessor(row => row.duration, {
-        id: 'duration',
-        header: () => (
-            <AccessTimeRounded style={{fontSize: '1.125rem'}}/>
-        ),
-        cell: ({getValue}) => getValue(),
-    }),
-    columnHelper.display({
-        id: 'moreActions',
-        header: '',
-        cell: () => null,
-    }),
-];
+interface TrackTableProps {
+    variant?: "album" | "track";
+}
 
-export default function TrackTable() {
+export default function TrackTable({variant = "track"}: TrackTableProps) {
     const tracks = useStore(state => state.library.tracks);
     const {instances, loading} = useInjectMap({
         audioPlayerManager: AbstractAudioPlayerManager,
     });
+
+    const columns = [
+        columnHelper.display({
+            id: 'indexOrPlay',
+            header: '#',
+            cell: ({row}) => row.index + 1,
+        }),
+        columnHelper.accessor(row => row.Name, {
+            id: 'trackInfo',
+            header: 'Title',
+            cell: ({row}) => row.original,
+        }),
+        ...variant !== "album"
+            ? [columnHelper.accessor(row => row.AlbumName, {
+                id: 'album',
+                header: 'Album',
+                cell: ({row}) => row.original,
+            })] : [],
+        columnHelper.display({
+            id: 'addToPlaylist',
+            header: '',
+            cell: () => null,
+        }),
+        columnHelper.accessor(row => row.duration, {
+            id: 'duration',
+            header: () => (
+                <AccessTimeRounded style={{fontSize: '1.125rem'}}/>
+            ),
+            cell: ({getValue}) => getValue(),
+        }),
+        columnHelper.display({
+            id: 'moreActions',
+            header: '',
+            cell: () => null,
+        }),
+    ];
 
     const table = useReactTable({
         data: tracks,
@@ -99,7 +104,10 @@ export default function TrackTable() {
                 }
             }}
         >
-            <thead>
+            <thead style={{
+                position: "sticky",
+                top: 0,
+            }}>
             {table.getHeaderGroups().map(headerGroup => (
                 <tr key={headerGroup.id}>
                     {headerGroup.headers.map(header => (
@@ -125,6 +133,7 @@ export default function TrackTable() {
                     row={row}
                     columnStyles={columnStyles}
                     audioPlayerManager={instances.audioPlayerManager}
+                    variant={variant}
                 />
             ))}
             </tbody>

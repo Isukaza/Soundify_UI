@@ -1,4 +1,4 @@
-import {Album} from '@/domain/models/Album';
+import Album from '@/domain/models/Album';
 import {Artist} from '@/domain/models/Artist';
 import {Playlist} from '@/domain/models/Playlist';
 import {Track} from '@/domain/models/Track';
@@ -13,6 +13,7 @@ export interface LibrarySlice {
     artists: Artist[];
     playlists: Playlist[];
     currentTrack: Track | null;
+    currentAlbum: Album | null;
     nextPage: number | null;
 
     setTracks: (tracks: Track[]) => void;
@@ -20,6 +21,7 @@ export interface LibrarySlice {
     setArtists: (artists: Artist[]) => void;
     setPlaylists: (playlists: Playlist[]) => void;
     setCurrentTrack: (track: Track | null) => void;
+    setCurrentAlbum: (album: Album | null) => void;
     setNextPage: (nextPage: number | null) => void;
 
     addTracks: (tracks: Track[]) => void;
@@ -31,6 +33,7 @@ const initialState: LibrarySlice = {
     artists: [],
     playlists: [],
     currentTrack: null,
+    currentAlbum: null,
     nextPage: null,
 
     setTracks: () => {
@@ -42,6 +45,8 @@ const initialState: LibrarySlice = {
     setPlaylists: () => {
     },
     setCurrentTrack: () => {
+    },
+    setCurrentAlbum: () => {
     },
     setNextPage: () => {
     },

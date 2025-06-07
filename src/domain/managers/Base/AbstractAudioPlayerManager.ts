@@ -19,4 +19,6 @@ export default abstract class AbstractAudioPlayerManager extends InjectableBase 
     abstract resetLibraryState(): void;
 
     abstract resetPlayerState(): void;
+
+    abstract resetLibraryBetweenPage(): void;
 }

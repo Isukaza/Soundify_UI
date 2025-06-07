@@ -81,4 +81,14 @@ export default class AudioPlayerManager extends AbstractAudioPlayerManager {
         player.setDuration(0);
         player.setIsEnded(false);
     }
+
+    resetLibraryBetweenPage(): void {
+        const library = useStore.getState().library;
+
+        library.setTracks([]);
+        library.setAlbums([]);
+        library.setArtists([]);
+        library.setPlaylists([]);
+        library.setNextPage(null);
+    }
 }
