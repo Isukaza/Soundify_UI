@@ -18,11 +18,12 @@ interface TrackRowProps {
     row: Row<Track>;
     columnStyles: Record<string, React.CSSProperties>;
     audioPlayerManager: AbstractAudioPlayerManager | null;
+    variant?: "album" | "track";
 }
 
-export const TrackRow = ({row, columnStyles, audioPlayerManager}: TrackRowProps) => {
+export const TrackRow = ({row, columnStyles, audioPlayerManager, variant = "track"}: TrackRowProps) => {
     const isPlaying = useStore(state => state.player.isPlaying);
-    const currentTrack = useStore(state => state.library.currentTrack);
+    const currentTrack = useStore(state => state.track.currentTrack);
 
     const isCurrent = currentTrack?.TrackId === row.original.TrackId;
     const isActive = isCurrent && isPlaying;
@@ -66,6 +67,7 @@ export const TrackRow = ({row, columnStyles, audioPlayerManager}: TrackRowProps)
                                 trackName={row.original.Name}
                                 artistId={row.original.ArtistId}
                                 artistName={row.original.ArtistName}
+                                variant={variant}
                             />
                         );
                         break;

@@ -8,13 +8,13 @@ import TrackApi from "@/infrastructure/api/TrackAPI";
 import {useStore} from '@/stores';
 
 export default class TrackManager extends AbstractTrackManager {
-    async LoadInitialTracksAsync(): Promise<Track[] | null> {
+    async LoadInitialTracksAsync(albumId?: string): Promise<Track[] | null> {
         try {
-            const filter: TrackFilterRequest = {page: 1, size: 20};
+            const filter: TrackFilterRequest = {page: 1, size: 20, albumId: albumId};
             const {tracks, nextPage} = await TrackApi.GetTracksByFilterAsync(filter);
 
-            useStore.getState().library.setTracks(tracks);
-            useStore.getState().library.setNextPage(nextPage ?? 0);
+            useStore.getState().track.setTracks(tracks);
+            useStore.getState().app.setNextPage(nextPage ?? 0);
 
             return tracks;
         } catch (error) {
@@ -23,8 +23,8 @@ export default class TrackManager extends AbstractTrackManager {
         }
     }
 
-    async LoadNextPageAsync(size = 20): Promise<Track[] | null> {
-        const nextPage = useStore.getState().library.nextPage;
+    async LoadNextPageAsync(albumId = undefined, size = 20): Promise<Track[] | null> {
+        const nextPage = useStore.getState().app.nextPage;
 
         if (nextPage === null || nextPage === 0) {
             console.warn('TrackManager: No next page to load');
@@ -32,11 +32,11 @@ export default class TrackManager extends AbstractTrackManager {
         }
 
         try {
-            const filter: TrackFilterRequest = {page: nextPage, size};
+            const filter: TrackFilterRequest = {page: nextPage, size, albumId: albumId};
             const {tracks, nextPage: newNextPage} = await TrackApi.GetTracksByFilterAsync(filter);
 
-            useStore.getState().library.addTracks(tracks);
-            useStore.getState().library.setNextPage(newNextPage ?? 0);
+            useStore.getState().track.addTracks(tracks);
+            useStore.getState().app.setNextPage(newNextPage ?? 0);
 
             return tracks;
         } catch (error) {
@@ -49,8 +49,8 @@ export default class TrackManager extends AbstractTrackManager {
         try {
             const {tracks, nextPage} = await TrackApi.GetTracksByFilterAsync(filter);
 
-            useStore.getState().library.setTracks(tracks);
-            useStore.getState().library.setNextPage(nextPage ?? 0);
+            useStore.getState().track.setTracks(tracks);
+            useStore.getState().app.setNextPage(nextPage ?? 0);
 
             return tracks;
         } catch (error) {

@@ -13,6 +13,10 @@ export const trackAPI = axios.create({
     baseURL: 'https://localhost:8433/api/Track'
 });
 
+export const albumAPI = axios.create({
+    baseURL: 'https://localhost:8433/api/Album'
+})
+
 cdnAPI.interceptors.request.use((config) => {
     const jwt = useStore.getState().auth.jwt;
     if (jwt)
@@ -30,3 +34,12 @@ trackAPI.interceptors.request.use((config) => {
 }, (error) => {
     return Promise.reject(error);
 });
+
+albumAPI.interceptors.request.use((config) => {
+    const jwt = useStore.getState().auth.jwt;
+    if (jwt)
+        config.headers.Authorization = `Bearer ${jwt}`;
+    return config;
+}, (error) => {
+    return Promise.reject(error);
+})

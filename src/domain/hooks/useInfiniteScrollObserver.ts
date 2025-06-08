@@ -6,7 +6,7 @@ interface UseInfiniteScrollObserverParams {
 }
 
 export function useInfiniteScrollObserver({loadMore}: UseInfiniteScrollObserverParams) {
-    const nextPage = useStore(state => state.library.nextPage);
+    const nextPage = useStore(state => state.app.nextPage);
     const canLoadMore = nextPage !== null && nextPage !== 0;
 
     const sentinelRef = useRef<HTMLDivElement | null>(null);

@@ -6,9 +6,8 @@ import {useStore} from "@/stores";
 export default class AudioPlayerManager extends AbstractAudioPlayerManager {
     async play(): Promise<void> {
         const player = useStore.getState().player;
-        const library = useStore.getState().library;
 
-        if (!library.currentTrack)
+        if (!useStore.getState().track.currentTrack)
             return;
 
         if (!player.isTrackLoaded) {
@@ -34,7 +33,7 @@ export default class AudioPlayerManager extends AbstractAudioPlayerManager {
     }
 
     setCurrentTrack(track: Track): void {
-        useStore.getState().library.setCurrentTrack(track);
+        useStore.getState().track.setCurrentTrack(track);
     }
 
     async setTime(time: number): Promise<void> {
@@ -61,14 +60,12 @@ export default class AudioPlayerManager extends AbstractAudioPlayerManager {
     }
 
     resetLibraryState(): void {
-        const library = useStore.getState().library;
-
-        library.setTracks([]);
-        library.setAlbums([]);
-        library.setArtists([]);
-        library.setPlaylists([]);
-        library.setCurrentTrack(null);
-        library.setNextPage(null);
+        useStore.getState().track.setTracks([]);
+        useStore.getState().track.setCurrentTrack(null);
+        useStore.getState().album.setAlbums([]);
+        useStore.getState().artist.setArtists([]);
+        useStore.getState().playlist.setPlaylists([]);
+        useStore.getState().app.setNextPage(null);
     }
 
     resetPlayerState(): void {
@@ -80,5 +77,13 @@ export default class AudioPlayerManager extends AbstractAudioPlayerManager {
         player.setCurrentTime(0);
         player.setDuration(0);
         player.setIsEnded(false);
+    }
+
+    resetLibraryBetweenPage(): void {
+        useStore.getState().track.setTracks([]);
+        useStore.getState().album.setAlbums([]);
+        useStore.getState().artist.setArtists([]);
+        useStore.getState().playlist.setPlaylists([]);
+        useStore.getState().app.setNextPage(null);
     }
 }

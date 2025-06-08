@@ -19,6 +19,7 @@ import NotFoundPage from '@/presentation/pages/NotFoundPage';
 import {useStore} from '@/stores/index';
 
 import AppInitGate from "@/presentation/hoc/AppInitGate";
+import AlbumPage from "@/presentation/pages/AlbumPage";
 
 export default function App() {
     const isAuthenticated = useStore(state => state.auth.isAuthenticated);
@@ -40,6 +41,7 @@ export default function App() {
                         <Route element={<Layout/>}>
                             <Route path="/" element={<HomePage/>}/>
                             <Route path="/DetailsTrack" element={<DetailsTrackPage/>}/>
+                            <Route path="/album/:albumId" element={<AlbumPage/>} />
                         </Route>
                     </Route>
 

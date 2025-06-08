@@ -4,12 +4,13 @@ import {Link as RouterLink} from 'react-router-dom';
 import {InsertPhoto} from '@mui/icons-material';
 import {Link, Stack} from '@mui/joy';
 
-export function TrackInfo({thumbnail, trackId, trackName, artistId, artistName}: {
+export function TrackInfo({thumbnail, trackId, trackName, artistId, artistName, variant}: {
     thumbnail?: string;
     trackId: string;
     trackName: string;
     artistId: string;
     artistName: string;
+    variant: string;
 }) {
     const [imgError, setImgError] = useState(false);
 
@@ -17,16 +18,18 @@ export function TrackInfo({thumbnail, trackId, trackName, artistId, artistName}:
 
     return (
         <Stack direction="row" spacing={1} alignItems="center">
-            {showPlaceholderIcon ? (
-                <InsertPhoto sx={{width: 32, height: 32}} />
-            ) : (
-                <img
-                    src={thumbnail}
-                    onError={() => setImgError(true)}
-                    alt={trackName}
-                    style={{width: 32, height: 32, borderRadius: 4}}
-                />
-            )}
+            {variant !== "album" ? (
+                showPlaceholderIcon ? (
+                    <InsertPhoto sx={{width: 32, height: 32}} />
+                ) : (
+                    <img
+                        src={thumbnail}
+                        onError={() => setImgError(true)}
+                        alt={trackName}
+                        style={{width: 32, height: 32, borderRadius: 4}}
+                    />
+                )
+            ) : null}
 
             <Stack>
                 <Link

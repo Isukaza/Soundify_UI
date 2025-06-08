@@ -6,12 +6,9 @@ import Button from "@mui/joy/Button";
 import {Search} from '@mui/icons-material';
 import HomeIcon from '@mui/icons-material/Home';
 
+import AbstractAppManager from "@/domain/managers/Base/AbstractAppManager";
 import AbstractAudioPlayerManager from "@/domain/managers/Base/AbstractAudioPlayerManager";
 import AbstractAuthManager from "@/domain/managers/Base/AbstractAuthManager";
-import AbstractTrackManager from '@/domain/managers/Base/AbstractTrackManager';
-
-import TrackFilterRequest from '@/domain/models/requests/TrackFilterRequest';
-
 import {useDebouncedValue} from '@/domain/hooks/useDebouncedValue';
 import useInjectMap from '@/domain/hooks/useInjectMap';
 
@@ -22,36 +19,15 @@ export function Header() {
     const debouncedSearchText = useDebouncedValue<string>(searchText, 500);
 
     const {instances, loading} = useInjectMap({
+        appManager: AbstractAppManager,
         authManager: AbstractAuthManager,
-        trackManager: AbstractTrackManager,
         audioPlayerManager: AbstractAudioPlayerManager
     });
 
     useEffect(() => {
-        const performSearch = async () => {
-            if (loading || !instances.trackManager)
-                return;
-
-            try {
-                if (debouncedSearchText.trim() === '') {
-                    await instances.trackManager.LoadInitialTracksAsync();
-                } else if (debouncedSearchText.length >= 3) {
-                    const filter: TrackFilterRequest = {
-                        page: 1,
-                        size: 20,
-                        trackName: debouncedSearchText
-                    };
-
-
-                    await instances.trackManager.LoadTracksByFilterAsync(filter);
-                }
-            } catch (error) {
-                console.error('Header: Failed to perform track loading', error);
-            }
-        };
-
-        performSearch();
-    }, [debouncedSearchText, loading, instances.trackManager]);
+        if (instances.appManager)
+            instances.appManager.updateSearchQuery(debouncedSearchText);
+    }, [debouncedSearchText, instances.appManager]);
 
     const handleLogout = () => {
         if (!instances.authManager && !instances.audioPlayerManager)

@@ -1,6 +1,6 @@
 import React from 'react';
 
-export const Sentinel = React.forwardRef<HTMLDivElement>((props, ref) => {
+const Sentinel = React.forwardRef<HTMLDivElement>((props, ref) => {
     return (
         <div
             ref={ref}
@@ -11,3 +11,5 @@ export const Sentinel = React.forwardRef<HTMLDivElement>((props, ref) => {
         />
     );
 });
+
+export default Sentinel;

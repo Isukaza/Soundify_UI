@@ -5,14 +5,23 @@ import {immer} from 'zustand/middleware/immer';
 import {subscribeWithSelector} from 'zustand/middleware';
 import {mergeDeepLeft} from 'ramda';
 
+import {appSlice, AppSlice} from '@/stores/slices/appSlice';
 import {authSlice, AuthSlice} from '@/stores/slices/authSlice';
-import {librarySlice, LibrarySlice} from '@/stores/slices/librarySlice';
 import {playerSlice, PlayerSlice} from '@/stores/slices/playerSlice';
+import {trackSlice, TrackSlice} from '@/stores/slices/trackSlice';
+import {albumSlice, AlbumSlice} from '@/stores/slices/albumSlice';
+import {artistSlice, ArtistSlice} from '@/stores/slices/artistSlice';
+import {playlistSlice, PlaylistSlice} from '@/stores/slices/playlistSlice';
 
 export interface Index {
     player: PlayerSlice;
-    library: LibrarySlice;
     auth: AuthSlice;
+    app: AppSlice;
+
+    track: TrackSlice;
+    album: AlbumSlice;
+    artist: ArtistSlice;
+    playlist: PlaylistSlice;
 }
 
 export const useStore = create<Index>()(
@@ -21,8 +30,13 @@ export const useStore = create<Index>()(
             subscribeWithSelector(
                 immer((...args) => ({
                     player: playerSlice(...args),
-                    library: librarySlice(...args),
                     auth: authSlice(...args),
+                    app: appSlice(...args),
+
+                    track: trackSlice(...args),
+                    album: albumSlice(...args),
+                    artist: artistSlice(...args),
+                    playlist: playlistSlice(...args),
                 }))
             ),
             {
@@ -38,7 +52,8 @@ export const useStore = create<Index>()(
                 }),
                 merge: (persistedState, currentState) =>
                     mergeDeepLeft(persistedState as Partial<Index>, currentState as Index)
-            }),
+            }
+        ),
         {name: 'AppStore'}
     )
 );

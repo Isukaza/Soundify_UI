@@ -10,7 +10,7 @@ import PlayButton from "@/presentation/components/player/playbackControls/PlayBu
 const PlaybackControls = React.memo(function PlaybackControls() {
     console.log("PlaybackControls");
 
-    const currentTrack = useStore(state => state.library.currentTrack);
+    const currentTrack = useStore(state => state.track.currentTrack);
     const isDisabled = !currentTrack;
 
     return (
