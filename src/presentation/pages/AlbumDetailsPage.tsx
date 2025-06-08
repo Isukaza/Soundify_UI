@@ -14,7 +14,7 @@ import {useStore} from '@/stores';
 import Sentinel from '@/presentation/components/common/Sentinel';
 import TrackTable from '@/presentation/components/tables/trackTable';
 
-export default function AlbumPage() {
+export default function AlbumDetailsPage() {
     const {instances} = useInjectMap({
         trackManager: AbstractTrackManager,
         albumManager: AbstractAlbumManager,
@@ -52,7 +52,7 @@ export default function AlbumPage() {
                     await instances.trackManager.LoadTracksByFilterAsync(filter);
                 }
             } catch (error) {
-                console.error('AlbumPage: Failed to load album or tracks', error);
+                console.error('AlbumDetailsPage: Failed to load album or tracks', error);
             }
         };
 

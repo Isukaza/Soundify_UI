@@ -10,7 +10,7 @@ import RequireUnAuthenticated from '@/presentation/hoc/RequireUnAuthenticated';
 
 import AppDIManager from '@/app/di/AppDIManager';
 
-import DetailsTrackPage from '@/presentation/pages/DetailsTrackPage';
+import TrackDetailsPage from '@/presentation/pages/TrackDetailsPage.tsx';
 import HomePage from '@/presentation/pages/HomePage';
 import InDevelopPage from '@/presentation/pages/InDevelopPage';
 import LoginPage from '@/presentation/pages/LoginPage';
@@ -19,7 +19,7 @@ import NotFoundPage from '@/presentation/pages/NotFoundPage';
 import {useStore} from '@/stores/index';
 
 import AppInitGate from "@/presentation/hoc/AppInitGate";
-import AlbumPage from "@/presentation/pages/AlbumPage";
+import AlbumDetailsPage from "@/presentation/pages/AlbumDetailsPage.js";
 
 export default function App() {
     const isAuthenticated = useStore(state => state.auth.isAuthenticated);
@@ -40,8 +40,8 @@ export default function App() {
                     <Route element={<ProtectedRoutes/>}>
                         <Route element={<Layout/>}>
                             <Route path="/" element={<HomePage/>}/>
-                            <Route path="/DetailsTrack" element={<DetailsTrackPage/>}/>
-                            <Route path="/album/:albumId" element={<AlbumPage/>} />
+                            <Route path="/TrackDetails" element={<TrackDetailsPage/>}/>
+                            <Route path="/AlbumDetails/:albumId" element={<AlbumDetailsPage/>} />
                         </Route>
                     </Route>
 
