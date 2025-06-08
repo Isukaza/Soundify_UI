@@ -2,7 +2,7 @@ import axios from "axios";
 import {useStore} from "@/stores/index";
 
 export const authAPI = axios.create({
-    baseURL: 'https://localhost:7433/Authorization'
+    baseURL: 'https://localhost:2443/ic/Authorization'
 });
 
 export const cdnAPI = axios.create({
@@ -10,11 +10,11 @@ export const cdnAPI = axios.create({
 })
 
 export const trackAPI = axios.create({
-    baseURL: 'https://localhost:8433/api/Track'
+    baseURL: 'https://localhost:2443/app/Track'
 });
 
 export const albumAPI = axios.create({
-    baseURL: 'https://localhost:8433/api/Album'
+    baseURL: 'https://localhost:2443/app/Album'
 })
 
 cdnAPI.interceptors.request.use((config) => {
