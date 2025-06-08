@@ -6,7 +6,7 @@ const TrackProgressTime = () => {
     console.log("TrackProgressTime");
 
     const currentTime = useStore((state) => state.player.currentTime);
-    const currentTrack = useStore(state => state.library.currentTrack);
+    const currentTrack = useStore(state => state.track.currentTrack);
     if (!currentTrack)
         return null;
 

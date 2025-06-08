@@ -6,7 +6,7 @@ import {useStore} from '@/stores';
 export default function TrackInfo() {
     console.log("TrackInfo");
 
-    const currentTrack = useStore(state => state.library.currentTrack);
+    const currentTrack = useStore(state => state.track.currentTrack);
     if (!currentTrack)
         return null;
 

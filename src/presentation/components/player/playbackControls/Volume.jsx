@@ -10,7 +10,7 @@ import {useStore} from '@/stores';
 export default function Volume() {
     const {instance: manager, loading} = useInject(AbstractAudioPlayerManager);
     const playerVolume = useStore(state => state.player.volume);
-    const currentTrack = useStore(state => state.library.currentTrack);
+    const currentTrack = useStore(state => state.track.currentTrack);
 
     const getVolumeIcon = (volume) => {
         if (volume === 0)

@@ -6,7 +6,7 @@ const TrackDuration = () => {
     console.log("TrackDuration");
 
     const duration = useStore(state => state.player.duration);
-    const currentTrack = useStore(state => state.library.currentTrack);
+    const currentTrack = useStore(state => state.track.currentTrack);
     if (!currentTrack)
         return null;
 

@@ -29,7 +29,7 @@ interface TrackTableProps {
 }
 
 export default function TrackTable({variant = "track"}: TrackTableProps) {
-    const tracks = useStore(state => state.library.tracks);
+    const tracks = useStore(state => state.track.tracks);
     const {instances, loading} = useInjectMap({
         audioPlayerManager: AbstractAudioPlayerManager,
     });
@@ -104,10 +104,7 @@ export default function TrackTable({variant = "track"}: TrackTableProps) {
                 }
             }}
         >
-            <thead style={{
-                position: "sticky",
-                top: 0,
-            }}>
+            <thead>
             {table.getHeaderGroups().map(headerGroup => (
                 <tr key={headerGroup.id}>
                     {headerGroup.headers.map(header => (

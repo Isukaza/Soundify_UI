@@ -103,7 +103,7 @@ class AudioPlayerService extends AbstractAudioPlayerService {
             (state) => state.player.isLoadingTrack,
             async (isLoading) => {
                 if (isLoading) {
-                    const currentTrack = useStore.getState().library.currentTrack;
+                    const currentTrack = useStore.getState().track.currentTrack;
                     if (!currentTrack || !this.audioRef)
                         return;
 
@@ -114,7 +114,7 @@ class AudioPlayerService extends AbstractAudioPlayerService {
                         await this.hlsLoader
                             .loadToAudioElement(this.audioRef, getTrackPath(currentTrack), currentTrack.TrackId);
 
-                        const latestTrack = useStore.getState().library.currentTrack;
+                        const latestTrack = useStore.getState().track.currentTrack;
                         if (latestTrack?.TrackId !== currentTrackId)
                             return;
 

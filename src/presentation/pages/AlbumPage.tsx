@@ -1,53 +1,84 @@
-import {useEffect} from "react";
-import {useParams} from "react-router-dom";
-import TrackTable from "@/presentation/components/tables/trackTable";
-import {Sentinel} from "@/presentation/components/common/Sentinel";
-import Box from "@mui/joy/Box";
-import {CircularProgress} from "@mui/joy";
-import Typography from "@mui/joy/Typography";
+import {useEffect} from 'react';
+import {useParams} from 'react-router-dom';
+import {Stack, CircularProgress, Box, Typography} from '@mui/joy';
+import {InsertPhoto} from '@mui/icons-material';
 
-import useInjectMap from "@/domain/hooks/useInjectMap";
-import AbstractTrackManager from "@/domain/managers/Base/AbstractTrackManager";
-import AbstractAlbumManager from "@/domain/managers/Base/AbstractAlbumManager";
-import {useInfiniteScrollObserver} from "@/domain/hooks/useInfiniteScrollObserver";
-import {useStore} from "@/stores";
+import AbstractAlbumManager from '@/domain/managers/Base/AbstractAlbumManager';
+import AbstractTrackManager from '@/domain/managers/Base/AbstractTrackManager';
+import useInjectMap from '@/domain/hooks/useInjectMap';
+import {useInfiniteScrollObserver} from '@/domain/hooks/useInfiniteScrollObserver';
+import TrackFilterRequest from '@/domain/models/requests/TrackFilterRequest';
 
-import {InsertPhoto} from "@mui/icons-material";
+import {useStore} from '@/stores';
+
+import Sentinel from '@/presentation/components/common/Sentinel';
+import TrackTable from '@/presentation/components/tables/trackTable';
 
 export default function AlbumPage() {
-    const {instances, loading} = useInjectMap({
+    const {instances} = useInjectMap({
         trackManager: AbstractTrackManager,
         albumManager: AbstractAlbumManager,
     });
+
     const {albumId} = useParams();
 
-    const currentAlbum = useStore(state => state.library.currentAlbum);
-
-    useEffect(() => {
-        (async () => {
-            if (!instances.albumManager || !albumId || !instances.trackManager)
-                return;
-
-            const album = await instances.albumManager.LoadInitialAlbumByIdAsync(albumId);
-            instances.albumManager.SetCurrentAlbum(album);
-
-            await instances.trackManager.LoadInitialTracksAsync(album.Id);
-        })();
-    }, [loading]);
+    const currentAlbum = useStore(state => state.album.currentAlbum);
+    const searchQuery = useStore(state => state.app.searchQuery);
 
     const {sentinelRef, isLoadingNextPage} = useInfiniteScrollObserver({
         loadMore: async () => {
-            await instances.trackManager?.LoadNextPageAsync(albumId);
+            if (!instances.trackManager || !currentAlbum?.Id) return;
+
+            await instances.trackManager.LoadNextPageAsync(currentAlbum.Id);
         }
     });
 
+    useEffect(() => {
+        const performSearch = async () => {
+            if (!instances.albumManager || !instances.trackManager || !albumId) return;
+
+            try {
+                const album = await instances.albumManager.LoadInitialAlbumByIdAsync(albumId);
+                if (searchQuery.trim() === '') {
+                    await instances.trackManager.LoadInitialTracksAsync(album.Id);
+                } else if (searchQuery.length >= 3) {
+                    const filter: TrackFilterRequest = {
+                        page: 1,
+                        size: 20,
+                        trackName: searchQuery,
+                        albumId: album.Id
+                    };
+
+                    await instances.trackManager.LoadTracksByFilterAsync(filter);
+                }
+            } catch (error) {
+                console.error('AlbumPage: Failed to load album or tracks', error);
+            }
+        };
+
+        performSearch();
+    }, [albumId, instances.albumManager, instances.trackManager, searchQuery]);
+
     return (
-        <Box sx={{px: 8}}>
-            <Box sx={{display: 'flex', flexDirection: 'row', py: 3}}>
+        <Stack
+            sx={{
+                width: '100%',
+                maxWidth: '50%',
+                margin: '0 auto',
+            }}
+        >
+            <Box sx={{display: 'flex', flexDirection: 'row', mb: 2}}>
                 <Box sx={{px: 4}}>
-                    <InsertPhoto sx={{fontSize: "16rem"}}/>
+                    <InsertPhoto sx={{fontSize: '16rem'}}/>
                 </Box>
-                <Box sx={{display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', paddingBottom: 4}}>
+                <Box
+                    sx={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        justifyContent: 'flex-end',
+                        paddingBottom: 4
+                    }}
+                >
                     <Typography level="title-sm">Album</Typography>
                     <Typography level="h1">{currentAlbum?.Title}</Typography>
                     <Typography level="title-lg">{currentAlbum?.ArtistName}</Typography>
@@ -63,6 +94,6 @@ export default function AlbumPage() {
                     <CircularProgress size="sm"/>
                 </div>
             )}
-        </Box>
+        </Stack>
     );
 }

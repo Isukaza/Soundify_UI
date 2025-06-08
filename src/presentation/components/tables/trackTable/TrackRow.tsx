@@ -23,7 +23,7 @@ interface TrackRowProps {
 
 export const TrackRow = ({row, columnStyles, audioPlayerManager, variant = "track"}: TrackRowProps) => {
     const isPlaying = useStore(state => state.player.isPlaying);
-    const currentTrack = useStore(state => state.library.currentTrack);
+    const currentTrack = useStore(state => state.track.currentTrack);
 
     const isCurrent = currentTrack?.TrackId === row.original.TrackId;
     const isActive = isCurrent && isPlaying;
