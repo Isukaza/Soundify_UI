@@ -1,15 +1,17 @@
+import SectionNavigation from "@/presentation/components/common/SectionNavigation";
 import {useEffect} from 'react';
 import {Stack, Button, CircularProgress} from '@mui/joy';
 
 import AbstractTrackManager from '@/domain/managers/Base/AbstractTrackManager';
 import useInjectMap from '@/domain/hooks/useInjectMap';
 import {useInfiniteScrollObserver} from '@/domain/hooks/useInfiniteScrollObserver';
-import TrackFilterRequest from '@/domain/models/requests/TrackFilterRequest';
+import FilterRequest from '@/domain/models/requests/FilterRequest';
 
 import {useStore} from '@/stores';
 
 import Sentinel from '@/presentation/components/common/Sentinel';
 import TrackTable from '@/presentation/components/tables/trackTable';
+import {useNavigate} from "react-router-dom";
 
 export default function HomePage() {
     const {instances} = useInjectMap({
@@ -22,6 +24,7 @@ export default function HomePage() {
         }
     });
 
+    const navigate = useNavigate();
     const searchQuery = useStore(state => state.app.searchQuery);
 
     useEffect(() => {
@@ -33,7 +36,7 @@ export default function HomePage() {
                 if (searchQuery.trim() === '') {
                     await instances.trackManager.LoadInitialTracksAsync();
                 } else if (searchQuery.length >= 3) {
-                    const filter: TrackFilterRequest = {
+                    const filter: FilterRequest = {
                         page: 1,
                         size: 20,
                         trackName: searchQuery
@@ -57,11 +60,7 @@ export default function HomePage() {
                 margin: '0 auto',
             }}
         >
-            <Stack direction="row" spacing={1} sx={{mb: 2}}>
-                <Button>Track</Button>
-                <Button>Album</Button>
-                <Button>Artist</Button>
-            </Stack>
+            <SectionNavigation/>
 
             <TrackTable/>
 

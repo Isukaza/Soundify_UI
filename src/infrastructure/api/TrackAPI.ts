@@ -1,10 +1,10 @@
-import {Track} from "@/domain/models/Track";
-import TrackFilterRequest from '@/domain/models/requests/TrackFilterRequest';
+import Track from "@/domain/models/Track";
+import FilterRequest from '@/domain/models/requests/FilterRequest';
 
 import {trackAPI} from './configs.js';
 
 export default class TrackApi {
-    static async GetTracksByFilterAsync(filter: TrackFilterRequest):
+    static async GetTracksByFilterAsync(filter: FilterRequest):
         Promise<{
             tracks: Track[],
             nextPage: number | null

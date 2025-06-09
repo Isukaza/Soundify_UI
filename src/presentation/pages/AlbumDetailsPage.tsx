@@ -1,18 +1,19 @@
 import {useEffect} from 'react';
 import {useParams} from 'react-router-dom';
-import {Stack, CircularProgress, Box, Typography} from '@mui/joy';
+import {Stack, CircularProgress, Box, Typography, Button} from '@mui/joy';
 import {InsertPhoto} from '@mui/icons-material';
 
 import AbstractAlbumManager from '@/domain/managers/Base/AbstractAlbumManager';
 import AbstractTrackManager from '@/domain/managers/Base/AbstractTrackManager';
 import useInjectMap from '@/domain/hooks/useInjectMap';
 import {useInfiniteScrollObserver} from '@/domain/hooks/useInfiniteScrollObserver';
-import TrackFilterRequest from '@/domain/models/requests/TrackFilterRequest';
+import FilterRequest from '@/domain/models/requests/FilterRequest';
 
 import {useStore} from '@/stores';
 
 import Sentinel from '@/presentation/components/common/Sentinel';
 import TrackTable from '@/presentation/components/tables/trackTable';
+import SectionNavigation from '../components/common/SectionNavigation';
 
 export default function AlbumDetailsPage() {
     const {instances} = useInjectMap({
@@ -42,7 +43,7 @@ export default function AlbumDetailsPage() {
                 if (searchQuery.trim() === '') {
                     await instances.trackManager.LoadInitialTracksAsync(album.Id);
                 } else if (searchQuery.length >= 3) {
-                    const filter: TrackFilterRequest = {
+                    const filter: FilterRequest = {
                         page: 1,
                         size: 20,
                         trackName: searchQuery,
@@ -67,6 +68,8 @@ export default function AlbumDetailsPage() {
                 margin: '0 auto',
             }}
         >
+            <SectionNavigation/>
+
             <Box sx={{display: 'flex', flexDirection: 'row', mb: 2}}>
                 <Box sx={{px: 4}}>
                     <InsertPhoto sx={{fontSize: '16rem'}}/>

@@ -5,7 +5,7 @@ export function TrackAlbum({albumId, albumName}: { albumId: string; albumName: s
     return (
         <Link
             component={RouterLink}
-            to={`/album/${albumId}`}
+            to={`/AlbumDetails/${albumId}`}
             underline="none"
             color="neutral"
             sx={{

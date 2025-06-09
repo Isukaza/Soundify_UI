@@ -5,7 +5,7 @@ import {Table} from '@mui/joy';
 import {useReactTable, getCoreRowModel, createColumnHelper, flexRender} from '@tanstack/react-table';
 
 import AbstractAudioPlayerManager from '@/domain/managers/Base/AbstractAudioPlayerManager';
-import {Track} from '@/domain/models/Track';
+import Track from '@/domain/models/Track';
 
 import useInjectMap from '@/domain/hooks/useInjectMap';
 

@@ -1,7 +1,8 @@
-import {InsertPhoto, PlaylistAdd} from '@mui/icons-material';
-import {IconButton, Stack, Typography} from '@mui/joy';
+import {InsertPhoto} from '@mui/icons-material';
+import {Stack, Typography} from '@mui/joy';
 
 import {useStore} from '@/stores';
+import {Link} from "react-router-dom";
 
 export default function TrackInfo() {
     console.log("TrackInfo");
@@ -24,12 +25,37 @@ export default function TrackInfo() {
                     justifyContent: 'center',
                 }}
             >
-                <Typography>{currentTrack.Name}</Typography>
-                <Typography>{currentTrack.ArtistName}</Typography>
+
+                <Typography
+                    level="title-md"
+                    component={Link}
+                    to={`/track/123`}
+                    sx={{
+                        textDecoration: 'none',
+                        '&:hover': {
+                            textDecoration: 'underline'
+                        }
+                    }}
+                >
+                    {currentTrack.Name}
+                </Typography>
+
+                <Typography
+                    component={Link}
+                    to={`/artist/123`}
+                    color="neutral"
+                    sx={{
+                        opacity: 0.7,
+                        textDecoration: 'none',
+                        '&:hover': {
+                            textDecoration: 'underline',
+                            opacity: 1,
+                        },
+                    }}
+                >
+                    {currentTrack.ArtistName}
+                </Typography>
             </Stack>
-            <IconButton>
-                <PlaylistAdd fontSize="xl3"/>
-            </IconButton>
         </Stack>
     );
 };

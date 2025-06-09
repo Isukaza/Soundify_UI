@@ -1,8 +1,8 @@
-import {useState} from 'react';
-import {Link as RouterLink} from 'react-router-dom';
+import React, {useState} from 'react';
+import {Link} from 'react-router-dom';
 
 import {InsertPhoto} from '@mui/icons-material';
-import {Link, Stack} from '@mui/joy';
+import {Stack, Typography} from '@mui/joy';
 
 export function TrackInfo({thumbnail, trackId, trackName, artistId, artistName, variant}: {
     thumbnail?: string;
@@ -14,46 +14,44 @@ export function TrackInfo({thumbnail, trackId, trackName, artistId, artistName, 
 }) {
     const [imgError, setImgError] = useState(false);
 
-    const showPlaceholderIcon = imgError || !thumbnail;
+    const showPlaceholderIcon = true;//imgError || !thumbnail;
 
     return (
         <Stack direction="row" spacing={1} alignItems="center">
             {variant !== "album" ? (
-                showPlaceholderIcon ? (
-                    <InsertPhoto sx={{width: 32, height: 32}} />
-                ) : (
-                    <img
+                showPlaceholderIcon
+                    ? <InsertPhoto sx={{width: 32, height: 32}}/>
+                    : <img
                         src={thumbnail}
                         onError={() => setImgError(true)}
                         alt={trackName}
                         style={{width: 32, height: 32, borderRadius: 4}}
                     />
-                )
+
             ) : null}
 
             <Stack>
-                <Link
-                    component={RouterLink}
+                <Typography
+                    level="title-md"
+                    component={Link}
                     to={`/track/${trackId}`}
-                    underline="none"
-                    color="neutral"
                     sx={{
-                        fontSize: '1rem',
+                        textDecoration: 'none',
                         '&:hover': {
-                            textDecoration: 'underline',
-                        },
+                            textDecoration: 'underline'
+                        }
                     }}
                 >
                     {trackName}
-                </Link>
+                </Typography>
 
-                <Link
-                    component={RouterLink}
+                <Typography
+                    component={Link}
                     to={`/artist/${artistId}`}
-                    underline="none"
                     color="neutral"
                     sx={{
                         opacity: 0.7,
+                        textDecoration: 'none',
                         '&:hover': {
                             textDecoration: 'underline',
                             opacity: 1,
@@ -61,7 +59,7 @@ export function TrackInfo({thumbnail, trackId, trackName, artistId, artistName, 
                     }}
                 >
                     {artistName}
-                </Link>
+                </Typography>
             </Stack>
         </Stack>
     );

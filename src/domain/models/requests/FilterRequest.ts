@@ -1,4 +1,4 @@
-export default interface TrackFilterRequest {
+export default interface FilterRequest {
     trackId?: string;
     trackName?: string;
     albumId?: string;
