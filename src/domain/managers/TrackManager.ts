@@ -1,7 +1,7 @@
 import AbstractTrackManager from "@/domain/managers/Base/AbstractTrackManager";
 
-import {Track} from "@/domain/models/Track";
-import TrackFilterRequest from '@/domain/models/requests/TrackFilterRequest';
+import Track from "@/domain/models/Track";
+import FilterRequest from '@/domain/models/requests/FilterRequest';
 
 import TrackApi from "@/infrastructure/api/TrackAPI";
 
@@ -10,7 +10,7 @@ import {useStore} from '@/stores';
 export default class TrackManager extends AbstractTrackManager {
     async LoadInitialTracksAsync(albumId?: string): Promise<Track[] | null> {
         try {
-            const filter: TrackFilterRequest = {page: 1, size: 20, albumId: albumId};
+            const filter: FilterRequest = {page: 1, size: 20, albumId: albumId};
             const {tracks, nextPage} = await TrackApi.GetTracksByFilterAsync(filter);
 
             useStore.getState().track.setTracks(tracks);
@@ -32,7 +32,7 @@ export default class TrackManager extends AbstractTrackManager {
         }
 
         try {
-            const filter: TrackFilterRequest = {page: nextPage, size, albumId: albumId};
+            const filter: FilterRequest = {page: nextPage, size, albumId: albumId};
             const {tracks, nextPage: newNextPage} = await TrackApi.GetTracksByFilterAsync(filter);
 
             useStore.getState().track.addTracks(tracks);
@@ -45,7 +45,7 @@ export default class TrackManager extends AbstractTrackManager {
         }
     }
 
-    async LoadTracksByFilterAsync(filter: TrackFilterRequest): Promise<Track[] | null> {
+    async LoadTracksByFilterAsync(filter: FilterRequest): Promise<Track[] | null> {
         try {
             const {tracks, nextPage} = await TrackApi.GetTracksByFilterAsync(filter);
 

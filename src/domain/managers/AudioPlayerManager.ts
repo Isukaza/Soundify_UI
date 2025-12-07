@@ -1,5 +1,5 @@
 import AbstractAudioPlayerManager from "@/domain/managers/Base/AbstractAudioPlayerManager";
-import {Track} from "@/domain/models/Track";
+import Track from "@/domain/models/Track";
 
 import {useStore} from "@/stores";
 

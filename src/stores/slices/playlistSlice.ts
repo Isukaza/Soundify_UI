@@ -1,5 +1,5 @@
 import {createSliceSetters, SliceCreator} from '@/stores/utils';
-import {Playlist} from '@/domain/models/Playlist';
+import Playlist from '@/domain/models/Playlist';
 import {Index} from '@/stores';
 
 export interface PlaylistSlice {

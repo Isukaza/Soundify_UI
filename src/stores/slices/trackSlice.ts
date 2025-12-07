@@ -1,6 +1,6 @@
 import {createSliceSetters, SliceCreator} from '@/stores/utils';
 
-import {Track} from '@/domain/models/Track';
+import Track from '@/domain/models/Track';
 
 import {Index} from "@/stores";
 

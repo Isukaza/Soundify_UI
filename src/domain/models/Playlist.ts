@@ -1,6 +1,6 @@
-import {Track} from "@/domain/models/Track";
+import Track from "@/domain/models/Track";
 
-export interface Playlist {
+export default interface Playlist {
     PlayListId: string;
     Name: string;
     Tracks: Track[];

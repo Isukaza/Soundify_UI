@@ -1,4 +1,4 @@
-export interface Track {
+export default interface Track {
     TrackId: string;
     Name: string;
     ArtistId: string;

@@ -7,7 +7,7 @@ import Typography from '@mui/joy/Typography';
 import { borderRadiusStyle } from '@/presentation/styles/common/borderRadiusStyle';
 import { centerStyles } from '@/presentation/styles/common/centerStyles';
 
-export default function DetailsTrackPage() {
+export default function TrackDetailsPage() {
     return (
         <main className="main-container">
             <Box sx={{...centerStyles, gap: 3, width: '734px'}}>
