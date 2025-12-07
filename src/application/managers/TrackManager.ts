@@ -1,9 +1,9 @@
 import {injectable} from "inversify";
 
-import AbstractTrackManager from "@/domain/managers/Base/AbstractTrackManager";
+import AbstractTrackManager from "@/domain/Base/AbstractTrackManager";
 import TrackApi from "@/infrastructure/api/TrackAPI";
-import Track from "@/domain/models/Track";
-import FilterRequest from "@/domain/models/requests/FilterRequest";
+import Track from "@/domain/DTO/Track";
+import FilterRequest from "@/domain/DTO/requests/FilterRequest";
 
 import {useStore} from "@/stores";
 

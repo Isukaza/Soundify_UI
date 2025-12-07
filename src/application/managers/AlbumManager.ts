@@ -1,9 +1,9 @@
 import {injectable} from "inversify";
 
-import AbstractAlbumManager from "@/domain/managers/Base/AbstractAlbumManager";
+import AbstractAlbumManager from "@/domain/Base/AbstractAlbumManager";
 import AlbumApi from "@/infrastructure/api/AlbumApi";
-import FilterRequest from "@/domain/models/requests/FilterRequest";
-import Album from "@/domain/models/Album";
+import FilterRequest from "@/domain/DTO/requests/FilterRequest";
+import Album from "@/domain/DTO/Album";
 
 import {useStore} from "@/stores";
 

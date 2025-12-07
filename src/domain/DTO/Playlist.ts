@@ -1,4 +1,4 @@
-import Track from "@/domain/models/Track";
+import Track from "@/domain/DTO/Track";
 
 export default interface Playlist {
     PlayListId: string;

@@ -1,6 +1,4 @@
-import InjectableBase from "@/app/di/Base/InjectableBase";
-
-export default abstract class AbstractAuthManager extends InjectableBase {
+export default abstract class AbstractAuthManager {
     abstract getGoogleSsoUrl(): Promise<string | null>;
 
     abstract loginWithEmail(email: string, password: string): Promise<boolean>;

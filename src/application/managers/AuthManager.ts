@@ -1,8 +1,8 @@
 import { injectable } from "inversify";
 
-import AbstractAuthManager from "@/domain/managers/Base/AbstractAuthManager";
+import AbstractAuthManager from "@/domain/Base/AbstractAuthManager";
 import AuthApi from "@/infrastructure/api/AuthApi";
-import LoginResponse from "@/domain/models/responses/LoginResponse";
+import LoginResponse from "@/domain/DTO/responses/LoginResponse";
 
 import dayjs from "dayjs";
 import { jwtDecode } from "jwt-decode";

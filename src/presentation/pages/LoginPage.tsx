@@ -3,10 +3,10 @@ import {useLocation, useNavigate} from "react-router-dom";
 
 import {Box, Divider, Sheet, Stack} from "@mui/joy";
 
-import useInject from "@/domain/hooks/useInject";
+import useInject from "@/presentation/hooks/useInject";
 import {TYPES} from "@/app/di/types";
 
-import AbstractAuthManager from "@/domain/managers/Base/AbstractAuthManager";
+import AbstractAuthManager from "@/domain/Base/AbstractAuthManager";
 
 import LoadingPage from "@/presentation/pages/LoadingPage";
 import Logo from "@/presentation/components/common/Logo";

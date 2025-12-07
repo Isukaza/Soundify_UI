@@ -2,12 +2,12 @@ import {Container} from "inversify";
 import {appContainer} from "./inversify.config";
 import {TYPES} from "./types";
 
-import AlbumManager from "@/domain/managers/AlbumManager";
-import TrackManager from "@/domain/managers/TrackManager";
-import AudioPlayerManager from "@/domain/managers/AudioPlayerManager";
+import AlbumManager from "@/application/managers/AlbumManager";
+import TrackManager from "@/application/managers/TrackManager";
+import AudioPlayerManager from "@/application/managers/AudioPlayerManager";
 
-import AuthService from "@/domain/services/AuthService";
-import AudioPlayerService from "@/domain/services/AudioPlayerService";
+import AuthService from "@/application/services/AuthService";
+import AudioPlayerService from "@/application/services/AudioPlayerService";
 
 let sessionContainer: Container | null = null;
 

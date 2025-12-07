@@ -1,4 +1,4 @@
-import UserRole from "@/domain/models/enums/UserRole";
+import UserRole from "@/domain/enums/UserRole";
 import {createSliceSetters, SliceCreator} from '@/stores/utils';
 
 export interface AuthSlice {

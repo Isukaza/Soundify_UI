@@ -1,9 +1,7 @@
-import InjectableBase from "@/app/di/Base/InjectableBase";
-import Album from "@/domain/models/Album";
-import FilterRequest from "@/domain/models/requests/FilterRequest";
-import Track from "@/domain/models/Track";
+import Album from "@/domain/DTO/Album";
+import FilterRequest from "@/domain/DTO/requests/FilterRequest";
 
-export default abstract class AbstractAlbumManager extends InjectableBase {
+export default abstract class AbstractAlbumManager {
     abstract LoadInitialAlbumByIdAsync(id: string): Promise<Album>;
     abstract LoadInitialAlbumsAsync(): Promise<Album[] | null>;
 

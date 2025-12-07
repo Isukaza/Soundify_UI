@@ -1,7 +1,7 @@
 import {injectable} from "inversify";
 
-import AbstractAudioPlayerManager from "@/domain/managers/Base/AbstractAudioPlayerManager";
-import Track from "@/domain/models/Track";
+import AbstractAudioPlayerManager from "@/domain/Base/AbstractAudioPlayerManager";
+import Track from "@/domain/DTO/Track";
 import {useStore} from "@/stores";
 
 @injectable()

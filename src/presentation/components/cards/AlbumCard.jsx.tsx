@@ -1,7 +1,7 @@
 import React from 'react';
 import {Box, Card, Typography} from '@mui/joy';
 import {Link, useNavigate} from 'react-router-dom';
-import Album from '@/domain/models/Album';
+import Album from '@/domain/DTO/Album';
 // @ts-ignore
 import placeholderSvg from '@/shared/assets/imagePlaceholder.svg';
 

@@ -1,5 +1,5 @@
 import {injectable} from "inversify";
-import AbstractAudioPlayerService from "@/domain/services/types/AbstractAudioPlayerService";
+import AbstractAudioPlayerService from "@/domain/Base/AbstractAudioPlayerService";
 
 import HlsLoader from "@/infrastructure/utils/HlsLoader";
 import {getTrackPath} from "@/infrastructure/utils/formatters";

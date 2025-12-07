@@ -2,8 +2,8 @@ import React from "react";
 
 import {flexRender, Row} from '@tanstack/react-table';
 
-import AbstractAudioPlayerManager from "@/domain/managers/Base/AbstractAudioPlayerManager";
-import Track from '@/domain/models/Track';
+import AbstractAudioPlayerManager from "@/domain/Base/AbstractAudioPlayerManager";
+import Track from '@/domain/DTO/Track';
 
 import {useStore} from '@/stores';
 

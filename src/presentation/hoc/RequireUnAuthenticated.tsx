@@ -1,9 +1,9 @@
 import {Navigate, Outlet, useLocation} from "react-router-dom";
 
-import useInject from "@/domain/hooks/useInject";
+import useInject from "@/presentation/hooks/useInject";
 import {TYPES} from "@/app/di/types";
 
-import AbstractAuthManager from "@/domain/managers/Base/AbstractAuthManager";
+import AbstractAuthManager from "@/domain/Base/AbstractAuthManager";
 
 interface LocationState {
     from?: { pathname?: string };

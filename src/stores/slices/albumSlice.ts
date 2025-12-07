@@ -1,5 +1,5 @@
 import {createSliceSetters, SliceCreator} from '@/stores/utils';
-import Album from '@/domain/models/Album';
+import Album from '@/domain/DTO/Album';
 import {Index} from '@/stores';
 
 export interface AlbumSlice {

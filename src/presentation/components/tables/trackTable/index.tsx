@@ -10,14 +10,14 @@ import {
     flexRender
 } from "@tanstack/react-table";
 
-import Track from "@/domain/models/Track";
-import AbstractAudioPlayerManager from "@/domain/managers/Base/AbstractAudioPlayerManager";
+import Track from "@/domain/DTO/Track";
+import AbstractAudioPlayerManager from "@/domain/Base/AbstractAudioPlayerManager";
 
 import {useStore} from "@/stores";
 
 import {TrackRow} from "./TrackRow";
 
-import useInject from "@/domain/hooks/useInject";
+import useInject from "@/presentation/hooks/useInject";
 import {TYPES} from "@/app/di/types";
 
 const columnStyles: Record<string, React.CSSProperties> = {

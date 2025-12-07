@@ -6,14 +6,14 @@ import Button from "@mui/joy/Button";
 import {Search} from "@mui/icons-material";
 import HomeIcon from "@mui/icons-material/Home";
 
-import {useDebouncedValue} from "@/domain/hooks/useDebouncedValue";
-import useInject from "@/domain/hooks/useInject";
+import {useDebouncedValue} from "@/presentation/hooks/useDebouncedValue";
+import useInject from "@/presentation/hooks/useInject";
 
 import {TYPES} from "@/app/di/types";
 
-import AbstractAppManager from "@/domain/managers/Base/AbstractAppManager";
-import AbstractAuthManager from "@/domain/managers/Base/AbstractAuthManager";
-import AbstractAudioPlayerManager from "@/domain/managers/Base/AbstractAudioPlayerManager";
+import AbstractAppManager from "@/domain/Base/AbstractAppManager";
+import AbstractAuthManager from "@/domain/Base/AbstractAuthManager";
+import AbstractAudioPlayerManager from "@/domain/Base/AbstractAudioPlayerManager";
 
 import {borderRadiusStyle} from "@/presentation/styles/common/borderRadiusStyle";
 

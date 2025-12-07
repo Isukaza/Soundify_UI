@@ -1,10 +1,10 @@
 import React from "react";
 import {Button, CircularProgress, Typography} from "@mui/joy";
 
-import useInject from "@/domain/hooks/useInject";
+import useInject from "@/presentation/hooks/useInject";
 import {TYPES} from "@/app/di/types";
 
-import AbstractAuthManager from "@/domain/managers/Base/AbstractAuthManager";
+import AbstractAuthManager from "@/domain/Base/AbstractAuthManager";
 
 import GoogleIcon from "@/shared/assets/GoogleIcon";
 import {borderRadiusStyle} from "@/presentation/styles/common/borderRadiusStyle";

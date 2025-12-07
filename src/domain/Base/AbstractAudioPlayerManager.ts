@@ -1,7 +1,6 @@
-import InjectableBase from "@/app/di/Base/InjectableBase";
-import Track from "@/domain/models/Track";
+import Track from "@/domain/DTO/Track";
 
-export default abstract class AbstractAudioPlayerManager extends InjectableBase {
+export default abstract class AbstractAudioPlayerManager {
     abstract play(): Promise<void>;
 
     abstract pause(): Promise<void>;

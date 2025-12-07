@@ -1,7 +1,7 @@
 import {injectable, inject} from "inversify";
 
-import AbstractAuthManager from "@/domain/managers/Base/AbstractAuthManager";
-import AbstractAuthService from "@/domain/services/types/AbstractAuthService";
+import AbstractAuthManager from "@/domain/Base/AbstractAuthManager";
+import AbstractAuthService from "@/domain/Base/AbstractAuthService";
 
 import {useStore} from "@/stores";
 import {TYPES} from "@/app/di/types";

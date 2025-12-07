@@ -3,8 +3,8 @@ import {VolumeDown, VolumeMute, VolumeOff, VolumeUp} from '@mui/icons-material';
 
 import {useStore} from '@/stores';
 
-import useInject from "@/domain/hooks/useInject";
-import AbstractAudioPlayerManager from "@/domain/managers/Base/AbstractAudioPlayerManager";
+import useInject from "@/presentation/hooks/useInject";
+import AbstractAudioPlayerManager from "@/domain/Base/AbstractAudioPlayerManager";
 import {TYPES} from "@/app/di/types";
 
 export default function Volume() {

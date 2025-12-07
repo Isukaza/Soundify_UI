@@ -1,5 +1,5 @@
-import Track from "@/domain/models/Track";
-import FilterRequest from '@/domain/models/requests/FilterRequest';
+import Track from "@/domain/DTO/Track";
+import FilterRequest from '@/domain/DTO/requests/FilterRequest';
 
 import {trackAPI} from './configs.js';
 

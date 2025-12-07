@@ -1,4 +1,4 @@
-import UserRole  from '@/domain/models/enums/UserRole';
+import UserRole  from '@/domain/enums/UserRole';
 
 export interface LoginResponse {
     userId: string;

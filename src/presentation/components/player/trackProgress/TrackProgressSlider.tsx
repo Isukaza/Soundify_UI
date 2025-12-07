@@ -2,10 +2,10 @@ import {useCallback, useEffect, useRef, useState} from "react";
 import {Slider} from "@mui/joy";
 
 import {useStore} from "@/stores";
-import useInject from "@/domain/hooks/useInject";
+import useInject from "@/presentation/hooks/useInject";
 
 import {TYPES} from "@/app/di/types";
-import AbstractAudioPlayerManager from "@/domain/managers/Base/AbstractAudioPlayerManager";
+import AbstractAudioPlayerManager from "@/domain/Base/AbstractAudioPlayerManager";
 
 import {formatTime} from "@/infrastructure/utils/formatters";
 

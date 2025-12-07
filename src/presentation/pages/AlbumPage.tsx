@@ -2,16 +2,16 @@ import React, {useEffect} from "react";
 import {Box, CircularProgress, Stack} from "@mui/joy";
 
 import {useStore} from "@/stores";
-import {useInfiniteScrollObserver} from "@/domain/hooks/useInfiniteScrollObserver";
+import {useInfiniteScrollObserver} from "@/presentation/hooks/useInfiniteScrollObserver";
 
-import AbstractAlbumManager from "@/domain/managers/Base/AbstractAlbumManager";
-import FilterRequest from "@/domain/models/requests/FilterRequest";
+import AbstractAlbumManager from "@/domain/Base/AbstractAlbumManager";
+import FilterRequest from "@/domain/DTO/requests/FilterRequest";
 
 import SectionNavigation from "@/presentation/components/common/SectionNavigation";
 import AlbumCard from "../components/cards/AlbumCard.jsx";
 import Sentinel from "@/presentation/components/common/Sentinel";
 
-import useInject from "@/domain/hooks/useInject";
+import useInject from "@/presentation/hooks/useInject";
 import {TYPES} from "@/app/di/types";
 
 export default function AlbumPage() {

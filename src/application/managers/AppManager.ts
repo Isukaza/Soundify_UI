@@ -1,5 +1,5 @@
 import {injectable} from "inversify";
-import AbstractAppManager from "@/domain/managers/Base/AbstractAppManager";
+import AbstractAppManager from "@/domain/Base/AbstractAppManager";
 import {useStore} from "@/stores";
 
 @injectable()

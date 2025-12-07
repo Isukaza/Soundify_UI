@@ -2,14 +2,14 @@ import {useNavigate} from "react-router-dom";
 
 import {Button} from "@mui/joy";
 
-import {useFetching} from "@/domain/hooks/useFetching";
+import {useFetching} from "@/presentation/hooks/useFetching";
 
 import {borderRadiusStyle} from "@/presentation/styles/common/borderRadiusStyle";
 
-import AbstractAuthManager from "@/domain/managers/Base/AbstractAuthManager";
+import AbstractAuthManager from "@/domain/Base/AbstractAuthManager";
 
 import {useStore} from "@/stores";
-import useInject from "@/domain/hooks/useInject";
+import useInject from "@/presentation/hooks/useInject";
 import {TYPES} from "@/app/di/types";
 
 interface Props {

@@ -4,16 +4,16 @@ import {useParams} from "react-router-dom";
 import {Stack, CircularProgress, Box, Typography} from "@mui/joy";
 import {InsertPhoto} from "@mui/icons-material";
 
-import useInject from "@/domain/hooks/useInject";
+import useInject from "@/presentation/hooks/useInject";
 import {TYPES} from "@/app/di/types";
 
-import AbstractAlbumManager from "@/domain/managers/Base/AbstractAlbumManager";
-import AbstractTrackManager from "@/domain/managers/Base/AbstractTrackManager";
+import AbstractAlbumManager from "@/domain/Base/AbstractAlbumManager";
+import AbstractTrackManager from "@/domain/Base/AbstractTrackManager";
 
 import {useStore} from "@/stores";
 
-import {useInfiniteScrollObserver} from "@/domain/hooks/useInfiniteScrollObserver";
-import FilterRequest from "@/domain/models/requests/FilterRequest";
+import {useInfiniteScrollObserver} from "@/presentation/hooks/useInfiniteScrollObserver";
+import FilterRequest from "@/domain/DTO/requests/FilterRequest";
 
 import SectionNavigation from "../components/common/SectionNavigation";
 import TrackTable from "@/presentation/components/tables/trackTable";
