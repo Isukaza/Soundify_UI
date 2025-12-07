@@ -1,5 +1,5 @@
-import Album from "@/domain/models/Album";
-import FilterRequest from "@/domain/models/requests/FilterRequest";
+import Album from "@/domain/DTO/Album";
+import FilterRequest from "@/domain/DTO/requests/FilterRequest";
 import {albumAPI} from "@/infrastructure/api/configs";
 
 export default class AlbumApi {

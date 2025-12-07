@@ -1,55 +1,55 @@
-import {useEffect, useState} from 'react';
+import {useEffect, useState} from "react";
 import {Link} from "react-router-dom";
 
-import {Box, Input} from '@mui/joy';
+import {Box, Input} from "@mui/joy";
 import Button from "@mui/joy/Button";
-import {Search} from '@mui/icons-material';
-import HomeIcon from '@mui/icons-material/Home';
+import {Search} from "@mui/icons-material";
+import HomeIcon from "@mui/icons-material/Home";
 
-import AbstractAppManager from "@/domain/managers/Base/AbstractAppManager";
-import AbstractAudioPlayerManager from "@/domain/managers/Base/AbstractAudioPlayerManager";
-import AbstractAuthManager from "@/domain/managers/Base/AbstractAuthManager";
-import {useDebouncedValue} from '@/domain/hooks/useDebouncedValue';
-import useInjectMap from '@/domain/hooks/useInjectMap';
+import {useDebouncedValue} from "@/presentation/hooks/useDebouncedValue";
+import useInject from "@/presentation/hooks/useInject";
+
+import {TYPES} from "@/app/di/types";
+
+import AbstractAppManager from "@/domain/Base/AbstractAppManager";
+import AbstractAuthManager from "@/domain/Base/AbstractAuthManager";
+import AbstractAudioPlayerManager from "@/domain/Base/AbstractAudioPlayerManager";
 
 import {borderRadiusStyle} from "@/presentation/styles/common/borderRadiusStyle";
 
 export function Header() {
-    const [searchText, setSearchText] = useState<string>('');
-    const debouncedSearchText = useDebouncedValue<string>(searchText, 500);
+    const [searchText, setSearchText] = useState("");
+    const debouncedSearchText = useDebouncedValue(searchText, 500);
 
-    const {instances, loading} = useInjectMap({
-        appManager: AbstractAppManager,
-        authManager: AbstractAuthManager,
-        audioPlayerManager: AbstractAudioPlayerManager
-    });
+    // NEW DI — synchronous, always available
+    const appManager = useInject<AbstractAppManager>(TYPES.AppManager);
+    const authManager = useInject<AbstractAuthManager>(TYPES.AuthManager);
+    const audioPlayerManager = useInject<AbstractAudioPlayerManager>(TYPES.AudioPlayerManager);
 
+    // Update search query
     useEffect(() => {
-        if (instances.appManager)
-            instances.appManager.updateSearchQuery(debouncedSearchText);
-    }, [debouncedSearchText, instances.appManager]);
+        appManager.updateSearchQuery(debouncedSearchText);
+    }, [debouncedSearchText, appManager]);
 
+    // Logout logic
     const handleLogout = () => {
-        if (!instances.authManager && !instances.audioPlayerManager)
-            return;
-
-        instances.audioPlayerManager?.resetPlayerState();
-        instances.audioPlayerManager?.resetLibraryState();
-        instances.authManager?.clearAuthData();
+        audioPlayerManager.resetPlayerState();
+        audioPlayerManager.resetLibraryState();
+        authManager.clearAuthData();
     };
 
     return (
         <Box
             sx={{
-                position: 'relative',
-                padding: '10px 20px',
-                backgroundColor: 'black',
-                color: 'white',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                boxShadow: '0px 1px 3px 0px rgba(255, 255, 255, 0.1)',
-                height: '64px'
+                position: "relative",
+                padding: "10px 20px",
+                backgroundColor: "black",
+                color: "white",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                boxShadow: "0px 1px 3px rgba(255, 255, 255, 0.1)",
+                height: "64px",
             }}
         >
             <Box sx={{flexShrink: 0}}>
@@ -63,15 +63,15 @@ export function Header() {
                 value={searchText}
                 onChange={(e) => setSearchText(e.target.value)}
                 sx={{
-                    position: 'absolute',
-                    left: '50%',
-                    transform: 'translateX(-50%)',
-                    backgroundColor: 'rgba(255, 255, 255, 0.1)',
-                    color: 'white',
-                    borderRadius: '20px',
-                    paddingX: '10px',
-                    width: '100%',
-                    maxWidth: '500px',
+                    position: "absolute",
+                    left: "50%",
+                    transform: "translateX(-50%)",
+                    backgroundColor: "rgba(255, 255, 255, 0.1)",
+                    color: "white",
+                    borderRadius: "20px",
+                    paddingX: "10px",
+                    width: "100%",
+                    maxWidth: "500px",
                 }}
                 startDecorator={<Search fontSize="large"/>}
             />
@@ -83,12 +83,11 @@ export function Header() {
                 variant="solid"
                 color="primary"
                 size="md"
-                disabled={loading || !instances.authManager}
                 sx={{
                     flexShrink: 0,
-                    width: {xs: 'auto', sm: '90px'},
+                    width: {xs: "auto", sm: "90px"},
                     ...borderRadiusStyle,
-                    '&:hover': {transform: 'scale(1.1)'},
+                    "&:hover": {transform: "scale(1.1)"},
                 }}
             >
                 Log Out

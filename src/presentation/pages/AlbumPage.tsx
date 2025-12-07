@@ -1,55 +1,54 @@
-import {useInfiniteScrollObserver} from "@/domain/hooks/useInfiniteScrollObserver";
-import useInjectMap from "@/domain/hooks/useInjectMap";
-import AbstractAlbumManager from "@/domain/managers/Base/AbstractAlbumManager";
-import FilterRequest from "@/domain/models/requests/FilterRequest";
-import SectionNavigation from "@/presentation/components/common/SectionNavigation";
-import Sentinel from "@/presentation/components/common/Sentinel";
+import React, {useEffect} from "react";
+import {Box, CircularProgress, Stack} from "@mui/joy";
+
 import {useStore} from "@/stores";
-import React, {useEffect} from 'react';
-import {Box, CircularProgress, Stack} from '@mui/joy';
+import {useInfiniteScrollObserver} from "@/presentation/hooks/useInfiniteScrollObserver";
+
+import AbstractAlbumManager from "@/domain/Base/AbstractAlbumManager";
+import FilterRequest from "@/domain/DTO/requests/FilterRequest";
+
+import SectionNavigation from "@/presentation/components/common/SectionNavigation";
 import AlbumCard from "../components/cards/AlbumCard.jsx";
+import Sentinel from "@/presentation/components/common/Sentinel";
+
+import useInject from "@/presentation/hooks/useInject";
+import {TYPES} from "@/app/di/types";
 
 export default function AlbumPage() {
-    const {instances} = useInjectMap({
-        albumManager: AbstractAlbumManager,
-    });
+    const albumManager = useInject<AbstractAlbumManager>(TYPES.AlbumManager);
 
-
-    const albums = useStore(state => state.album.albums);
-    const searchQuery = useStore(state => state.app.searchQuery);
+    const albums = useStore((state) => state.album.albums);
+    const searchQuery = useStore((state) => state.app.searchQuery);
 
     const {sentinelRef, isLoadingNextPage} = useInfiniteScrollObserver({
         loadMore: async () => {
-            if (!instances.albumManager) return;
-
-            await instances.albumManager.LoadNextPageAsync();
-        }
+            await albumManager.LoadNextPageAsync();
+        },
     });
 
     useEffect(() => {
         const performSearch = async () => {
-            if (!instances.albumManager)
-                return;
-
             try {
-                if (searchQuery.trim() === '') {
-                    await instances.albumManager.LoadInitialAlbumsAsync();
-                } else if (searchQuery.length >= 3) {
+                const trimmed = searchQuery.trim();
+
+                if (trimmed === "") {
+                    await albumManager.LoadInitialAlbumsAsync();
+                } else if (trimmed.length >= 3) {
                     const filter: FilterRequest = {
                         page: 1,
                         size: 20,
-                        albumName: searchQuery
+                        albumName: trimmed,
                     };
 
-                    await instances.albumManager.LoadAlbumsByFilterAsync(filter);
+                    await albumManager.LoadAlbumsByFilterAsync(filter);
                 }
             } catch (error) {
-                console.error('AlbumDetailsPage: Failed to load album or tracks', error);
+                console.error("AlbumPage: Failed to load albums", error);
             }
         };
 
         performSearch();
-    }, [instances.albumManager, searchQuery]);
+    }, [searchQuery, albumManager]);
 
     return (
         <Stack>
@@ -57,9 +56,9 @@ export default function AlbumPage() {
 
             <Box
                 sx={{
-                    display: 'grid',
-                    gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))',
-                    gap: 0
+                    display: "grid",
+                    gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))",
+                    gap: 0,
                 }}
             >
                 {albums.map((album) => (
@@ -69,11 +68,11 @@ export default function AlbumPage() {
                 <Sentinel ref={sentinelRef}/>
 
                 {isLoadingNextPage && (
-                    <div style={{display: 'flex', justifyContent: 'center', padding: '10px'}}>
+                    <div style={{display: "flex", justifyContent: "center", padding: "10px"}}>
                         <CircularProgress size="sm"/>
                     </div>
                 )}
             </Box>
         </Stack>
     );
-};
+}

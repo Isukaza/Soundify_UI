@@ -1,3 +1,4 @@
+import "reflect-metadata";
 import {createRoot} from 'react-dom/client';
 import {BrowserRouter} from 'react-router-dom';
 import {CssVarsProvider, StyledEngineProvider} from '@mui/joy/styles';

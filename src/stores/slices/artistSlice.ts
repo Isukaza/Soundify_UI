@@ -1,5 +1,5 @@
 import {createSliceSetters, SliceCreator} from '@/stores/utils';
-import Artist from '@/domain/models/Artist';
+import Artist from '@/domain/DTO/Artist';
 import {Index} from '@/stores';
 
 export interface ArtistSlice {

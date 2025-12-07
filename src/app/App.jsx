@@ -1,3 +1,5 @@
+import {startHostedServices, stopHostedServices} from "@/app/di/hostedServices.ts";
+import {createSessionScope, destroySessionScope, getSessionContainer} from "@/app/di/session.scope.ts";
 import {useEffect} from 'react';
 import {Route, Routes} from 'react-router-dom';
 
@@ -7,17 +9,14 @@ import Layout from '@/presentation/components/layout/Layout';
 
 import ProtectedRoutes from '@/presentation/hoc/ProtectedRoutes';
 import RequireUnAuthenticated from '@/presentation/hoc/RequireUnAuthenticated';
-import AppInitGate from "@/presentation/hoc/AppInitGate";
-
-import AppDIManager from '@/app/di/AppDIManager';
 
 import HomePage from '@/presentation/pages/HomePage';
 import AlbumPage from "@/presentation/pages/AlbumPage";
 import TrackDetailsPage from '@/presentation/pages/TrackDetailsPage.tsx';
 import AlbumDetailsPage from "@/presentation/pages/AlbumDetailsPage";
-import InDevelopPage from '@/presentation/pages/InDevelopPage';
+import InDevelopPage from '@/presentation/pages/InDevelopPage.tsx';
 import LoginPage from '@/presentation/pages/LoginPage';
-import NotFoundPage from '@/presentation/pages/NotFoundPage';
+import NotFoundPage from '@/presentation/pages/NotFoundPage.tsx';
 
 import {useStore} from '@/stores/index';
 
@@ -25,17 +24,19 @@ export default function App() {
     const isAuthenticated = useStore(state => state.auth.isAuthenticated);
 
     useEffect(() => {
-        const manageDI = async () => {
-            isAuthenticated ? await AppDIManager.start() : await AppDIManager.stop();
-        };
-
-        manageDI();
+        if (isAuthenticated) {
+            const session = createSessionScope();
+            startHostedServices(session);
+        } else {
+            const session = getSessionContainer();
+            if (session) stopHostedServices(session);
+            destroySessionScope();
+        }
     }, [isAuthenticated]);
 
     return (
         <>
             <CssBaseline/>
-            <AppInitGate>
                 <Routes>
                     <Route element={<ProtectedRoutes/>}>
                         <Route element={<Layout/>}>
@@ -53,7 +54,6 @@ export default function App() {
                     <Route path="/InDevelop" element={<InDevelopPage/>}/>
                     <Route path="*" element={<NotFoundPage/>}/>
                 </Routes>
-            </AppInitGate>
         </>
     );
 }

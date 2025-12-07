@@ -1,7 +1,7 @@
-import UserRole from "@/domain/models/enums/UserRole";
-import {LoginRequest} from "@/domain/models/requests/LoginRequest";
-import {RefreshTokensRequest} from "@/domain/models/requests/RefreshTokensRequest";
-import {LoginResponse} from "@/domain/models/responses/LoginResponse";
+import UserRole from "@/domain/enums/UserRole";
+import {LoginRequest} from "@/domain/DTO/requests/LoginRequest";
+import {RefreshTokensRequest} from "@/domain/DTO/requests/RefreshTokensRequest";
+import {LoginResponse} from "@/domain/DTO/responses/LoginResponse";
 import {authAPI} from './configs';
 
 export default class AuthApi {

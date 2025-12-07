@@ -1,4 +1,4 @@
-import Track from "@/domain/models/Track";
+import Track from "@/domain/DTO/Track";
 
 export function formatTime(time: number, short: boolean = false): string {
     const hours = Math.floor(time / 3600);
