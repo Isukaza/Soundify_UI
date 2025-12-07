@@ -1,6 +1,6 @@
 import {Typography} from "@mui/joy";
 import {formatTime} from "@/infrastructure/utils/formatters";
-import {useStore} from '@/stores/index';
+import {useStore} from '@/stores';
 
 const TrackDuration = () => {
     console.log("TrackDuration");

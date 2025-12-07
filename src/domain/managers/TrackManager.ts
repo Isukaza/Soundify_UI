@@ -1,61 +1,44 @@
+import {injectable} from "inversify";
+
 import AbstractTrackManager from "@/domain/managers/Base/AbstractTrackManager";
-
-import Track from "@/domain/models/Track";
-import FilterRequest from '@/domain/models/requests/FilterRequest';
-
 import TrackApi from "@/infrastructure/api/TrackAPI";
+import Track from "@/domain/models/Track";
+import FilterRequest from "@/domain/models/requests/FilterRequest";
 
-import {useStore} from '@/stores';
+import {useStore} from "@/stores";
 
+@injectable()
 export default class TrackManager extends AbstractTrackManager {
-    async LoadInitialTracksAsync(albumId?: string): Promise<Track[] | null> {
-        try {
-            const filter: FilterRequest = {page: 1, size: 20, albumId: albumId};
-            const {tracks, nextPage} = await TrackApi.GetTracksByFilterAsync(filter);
 
-            useStore.getState().track.setTracks(tracks);
-            useStore.getState().app.setNextPage(nextPage ?? 0);
+    override async LoadInitialTracksAsync(albumId?: string): Promise<Track[] | null> {
+        const filter: FilterRequest = {page: 1, size: 20, albumId};
+        const {tracks, nextPage} = await TrackApi.GetTracksByFilterAsync(filter);
 
-            return tracks;
-        } catch (error) {
-            console.error('TrackManager: Failed to load initial tracks', error);
-            throw error;
-        }
+        useStore.getState().track.setTracks(tracks);
+        useStore.getState().app.setNextPage(nextPage ?? 0);
+
+        return tracks;
     }
 
-    async LoadNextPageAsync(albumId = undefined, size = 20): Promise<Track[] | null> {
+    override async LoadNextPageAsync(albumId?: string, size = 20): Promise<Track[] | null> {
         const nextPage = useStore.getState().app.nextPage;
+        if (!nextPage) return null;
 
-        if (nextPage === null || nextPage === 0) {
-            console.warn('TrackManager: No next page to load');
-            return null;
-        }
+        const filter: FilterRequest = {page: nextPage, size, albumId};
+        const {tracks, nextPage: newNext} = await TrackApi.GetTracksByFilterAsync(filter);
 
-        try {
-            const filter: FilterRequest = {page: nextPage, size, albumId: albumId};
-            const {tracks, nextPage: newNextPage} = await TrackApi.GetTracksByFilterAsync(filter);
+        useStore.getState().track.addTracks(tracks);
+        useStore.getState().app.setNextPage(newNext ?? 0);
 
-            useStore.getState().track.addTracks(tracks);
-            useStore.getState().app.setNextPage(newNextPage ?? 0);
-
-            return tracks;
-        } catch (error) {
-            console.error('TrackManager: Failed to load next page', error);
-            throw error;
-        }
+        return tracks;
     }
 
-    async LoadTracksByFilterAsync(filter: FilterRequest): Promise<Track[] | null> {
-        try {
-            const {tracks, nextPage} = await TrackApi.GetTracksByFilterAsync(filter);
+    override async LoadTracksByFilterAsync(filter: FilterRequest): Promise<Track[] | null> {
+        const {tracks, nextPage} = await TrackApi.GetTracksByFilterAsync(filter);
 
-            useStore.getState().track.setTracks(tracks);
-            useStore.getState().app.setNextPage(nextPage ?? 0);
+        useStore.getState().track.setTracks(tracks);
+        useStore.getState().app.setNextPage(nextPage ?? 0);
 
-            return tracks;
-        } catch (error) {
-            console.error('TrackManager: Failed to load tracks by filter', error);
-            throw error;
-        }
+        return tracks;
     }
 }

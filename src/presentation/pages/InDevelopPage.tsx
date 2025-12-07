@@ -1,13 +1,13 @@
-import { Link } from 'react-router-dom';
+import {Link} from 'react-router-dom';
 
 import Button from "@mui/joy/Button";
-import { Box } from "@mui/joy";
+import {Box} from "@mui/joy";
 import Typography from "@mui/joy/Typography";
 
 import Logo from "@/presentation/components/common/Logo";
 
-import { centerStyles } from "@/presentation/styles/common/centerStyles";
-import { borderRadiusStyle } from "@/presentation/styles/common/borderRadiusStyle";
+import {centerStyles} from "@/presentation/styles/common/centerStyles";
+import {borderRadiusStyle} from "@/presentation/styles/common/borderRadiusStyle";
 
 export default function InDevelopPage() {
     return (
@@ -15,13 +15,13 @@ export default function InDevelopPage() {
             <Box sx={{...centerStyles, gap: 3}}>
                 <Logo/>
 
-                <Typography level="h1" sx={{textAlign: 'center',fontWeight: 'bold'}}>
+                <Typography level="h1" sx={{textAlign: 'center', fontWeight: 'bold'}}>
                     Thank you for your interest!
                 </Typography>
-                <Typography level="h1" sx={{textAlign: 'center',fontWeight: 'bold'}}>
+                <Typography level="h1" sx={{textAlign: 'center', fontWeight: 'bold'}}>
                     This page is currently under development.
                 </Typography>
-                <Typography level="h1" sx={{textAlign: 'center',fontWeight: 'bold'}}>
+                <Typography level="h1" sx={{textAlign: 'center', fontWeight: 'bold'}}>
                     {"We're working hard to provide you with valuable and relevant information."}
                 </Typography>
 

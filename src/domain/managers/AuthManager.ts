@@ -1,39 +1,42 @@
-import dayjs from 'dayjs';
-import {jwtDecode} from 'jwt-decode';
+import { injectable } from "inversify";
 
-import UserRole from "@/domain/models/enums/UserRole";
 import AbstractAuthManager from "@/domain/managers/Base/AbstractAuthManager";
-import LoginResponse from '@/domain/models/responses/LoginResponse';
+import AuthApi from "@/infrastructure/api/AuthApi";
+import LoginResponse from "@/domain/models/responses/LoginResponse";
 
-import AuthApi from '@/infrastructure/api/AuthApi';
+import dayjs from "dayjs";
+import { jwtDecode } from "jwt-decode";
+import { useStore } from "@/stores";
 
-import {useStore} from '@/stores';
-
+@injectable()
 export default class AuthManager extends AbstractAuthManager {
 
     constructor() {
         super();
     }
 
-    async getGoogleSsoUrl(): Promise<string | null> {
+    public async getGoogleSsoUrl(): Promise<string | null> {
         const resp = await AuthApi.GetLoginGoogleSsoURL();
         return resp.status ? resp.data : null;
     }
 
-    async loginWithEmail(email: string, password: string): Promise<boolean> {
-        return this.handleAuthResponse(() => AuthApi.login({Email: email, Password: password}));
+    public async loginWithEmail(email: string, password: string): Promise<boolean> {
+        return this.handleAuthResponse(() =>
+            AuthApi.login({ Email: email, Password: password })
+        );
     }
 
-    async handleGoogleCallback(code: string): Promise<boolean> {
-        return this.handleAuthResponse(() => AuthApi.HandleGoogleCallback(code));
+    public async handleGoogleCallback(code: string): Promise<boolean> {
+        return this.handleAuthResponse(() =>
+            AuthApi.HandleGoogleCallback(code)
+        );
     }
 
-    async jwtRefresh(): Promise<boolean> {
+    public async jwtRefresh(): Promise<boolean> {
         try {
-            const {userId, refresh} = useStore.getState().auth;
+            const { userId, refresh } = useStore.getState().auth;
 
-            const isValid = refresh && userId && /^[0-9a-fA-F-]{36}$/.test(userId);
-            if (!isValid) {
+            if (!refresh || !userId) {
                 this.clearAuthData();
                 return false;
             }
@@ -45,95 +48,83 @@ export default class AuthManager extends AbstractAuthManager {
             }
 
             this.applyTokens(tokens);
-
             return this.isAuthDataValid();
         } catch (error) {
-            console.error('[AuthManager] forceRefresh error:', error);
+            console.error("[AuthManager] refresh error:", error);
             return false;
         }
     }
 
-    clearAuthData(): void {
-        const state = useStore.getState().auth;
+    public clearAuthData(): void {
+        const auth = useStore.getState().auth;
 
-        state.setUserId('');
-        state.setUserRole(null)
-        state.setJwt('');
-        state.setRefresh('');
-        state.setExp(0);
-        state.setIsAuthenticated(false);
+        auth.setUserId("");
+        auth.setUserRole(null);
+        auth.setJwt("");
+        auth.setRefresh("");
+        auth.setExp(0);
+        auth.setIsAuthenticated(false);
     }
 
-    isAuthDataValid(): boolean {
-        const {userId, userRole, jwt, refresh, exp} = useStore.getState().auth;
+    public isAuthDataValid(): boolean {
+        const { jwt, refresh, exp } = useStore.getState().auth;
 
-        if (!jwt.trim() || !refresh.trim() || !/^[0-9a-f-]{36}$/i.test(userId) || exp <= 0)
-            return false;
-
-        if (userRole === null || userRole < UserRole.User || userRole > UserRole.SuperAdmin)
-            return false;
+        if (!jwt || !refresh || exp <= 0) return false;
 
         const now = dayjs();
         const expiration = dayjs(exp * 1000);
 
-        return expiration.isAfter(now.add(30, 'second'));
+        return expiration.isAfter(now.add(30, "second"));
     }
 
-    private async handleAuthResponse(apiCall: () => Promise<LoginResponse>): Promise<boolean> {
+    protected async handleAuthResponse(apiCall: () => Promise<LoginResponse>): Promise<boolean> {
         try {
             const token = await apiCall();
-            if (!token)
-                return false;
-
-            if (!token.userId || token.userRole === null || !token.bearer || !token.refreshToken)
-                return false;
+            if (!token?.bearer) return false;
 
             const exp = this.applyTokens(token);
-            if (!exp || isNaN(exp)) {
+            if (!exp) {
                 this.clearAuthData();
                 return false;
             }
 
             return this.isAuthDataValid();
-        } catch (error) {
-            console.error('[AuthManager] handleAuthResponse error:', error);
+        } catch (err) {
+            console.error("[AuthManager] auth error:", err);
             this.clearAuthData();
             return false;
         }
     }
 
-    private async getRefreshedAuthTokens(): Promise<LoginResponse | null> {
-        const {userId, refresh} = useStore.getState().auth;
-
-        if (!refresh)
-            return null;
+    protected async getRefreshedAuthTokens(): Promise<LoginResponse | null> {
+        const { userId, refresh } = useStore.getState().auth;
+        if (!refresh) return null;
 
         try {
-            const tokens = await AuthApi.RefreshTokens({UserId: userId, RefreshToken: refresh});
-            return !tokens ? null : tokens;
-        } catch (error) {
-            console.error('[AuthManager] Token refresh error:', error);
+            return await AuthApi.RefreshTokens({ UserId: userId, RefreshToken: refresh });
+        } catch (err) {
+            console.error("[AuthManager] refresh token error:", err);
             return null;
         }
     }
 
-    private applyTokens(loginResponse: LoginResponse): number {
+    protected applyTokens(data: LoginResponse): number {
         let exp = 0;
+
         try {
-            exp = jwtDecode<{ exp: number }>(loginResponse.bearer)?.exp ?? 0;
-        } catch (error) {
-            console.error('[AuthManager] Failed to decode token', error);
+            exp = jwtDecode<{ exp: number }>(data.bearer)?.exp ?? 0;
+        } catch {
             return 0;
         }
 
-        const state = useStore.getState().auth;
+        const auth = useStore.getState().auth;
 
-        state.setUserId(loginResponse.userId);
-        state.setUserRole(loginResponse.userRole);
-        state.setJwt(loginResponse.bearer);
-        state.setRefresh(loginResponse.refreshToken);
-        state.setExp(exp);
-        state.setIsAuthenticated(true);
+        auth.setUserId(data.userId);
+        auth.setUserRole(data.userRole);
+        auth.setJwt(data.bearer);
+        auth.setRefresh(data.refreshToken);
+        auth.setExp(exp);
+        auth.setIsAuthenticated(true);
 
         return exp;
     }

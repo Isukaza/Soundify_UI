@@ -1,7 +1,9 @@
-import {Navigate, Outlet, useLocation} from 'react-router-dom';
+import {Navigate, Outlet, useLocation} from "react-router-dom";
+
 import useInject from "@/domain/hooks/useInject";
+import {TYPES} from "@/app/di/types";
+
 import AbstractAuthManager from "@/domain/managers/Base/AbstractAuthManager";
-import LoadingPage from "@/presentation/pages/LoadingPage";
 
 interface LocationState {
     from?: { pathname?: string };
@@ -10,12 +12,13 @@ interface LocationState {
 export default function RequireUnAuthenticated() {
     const location = useLocation();
     const state = location.state as LocationState | undefined;
-    const nextPage = state?.from?.pathname || '/';
+    const nextPage = state?.from?.pathname || "/";
 
-    const {instance: authManager, loading} = useInject(AbstractAuthManager);
+    const authManager = useInject<AbstractAuthManager>(TYPES.AuthManager);
 
-    if (loading)
-        return <LoadingPage/>;
+    const isAuthenticated = authManager.isAuthDataValid();
 
-    return authManager?.isAuthDataValid() ? <Navigate to={nextPage} replace/> : <Outlet/>;
+    return isAuthenticated
+        ? <Navigate to={nextPage} replace/>
+        : <Outlet/>;
 }

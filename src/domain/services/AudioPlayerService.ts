@@ -1,11 +1,15 @@
+import {injectable} from "inversify";
 import AbstractAudioPlayerService from "@/domain/services/types/AbstractAudioPlayerService";
 
 import HlsLoader from "@/infrastructure/utils/HlsLoader";
 import {getTrackPath} from "@/infrastructure/utils/formatters";
 
 import {useStore} from "@/stores";
+import {IHostedService} from "@/app/di/hostedServices";
 
-class AudioPlayerService extends AbstractAudioPlayerService {
+@injectable()
+class AudioPlayerService extends AbstractAudioPlayerService implements IHostedService {
+
     private audioRef?: HTMLAudioElement;
     private readonly hlsLoader = new HlsLoader();
     private subscriptions: Array<() => void> = [];
@@ -27,7 +31,7 @@ class AudioPlayerService extends AbstractAudioPlayerService {
             this.disposable();
             this.audioRef = undefined;
         } catch (ex) {
-            console.error('Error while stopping AudioPlayerService', ex);
+            console.error("Error while stopping AudioPlayerService", ex);
         }
     }
 
@@ -35,20 +39,19 @@ class AudioPlayerService extends AbstractAudioPlayerService {
         if (!this.audioRef)
             return;
 
-        this.audioRef.addEventListener('timeupdate', this.onTimeUpdate);
-        this.audioRef.addEventListener('ended', this.onEnded);
-        this.audioRef.addEventListener('volumechange', this.onVolumeChange);
-        this.audioRef.addEventListener('loadedmetadata', this.onLoadedMetadata);
+        this.audioRef.addEventListener("timeupdate", this.onTimeUpdate);
+        this.audioRef.addEventListener("ended", this.onEnded);
+        this.audioRef.addEventListener("volumechange", this.onVolumeChange);
+        this.audioRef.addEventListener("loadedmetadata", this.onLoadedMetadata);
     }
 
     private detachListeners() {
-        if (!this.audioRef)
-            return;
+        if (!this.audioRef) return;
 
-        this.audioRef.removeEventListener('timeupdate', this.onTimeUpdate);
-        this.audioRef.removeEventListener('ended', this.onEnded);
-        this.audioRef.removeEventListener('volumechange', this.onVolumeChange);
-        this.audioRef.removeEventListener('loadedmetadata', this.onLoadedMetadata);
+        this.audioRef.removeEventListener("timeupdate", this.onTimeUpdate);
+        this.audioRef.removeEventListener("ended", this.onEnded);
+        this.audioRef.removeEventListener("volumechange", this.onVolumeChange);
+        this.audioRef.removeEventListener("loadedmetadata", this.onLoadedMetadata);
     }
 
     private onTimeUpdate = () => {
@@ -56,8 +59,9 @@ class AudioPlayerService extends AbstractAudioPlayerService {
             return;
 
         const state = useStore.getState().player;
-        if (this.audioRef.currentTime - state.currentTime > 0.5)
+        if (Math.abs(this.audioRef.currentTime - state.currentTime) > 0.5) {
             state.setCurrentTime(this.audioRef.currentTime);
+        }
     };
 
     private onEnded = () => {
@@ -67,31 +71,29 @@ class AudioPlayerService extends AbstractAudioPlayerService {
     };
 
     private onVolumeChange = () => {
-        if (!this.audioRef)
-            return;
-
+        if (!this.audioRef) return;
         useStore.getState().player.setVolume(this.audioRef.volume);
     };
 
     private onLoadedMetadata = () => {
-        if (!this.audioRef)
-            return;
-
+        if (!this.audioRef) return;
         useStore.getState().player.setDuration(this.audioRef.duration);
     };
 
+    // -----------------------------
+    // ZUSTAND SUBSCRIPTIONS
+    // -----------------------------
     private setupSubscriptions() {
         const subscribeIsPlaying = useStore.subscribe(
             (state) => state.player.isPlaying,
             async (isPlaying: boolean) => {
-                if (!this.audioRef)
-                    return;
+                if (!this.audioRef) return;
 
                 if (isPlaying) {
                     try {
                         await this.audioRef.play();
                     } catch (ex) {
-                        console.error('Audio play failed', ex);
+                        console.error("Audio play failed", ex);
                     }
                 } else {
                     this.audioRef.pause();
@@ -104,23 +106,25 @@ class AudioPlayerService extends AbstractAudioPlayerService {
             async (isLoading) => {
                 if (isLoading) {
                     const currentTrack = useStore.getState().track.currentTrack;
-                    if (!currentTrack || !this.audioRef)
-                        return;
+                    if (!currentTrack || !this.audioRef) return;
 
                     try {
                         this.disposable();
-                        const currentTrackId = currentTrack.TrackId;
 
-                        await this.hlsLoader
-                            .loadToAudioElement(this.audioRef, getTrackPath(currentTrack), currentTrack.TrackId);
+                        const trackId = currentTrack.TrackId;
+
+                        await this.hlsLoader.loadToAudioElement(
+                            this.audioRef,
+                            getTrackPath(currentTrack),
+                            currentTrack.TrackId
+                        );
 
                         const latestTrack = useStore.getState().track.currentTrack;
-                        if (latestTrack?.TrackId !== currentTrackId)
-                            return;
+                        if (latestTrack?.TrackId !== trackId) return;
 
                         this.setTrackAsLoaded();
                     } catch (err) {
-                        console.error('Failed to load track', err);
+                        console.error("Failed to load track", err);
                     } finally {
                         useStore.getState().player.setIsLoadingTrack(false);
                     }
@@ -131,16 +135,16 @@ class AudioPlayerService extends AbstractAudioPlayerService {
         const subscribeVolume = useStore.subscribe(
             (state) => state.player.volume,
             (volume: number) => {
-                if (this.audioRef)
-                    this.audioRef.volume = volume;
+                if (this.audioRef) this.audioRef.volume = volume;
             }
         );
 
         const subscribeCurrentTime = useStore.subscribe(
             (state) => state.player.currentTime,
             (time: number) => {
-                if (this.audioRef && Math.abs(this.audioRef.currentTime - time) > 0.5)
+                if (this.audioRef && Math.abs(this.audioRef.currentTime - time) > 0.5) {
                     this.audioRef.currentTime = time;
+                }
             }
         );
 
@@ -169,7 +173,7 @@ class AudioPlayerService extends AbstractAudioPlayerService {
 
         if (this.audioRef) {
             this.audioRef.pause();
-            this.audioRef.src = '';
+            this.audioRef.src = "";
             this.audioRef.load();
         }
     }

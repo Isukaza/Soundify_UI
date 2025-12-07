@@ -1,63 +1,59 @@
 import SectionNavigation from "@/presentation/components/common/SectionNavigation";
-import {useEffect} from 'react';
-import {Stack, Button, CircularProgress} from '@mui/joy';
+import {useEffect} from "react";
+import {Stack, CircularProgress} from "@mui/joy";
 
-import AbstractTrackManager from '@/domain/managers/Base/AbstractTrackManager';
-import useInjectMap from '@/domain/hooks/useInjectMap';
-import {useInfiniteScrollObserver} from '@/domain/hooks/useInfiniteScrollObserver';
-import FilterRequest from '@/domain/models/requests/FilterRequest';
+import AbstractTrackManager from "@/domain/managers/Base/AbstractTrackManager";
+import FilterRequest from "@/domain/models/requests/FilterRequest";
 
-import {useStore} from '@/stores';
+import {useStore} from "@/stores";
+import Sentinel from "@/presentation/components/common/Sentinel";
+import TrackTable from "@/presentation/components/tables/trackTable";
 
-import Sentinel from '@/presentation/components/common/Sentinel';
-import TrackTable from '@/presentation/components/tables/trackTable';
-import {useNavigate} from "react-router-dom";
+import {useInfiniteScrollObserver} from "@/domain/hooks/useInfiniteScrollObserver";
+
+import useInject from "@/domain/hooks/useInject";
+import {TYPES} from "@/app/di/types";
 
 export default function HomePage() {
-    const {instances} = useInjectMap({
-        trackManager: AbstractTrackManager
-    });
-
+    const trackManager = useInject<AbstractTrackManager>(TYPES.TrackManager);
     const {sentinelRef, isLoadingNextPage} = useInfiniteScrollObserver({
         loadMore: async () => {
-            await instances.trackManager?.LoadNextPageAsync();
-        }
+            await trackManager.LoadNextPageAsync();
+        },
     });
 
-    const navigate = useNavigate();
-    const searchQuery = useStore(state => state.app.searchQuery);
+    const searchQuery = useStore((state) => state.app.searchQuery);
 
     useEffect(() => {
         const performSearch = async () => {
-            if (!instances.trackManager)
-                return;
+            const trimmed = searchQuery.trim();
 
             try {
-                if (searchQuery.trim() === '') {
-                    await instances.trackManager.LoadInitialTracksAsync();
-                } else if (searchQuery.length >= 3) {
+                if (trimmed === "") {
+                    await trackManager.LoadInitialTracksAsync();
+                } else if (trimmed.length >= 3) {
                     const filter: FilterRequest = {
                         page: 1,
                         size: 20,
-                        trackName: searchQuery
+                        trackName: trimmed,
                     };
 
-                    await instances.trackManager.LoadTracksByFilterAsync(filter);
+                    await trackManager.LoadTracksByFilterAsync(filter);
                 }
             } catch (error) {
-                console.error('HomePage: Failed to load tracks', error);
+                console.error("HomePage: Failed to load tracks", error);
             }
         };
 
         performSearch();
-    }, [searchQuery, instances.trackManager]);
+    }, [searchQuery, trackManager]);
 
     return (
         <Stack
             sx={{
-                width: '100%',
-                maxWidth: '50%',
-                margin: '0 auto',
+                width: "100%",
+                maxWidth: "50%",
+                margin: "0 auto",
             }}
         >
             <SectionNavigation/>
@@ -67,7 +63,7 @@ export default function HomePage() {
             <Sentinel ref={sentinelRef}/>
 
             {isLoadingNextPage && (
-                <div style={{display: 'flex', justifyContent: 'center', padding: '10px'}}>
+                <div style={{display: "flex", justifyContent: "center", padding: "10px"}}>
                     <CircularProgress size="sm"/>
                 </div>
             )}

@@ -1,24 +1,22 @@
+import {injectable} from "inversify";
+
 import AbstractAudioPlayerManager from "@/domain/managers/Base/AbstractAudioPlayerManager";
 import Track from "@/domain/models/Track";
-
 import {useStore} from "@/stores";
 
+@injectable()
 export default class AudioPlayerManager extends AbstractAudioPlayerManager {
+
     async play(): Promise<void> {
         const player = useStore.getState().player;
-
-        if (!useStore.getState().track.currentTrack)
-            return;
+        if (!useStore.getState().track.currentTrack) return;
 
         if (!player.isTrackLoaded) {
-            if (!player.isLoadingTrack)
-                player.setIsLoadingTrack(true);
-
+            if (!player.isLoadingTrack) player.setIsLoadingTrack(true);
             return;
         }
 
-        if (player.isEnded)
-            player.setCurrentTime(0);
+        if (player.isEnded) player.setCurrentTime(0);
 
         if (!player.isPlaying) {
             player.setIsEnded(false);
@@ -28,8 +26,7 @@ export default class AudioPlayerManager extends AbstractAudioPlayerManager {
 
     async pause(): Promise<void> {
         const player = useStore.getState().player;
-        if (player.isPlaying)
-            player.setIsPlaying(false);
+        if (player.isPlaying) player.setIsPlaying(false);
     }
 
     setCurrentTrack(track: Track): void {
@@ -45,7 +42,8 @@ export default class AudioPlayerManager extends AbstractAudioPlayerManager {
     }
 
     async togglePlay(): Promise<void> {
-        useStore.getState().player.isPlaying ? await this.pause() : await this.play();
+        const player = useStore.getState().player;
+        player.isPlaying ? await this.pause() : await this.play();
     }
 
     async toggleMute(): Promise<void> {
@@ -54,36 +52,36 @@ export default class AudioPlayerManager extends AbstractAudioPlayerManager {
             player.setPrevVolume(player.volume);
             player.setVolume(0);
         } else {
-            const restoredVolume = player.prevVolume || 1;
-            player.setVolume(restoredVolume);
+            player.setVolume(player.prevVolume || 1);
         }
     }
 
     resetLibraryState(): void {
-        useStore.getState().track.setTracks([]);
-        useStore.getState().track.setCurrentTrack(null);
-        useStore.getState().album.setAlbums([]);
-        useStore.getState().artist.setArtists([]);
-        useStore.getState().playlist.setPlaylists([]);
-        useStore.getState().app.setNextPage(null);
+        const s = useStore.getState();
+        s.track.setTracks([]);
+        s.track.setCurrentTrack(null);
+        s.album.setAlbums([]);
+        s.artist.setArtists([]);
+        s.playlist.setPlaylists([]);
+        s.app.setNextPage(null);
     }
 
     resetPlayerState(): void {
-        const player = useStore.getState().player;
-
-        player.setIsPlaying(false);
-        player.setIsTrackLoaded(false);
-        player.setIsLoadingTrack(true);
-        player.setCurrentTime(0);
-        player.setDuration(0);
-        player.setIsEnded(false);
+        const p = useStore.getState().player;
+        p.setIsPlaying(false);
+        p.setIsTrackLoaded(false);
+        p.setIsLoadingTrack(true);
+        p.setCurrentTime(0);
+        p.setDuration(0);
+        p.setIsEnded(false);
     }
 
     resetLibraryBetweenPage(): void {
-        useStore.getState().track.setTracks([]);
-        useStore.getState().album.setAlbums([]);
-        useStore.getState().artist.setArtists([]);
-        useStore.getState().playlist.setPlaylists([]);
-        useStore.getState().app.setNextPage(null);
+        const s = useStore.getState();
+        s.track.setTracks([]);
+        s.album.setAlbums([]);
+        s.artist.setArtists([]);
+        s.playlist.setPlaylists([]);
+        s.app.setNextPage(null);
     }
 }

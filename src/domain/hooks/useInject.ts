@@ -1,44 +1,19 @@
-import LifecycleScope from "@/app/di/Base/LifecycleScope";
+import {appContainer} from "@/app/di/inversify.config";
+import {getSessionContainer} from "@/app/di/session.scope";
 import {useStore} from "@/stores";
-import {useEffect, useState} from "react";
-import DIContainer, {AbstractConstructor} from "@/app/di/DIContainer";
+import {useMemo} from "react";
 
-export default function useInject<T>(abstract: AbstractConstructor<T>) {
-    const [state, setState] = useState<{ instance: T | null, loading: boolean }>({
-        instance: null,
-        loading: true
-    });
-
+export default function useInject<T>(token: symbol): T {
     const isAuthenticated = useStore(state => state.auth.isAuthenticated);
 
-    useEffect(() => {
-        let mounted = true;
+    return useMemo(() => {
+        const sessionContainer = isAuthenticated ? getSessionContainer() : null;
+        const container = sessionContainer ?? appContainer;
+        if (!container.isBound(token))
+            throw new Error(
+                `[useInject] Dependency not bound for token: ${String(token.toString())}`
+            );
 
-        (async () => {
-            const scope = DIContainer.getScope(abstract);
-
-            if (scope === LifecycleScope.Session && !isAuthenticated) {
-                if (mounted)
-                    setState({instance: null, loading: false});
-
-                return;
-            }
-
-            try {
-                const instance = await DIContainer.get(abstract);
-                if (mounted)
-                    setState({instance, loading: false});
-            } catch (err) {
-                console.error(`[useInjectOne] Error for ${abstract.name}:`, err);
-                if (mounted)
-                    setState({instance: null, loading: false});
-            }
-        })();
-
-        return () => {
-            mounted = false;
-        };
-    }, [abstract, isAuthenticated]);
-
-    return state;
+        return container.get<T>(token);
+    }, [isAuthenticated, token]);
 }

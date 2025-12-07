@@ -1,36 +1,46 @@
-import React from 'react';
-import {Button, CircularProgress, Typography} from '@mui/joy';
+import React from "react";
+import {Button, CircularProgress, Typography} from "@mui/joy";
 
 import useInject from "@/domain/hooks/useInject";
+import {TYPES} from "@/app/di/types";
 
 import AbstractAuthManager from "@/domain/managers/Base/AbstractAuthManager";
 
-import GoogleIcon from '@/shared/assets/GoogleIcon';
-import {borderRadiusStyle} from '@/presentation/styles/common/borderRadiusStyle';
+import GoogleIcon from "@/shared/assets/GoogleIcon";
+import {borderRadiusStyle} from "@/presentation/styles/common/borderRadiusStyle";
 
 export default function GoogleLoginButton() {
-    const {instance: authManager, loading} = useInject(AbstractAuthManager);
+    const authManager = useInject<AbstractAuthManager>(TYPES.AuthManager);
+
+    const [isLoading, setIsLoading] = React.useState(false);
 
     const handleClick = async () => {
-        if (!authManager) return;
+        try {
+            setIsLoading(true);
 
-        const url = await authManager.getGoogleSsoUrl();
-        if (url)
-            window.location.href = url;
+            const url = await authManager.getGoogleSsoUrl();
+            if (url)
+                window.location.href = url;
+
+        } catch (err) {
+            console.error("GoogleLoginButton error:", err);
+        } finally {
+            setIsLoading(false);
+        }
     };
-
-    const isDisabled = loading || !authManager;
 
     return (
         <Button
             onClick={handleClick}
             size="lg"
             variant="outlined"
-            disabled={isDisabled}
+            disabled={isLoading}
             sx={borderRadiusStyle}
-            startDecorator={loading ? <CircularProgress size="sm"/> : <GoogleIcon/>}
+            startDecorator={
+                isLoading ? <CircularProgress size="sm"/> : <GoogleIcon/>
+            }
         >
-            <Typography>{loading ? 'Loading...' : 'Continue with Google'}</Typography>
+            <Typography>{isLoading ? "Loading..." : "Continue with Google"}</Typography>
         </Button>
     );
 }
